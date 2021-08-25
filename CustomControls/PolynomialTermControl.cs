@@ -51,7 +51,7 @@ namespace MathEquationControl
 	[TemplatePart(Name = PolynomialTermControl.ElementRichTextBox, Type = typeof(RichTextBox))]
 	[TemplatePart(Name = PolynomialTermControl.ElementFlowDocument, Type = typeof(FlowDocument))]
 	//[TemplatePart(Name = PolynomialTermControl.ElementSection, Type = typeof(Section))]
-	[TemplatePart(Name = PolynomialTermControl.ElementParagraph, Type = typeof(Paragraph))]
+	//[TemplatePart(Name = PolynomialTermControl.ElementParagraph, Type = typeof(Paragraph))]
 	[TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Run))]
 	[TemplatePart(Name = PolynomialTermControl.ElementMultiplicationSymbol, Type = typeof(Run))]
 	[TemplatePart(Name = PolynomialTermControl.ElementIndeteminant, Type = typeof(Run))]
@@ -166,7 +166,7 @@ namespace MathEquationControl
 		private const string ElementRichTextBox = "PART_RichTextBox";
 		private const string ElementFlowDocument = "PART_FlowDocument";
 		//private const string ElementSection = "PART_Section";
-		private const string ElementParagraph = "PART_Paragraph";
+		//private const string ElementParagraph = "PART_Paragraph";
 		private const string ElementCoefficient = "PART_Coefficient";
 		private const string ElementMultiplicationSymbol = "PART_MultiplicationSymbol";
 		private const string ElementIndeteminant = "PART_Indeteminant";
@@ -176,7 +176,7 @@ namespace MathEquationControl
 		private RichTextBox controlRichTextBox;
 		private FlowDocument controlFlowDocument;
 		//private Section controlSection;
-		private Paragraph controlParagraph;
+		//private Paragraph controlParagraph;
 		private Run controlCoefficient;
 		private Run controlMultiplicationSymbol;
 		private Run controlIndeteminant;
@@ -217,7 +217,7 @@ namespace MathEquationControl
 			controlRichTextBox = GetTemplateChild(ElementRichTextBox) as RichTextBox;
 			controlFlowDocument = GetTemplateChild(ElementFlowDocument) as FlowDocument;
 			//controlSection = GetTemplateChild(ElementSection) as Section;
-			controlParagraph = GetTemplateChild(ElementParagraph) as Paragraph;
+			//controlParagraph = GetTemplateChild(ElementParagraph) as Paragraph;
 			controlIndeteminant = GetTemplateChild(ElementIndeteminant) as Run;
 			controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as Run;
 
@@ -229,9 +229,10 @@ namespace MathEquationControl
 
 			if (controlBorder != null)
 			{
-				controlBorder.PreviewMouseLeftButtonDown += PolynomialTermControl_PreviewMouseLeftButtonDown;
-				controlBorder.PreviewMouseLeftButtonUp += PolynomialTermControl_PreviewMouseLeftButtonUp;
-				controlBorder.PreviewMouseMove += PolynomialTermControl_PreviewMouseMove;
+				//controlBorder.PreviewMouseLeftButtonDown += PolynomialTermControl_PreviewMouseLeftButtonDown;
+				//controlBorder.PreviewMouseLeftButtonUp += PolynomialTermControl_PreviewMouseLeftButtonUp;
+				//controlBorder.PreviewMouseMove += PolynomialTermControl_PreviewMouseMove;
+				//controlBorder.MouseLeave += PolynomialTermControl_MouseLeave;
 			}
 
 			controlCoefficient = GetTemplateChild(ElementCoefficient) as Run;
@@ -246,6 +247,7 @@ namespace MathEquationControl
 				ExponentChanged += PolynomialTermControl_ExponentChanged;
 			}
 		}
+
 		private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
 		{
 			SetControls();
@@ -293,7 +295,7 @@ namespace MathEquationControl
 				}
 			}
 
-			string termString = $"{controlCoefficient.Text}*x{controlExponent.Text}";
+			string termString = $"{controlCoefficient.Text}*x {controlExponent.Text}";
 
 			double calculatedWidth = MeasureString(termString).Width;
 
@@ -329,12 +331,9 @@ namespace MathEquationControl
 		{
 			Point pointerLocation = this.PointToScreen(Mouse.GetPosition(this));
 
-			Point controlLocation = this.PointToScreen(this.TransformToVisual(this).Transform(new Point(0, 0)));
+			Rect clientRect = GetClientRectangle();
 
-			double from = controlLocation.X;
-			double to = controlLocation.X + this.ActualWidth;
-
-			if (pointerLocation.X >= from && pointerLocation.X <= to)
+			if (pointerLocation.X >= clientRect.Left && pointerLocation.X <= clientRect.Right)
 			{
 				_dragStartPosition = pointerLocation;
 				_isDragging = true;
@@ -344,6 +343,14 @@ namespace MathEquationControl
 		}
 
 		private void PolynomialTermControl_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			if (_isDragging == true)
+			{
+				_isDragging = false;
+				e.Handled = true;
+			}
+		}
+		private void PolynomialTermControl_MouseLeave(object sender, MouseEventArgs e)
 		{
 			if (_isDragging == true)
 			{
@@ -366,6 +373,12 @@ namespace MathEquationControl
 
 				e.Handled = true;
 			}
+		}
+
+		public Rect GetClientRectangle()
+		{
+			Point topLeft = this.PointToScreen(this.TransformToVisual(this).Transform(new Point(0, 0)));
+			return new Rect(topLeft.X, topLeft.Y, this.ActualWidth, this.ActualHeight);
 		}
 
 	}

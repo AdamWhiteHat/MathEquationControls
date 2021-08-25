@@ -15,27 +15,34 @@
 							HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
 							VerticalAlignment="{TemplateBinding VerticalAlignment}" >
 
-					
-						<RichTextBox x:Name="PART_RichTextBox"									 			 
-									 Style="{DynamicResource RichTextStyle}" >
-							<FlowDocument x:Name="PART_FlowDocument"  Style="{DynamicResource FlowDocumentStyle}"  >
+						<DockPanel LastChildFill="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						
+							<RichTextBox x:Name="PART_RichTextBox"
+										 Style="{DynamicResource RichTextStyle}" >
+								<FlowDocument x:Name="PART_FlowDocument"  Style="{DynamicResource FlowDocumentStyle}"  >
+									
+									<Table>
+										<TableRowGroup>
+											<TableRow>
+												<TableCell>
+													<BlockUIContainer>
+														<Grid VerticalAlignment="Center">
+															<Grid.RowDefinitions>
+																<RowDefinition Height="*" />
+															</Grid.RowDefinitions>
+															<TextBlock Grid.Row="0" Style="{DynamicResource TextBlockStyle}">															
+																<Run Name="PART_Coefficient" Text="0"  /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="x" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
+														</Grid>
+													</BlockUIContainer>
+												</TableCell>
+											</TableRow>
+										</TableRowGroup>
+									</Table>
 
-								<Table x:Name="PART_Table">
-									<TableRowGroup>
-										<TableRow>
-											<TableCell>												
-												<BlockUIContainer>
-													<WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-														<TextBlock Text="0" /><TextBlock Text="*" /><TextBlock Text="x" /><TextBlock Text="2" />
-													</WrapPanel>
-												</BlockUIContainer>
-											</TableCell>
-										</TableRow>
-									</TableRowGroup>									
-								</Table>
-								
-							</FlowDocument>
-						</RichTextBox>
+								</FlowDocument>
+							</RichTextBox>
+							
+						</DockPanel>
 						
 					</Border>
 				</ControlTemplate>

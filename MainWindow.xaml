@@ -6,29 +6,15 @@
         xmlns:local="clr-namespace:MathEquationControl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-
-	<Window.Resources>
-
-	</Window.Resources>
-
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="45" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-
-
-		<StackPanel Grid.Row="0" 
-					Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
-			<Button x:Name="btnAdd" Content="Add" Click="btnAdd_Click" Padding="5" />
-		</StackPanel>
-
-
-		<local:PolynomialControl Grid.Row="1"
-								 x:Name="polynomialCtrl" 
-								 Style="{DynamicResource PolynomialControlStyle}" />
-
-
+		
+		<Button x:Name="btnAdd" Content="Add" Height="20" Width="40" Click="Add_Click" />
+		
+		<local:PolynomialControl x:Name="polynomialCtrl" HorizontalAlignment="Center" VerticalAlignment="Center"
+							     Style="{DynamicResource PolynomialControlStyle}" />
 
 	</Grid>
 </Window>

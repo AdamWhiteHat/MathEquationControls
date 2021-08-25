@@ -3,50 +3,54 @@
 					xmlns:local="clr-namespace:MathEquationControl">
 
 	<Style x:Key="PolynomialControlStyle" TargetType="local:PolynomialControl">
-		<Setter Property="BorderBrush" Value="Transparent" />
-		<Setter Property="BorderThickness" Value="0" />
-
-		<Setter Property="HorizontalAlignment" Value="Center" />
-		<Setter Property="VerticalAlignment" Value="Stretch" />
-		<Setter Property="HorizontalContentAlignment" Value="Center" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
-	</Style>
-
-	<Style x:Key="PolynomialTermStyle" TargetType="local:PolynomialTermControl">
 		<Setter Property="BorderBrush" Value="Red" />
 		<Setter Property="BorderThickness" Value="0.5" />
 
-		<Setter Property="Cursor" Value="SizeNS" />
-		<Setter Property="ForceCursor" Value="True" />
+		<Setter Property="Height" Value="Auto" />
 
 		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Stretch" />
+	</Style>
+
+	<Style x:Key="PolynomialTermStyle" TargetType="local:PolynomialTermControl">
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="BorderThickness" Value="0" />
+
+		<Setter Property="Height" Value="Auto" />
+
+		<Setter Property="Cursor" Value="SizeNS" />
+		<Setter Property="ForceCursor" Value="True" />		
+
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Stretch" />
 	</Style>
 
 	<Style x:Key="RichTextStyle" TargetType="RichTextBox">
 		<Setter Property="BorderBrush" Value="Green" />
 		<Setter Property="BorderThickness" Value="1" />
 
+		<Setter Property="Height" Value="Auto" />
+
 		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
 		<Setter Property="FontSize" Value="30" />
-
+		
 		<Setter Property="Cursor" Value="SizeNS" />
 		<Setter Property="ForceCursor" Value="True" />
-
-		
 
 		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Stretch" />
 	</Style>
 
 	<Style x:Key="FlowDocumentStyle" TargetType="FlowDocument">
 		<Setter Property="ColumnWidth" Value="Auto" />
-		<Setter Property="LineHeight" Value="50" />
-		<Setter Property="PageHeight" Value="50" />
+		<Setter Property="LineHeight" Value="Auto" />
+		<Setter Property="PageHeight" Value="Auto" />
 		<Setter Property="PageWidth" Value="Auto" />
 
 		<Setter Property="FontFamily" Value="Libertinus Math Regular" />

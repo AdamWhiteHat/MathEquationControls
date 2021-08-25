@@ -44,7 +44,9 @@ namespace MathEquationControl
 	///     <MyNamespace:PolynomialControl/>
 	///
 	/// </summary>
-	[TemplatePart(Name = PolynomialControl.ElementStackPanel, Type = typeof(StackPanel))]
+
+	[TemplatePart(Name = PolynomialControl.ElementBorder, Type = typeof(Border))]
+	[TemplatePart(Name = PolynomialControl.ElementStackPanel, Type = typeof(WrapPanel))]
 	public class PolynomialControl : Control
 	{
 
@@ -103,9 +105,11 @@ namespace MathEquationControl
 
 		#region Template Constants & Private Controls
 
+		private const string ElementBorder = "PART_Border";
 		private const string ElementStackPanel = "PART_StackPanel";
 
-		private StackPanel controlStackPanel;
+		private Border controlBorder;
+		private WrapPanel controlStackPanel;
 
 		#endregion
 
@@ -116,18 +120,27 @@ namespace MathEquationControl
 
 		public PolynomialControl()
 		{
+			this.IsHitTestVisible = true;
 			this.Loaded += PolynomialControl_Loaded;
 		}
 
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
-			controlStackPanel = GetTemplateChild(ElementStackPanel) as StackPanel;
+
+			controlBorder = GetTemplateChild(ElementBorder) as Border;
+			controlStackPanel = GetTemplateChild(ElementStackPanel) as WrapPanel;
+
+			this.PreviewMouseLeftButtonDown += PolynomialControl_PreviewMouseLeftButtonDown;
+			this.PreviewMouseLeftButtonUp += PolynomialControl_PreviewMouseLeftButtonUp;
+			this.PreviewMouseMove += PolynomialControl_PreviewMouseMove;
+			this.MouseLeave += PolynomialControl_MouseLeave;
+
 		}
 
 		private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
 		{
-			this.PolynomialChanged += PolynomialControl_PolynomialChanged;
+			this.PolynomialChanged += PolynomialControl_PolynomialChanged;		
 		}
 
 		private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
@@ -146,15 +159,148 @@ namespace MathEquationControl
 
 			ExtendedArithmetic.Polynomial poly = ExtendedArithmetic.Polynomial.Parse(polynomial);
 
+			bool firstPass = true;
 			foreach (ExtendedArithmetic.Term term in poly.Terms.Reverse())
 			{
+				if (firstPass)
+				{
+					firstPass = false;
+				}
+				else
+				{
+					TextBlock plusSymbol = new TextBlock();
+					plusSymbol.Text = "+";
+					plusSymbol.VerticalAlignment = VerticalAlignment.Stretch;
+					plusSymbol.Width = GridLength.Auto.Value;
+					controlStackPanel.Children.Add(plusSymbol);
+				}
+
 				PolynomialTermControl termCtrl = new PolynomialTermControl(term);
-				//termCtrl.BorderBrush = Brushes.Transparent;
-				//termCtrl.BorderThickness = new Thickness(0);
 				termCtrl.Style = (Style)FindResource("PolynomialTermStyle");
 				controlStackPanel.Children.Add(termCtrl);
 			}
 		}
+
+
+
+		private bool _isDragging = false;
+		private Point _dragStartPosition = default(Point);
+		private int _numericStartValue = 0;
+		private Rect _clientRect = Rect.Empty;
+		private PolynomialTermControl _polyTermControl = null;
+
+		private void PolynomialControl_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			double width = this.ActualWidth;
+			double height = this.ActualHeight;
+
+			Point pointerLocation = this.PointToScreen(Mouse.GetPosition(this));
+
+			PolynomialTermControl polyTermControl = PolynomialTermHitTest();
+			Rect polyTermCtrl_ClientRect = polyTermControl.GetClientRectangle();
+
+			if (IsPointInRect(pointerLocation, polyTermCtrl_ClientRect))
+			{
+				_polyTermControl = polyTermControl;
+				_dragStartPosition = pointerLocation;
+				_numericStartValue = _polyTermControl.Coefficient;
+				_clientRect = polyTermCtrl_ClientRect;
+				_isDragging = true;
+				e.Handled = true;
+			}
+		}
+
+		private void PolynomialControl_PreviewMouseMove(object sender, MouseEventArgs e)
+		{
+			if (_isDragging)
+			{
+				Point currentPosition = this.PointToScreen(Mouse.GetPosition(this));
+
+				if (IsPointInRect(currentPosition, _clientRect))
+				{
+					int deltaY = -(int)Math.Round(currentPosition.Y - _dragStartPosition.Y);
+
+					int newCoeff = _numericStartValue + deltaY;
+
+					_polyTermControl.Coefficient = newCoeff;
+
+					e.Handled = true;
+				}
+			}
+		}
+
+		private void PolynomialControl_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			if (_isDragging == true)
+			{
+				_isDragging = false;
+				_dragStartPosition = default(Point);
+				_numericStartValue = 0;
+				_clientRect = Rect.Empty;
+				_polyTermControl = null;
+				e.Handled = true;
+			}
+		}
+
+		private void PolynomialControl_MouseLeave(object sender, MouseEventArgs e)
+		{
+			if (_isDragging == true)
+			{
+				_isDragging = false;
+				_dragStartPosition = default(Point);
+				_numericStartValue = 0;
+				_clientRect = Rect.Empty;
+				_polyTermControl = null;
+				e.Handled = true;
+			}
+		}
+
+		private PolynomialTermControl PolynomialTermHitTest()
+		{
+			object element = InputHitTest(Mouse.GetPosition(this));
+			PolynomialTermControl result = null;
+
+			while (result == null)
+			{
+				if (element is PolynomialTermControl)
+				{
+					result = element as PolynomialTermControl;
+				}
+				else if (element is FrameworkContentElement)
+				{
+					element = ((FrameworkContentElement)element).Parent;
+				}
+				else if (element is FrameworkElement)
+				{
+					FrameworkElement frameworkElement = element as FrameworkElement;
+
+					if (frameworkElement.Parent != null)
+					{
+						element = frameworkElement.Parent;
+					}
+					else
+					{
+						element = frameworkElement.TemplatedParent;
+					}
+				}
+			}
+
+			return result;
+		}
+
+		private bool IsPointInRect(Point point, Rect rect)
+		{
+			if (point.X >= rect.Left && point.X <= rect.Right)
+			{
+				if (point.Y >= rect.Top && point.Y <= rect.Bottom)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+
 
 	}
 }

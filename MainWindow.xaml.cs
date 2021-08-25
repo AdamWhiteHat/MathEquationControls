@@ -25,8 +25,9 @@ namespace MathEquationControl
 			InitializeComponent();
 		}
 
-		private void btnAdd_Click(object sender, RoutedEventArgs e)
+		private void Add_Click(object sender, RoutedEventArgs e)
 		{
+			btnAdd.Visibility = Visibility.Collapsed;
 			polynomialCtrl.Polynomial = "144*x^2 + 12*x + 1";
 		}
 	}
