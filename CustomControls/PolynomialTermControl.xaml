@@ -15,35 +15,14 @@
 							HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
 							VerticalAlignment="{TemplateBinding VerticalAlignment}" >
 
-						<DockPanel LastChildFill="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-						
-							<RichTextBox x:Name="PART_RichTextBox"
-										 Style="{DynamicResource RichTextStyle}" >
-								<FlowDocument x:Name="PART_FlowDocument"  Style="{DynamicResource FlowDocumentStyle}"  >
-									
-									<Table>
-										<TableRowGroup>
-											<TableRow>
-												<TableCell>
-													<BlockUIContainer>
-														<Grid VerticalAlignment="Center">
-															<Grid.RowDefinitions>
-																<RowDefinition Height="*" />
-															</Grid.RowDefinitions>
-															<TextBlock Grid.Row="0" Style="{DynamicResource TextBlockStyle}">															
-																<Run Name="PART_Coefficient" Text="0"  /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="x" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
-														</Grid>
-													</BlockUIContainer>
-												</TableCell>
-											</TableRow>
-										</TableRowGroup>
-									</Table>
+						<TextBlock x:Name="PART_TextBlock" 
+								   Style="{DynamicResource TextBlockStyle}"
+								   
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center"
+								   
+								   ><Run Name="PART_Coefficient" Text="0" /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="x" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
 
-								</FlowDocument>
-							</RichTextBox>
-							
-						</DockPanel>
-						
 					</Border>
 				</ControlTemplate>
 			</Setter.Value>

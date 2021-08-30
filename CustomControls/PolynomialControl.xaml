@@ -15,11 +15,16 @@
 							Width="{TemplateBinding Width}"
 							Height="{TemplateBinding Height}"
 							HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-							VerticalAlignment="{TemplateBinding VerticalAlignment}"							
-							>
+							VerticalAlignment="{TemplateBinding VerticalAlignment}" >
 
-						<WrapPanel x:Name="PART_StackPanel"
-									VerticalAlignment="Stretch" />
+						<Viewbox Stretch="None" StretchDirection="Both"
+								 VerticalAlignment="Center" HorizontalAlignment="Center">
+
+							<StackPanel x:Name="PART_ContentsPanel"
+										Orientation="Horizontal"
+										VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+						</Viewbox>
 
 					</Border>
 				</ControlTemplate>

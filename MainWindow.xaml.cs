@@ -23,12 +23,17 @@ namespace MathEquationControl
 		public MainWindow()
 		{
 			InitializeComponent();
+			this.Loaded += MainWindow_Loaded;
+		}
+
+		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+
 		}
 
 		private void Add_Click(object sender, RoutedEventArgs e)
 		{
-			btnAdd.Visibility = Visibility.Collapsed;
-			polynomialCtrl.Polynomial = "144*x^2 + 12*x + 1";
+			polynomialCtrl.Polynomial = "144*x^2 + 12*x^1 + 1*x^0";
 		}
 	}
 }

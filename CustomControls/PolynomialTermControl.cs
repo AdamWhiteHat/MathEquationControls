@@ -48,10 +48,11 @@ namespace MathEquationControl
 	///
 	/// </summary>
 	[TemplatePart(Name = PolynomialTermControl.ElementBorder, Type = typeof(Border))]
-	[TemplatePart(Name = PolynomialTermControl.ElementRichTextBox, Type = typeof(RichTextBox))]
-	[TemplatePart(Name = PolynomialTermControl.ElementFlowDocument, Type = typeof(FlowDocument))]
+	//[TemplatePart(Name = PolynomialTermControl.ElementRichTextBox, Type = typeof(RichTextBox))]
+	//[TemplatePart(Name = PolynomialTermControl.ElementFlowDocument, Type = typeof(FlowDocument))]
 	//[TemplatePart(Name = PolynomialTermControl.ElementSection, Type = typeof(Section))]
 	//[TemplatePart(Name = PolynomialTermControl.ElementParagraph, Type = typeof(Paragraph))]
+	[TemplatePart(Name = PolynomialTermControl.ElementTextBlock, Type = typeof(TextBlock))]
 	[TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Run))]
 	[TemplatePart(Name = PolynomialTermControl.ElementMultiplicationSymbol, Type = typeof(Run))]
 	[TemplatePart(Name = PolynomialTermControl.ElementIndeteminant, Type = typeof(Run))]
@@ -162,27 +163,26 @@ namespace MathEquationControl
 
 		#region Template Constants & Private Controls
 
+		private static string IndeteminantSymbolValue = "x";
+		private static string MultiplicationSymbolValue = "*";
+
 		private const string ElementBorder = "PART_Border";
-		private const string ElementRichTextBox = "PART_RichTextBox";
-		private const string ElementFlowDocument = "PART_FlowDocument";
-		//private const string ElementSection = "PART_Section";
-		//private const string ElementParagraph = "PART_Paragraph";
+		private const string ElementTextBlock = "PART_TextBlock";
 		private const string ElementCoefficient = "PART_Coefficient";
 		private const string ElementMultiplicationSymbol = "PART_MultiplicationSymbol";
 		private const string ElementIndeteminant = "PART_Indeteminant";
 		private const string ElementExponent = "PART_Exponent";
 
 		private Border controlBorder;
-		private RichTextBox controlRichTextBox;
-		private FlowDocument controlFlowDocument;
-		//private Section controlSection;
-		//private Paragraph controlParagraph;
+		private TextBlock controlTextBlock;
 		private Run controlCoefficient;
 		private Run controlMultiplicationSymbol;
 		private Run controlIndeteminant;
 		private Run controlExponent;
 
 		#endregion
+
+		#region Constructors
 
 		static PolynomialTermControl()
 		{
@@ -192,9 +192,6 @@ namespace MathEquationControl
 		public PolynomialTermControl()
 		{
 			this.Loaded += PolynomialTermControl_Loaded;
-			//this.PreviewMouseLeftButtonDown += PolynomialTermControl_PreviewMouseLeftButtonDown;
-			//this.PreviewMouseLeftButtonUp += PolynomialTermControl_PreviewMouseLeftButtonUp;
-			//this.PreviewMouseMove += PolynomialTermControl_PreviewMouseMove;
 		}
 
 		public PolynomialTermControl(Term polynomalTerm)
@@ -203,6 +200,8 @@ namespace MathEquationControl
 			this.Coefficient = (int)polynomalTerm.CoEfficient;
 			this.Exponent = polynomalTerm.Exponent;
 		}
+
+		#endregion
 
 		public Term GetPolynomialTerm()
 		{
@@ -214,26 +213,9 @@ namespace MathEquationControl
 			base.OnApplyTemplate();
 
 			controlBorder = GetTemplateChild(ElementBorder) as Border;
-			controlRichTextBox = GetTemplateChild(ElementRichTextBox) as RichTextBox;
-			controlFlowDocument = GetTemplateChild(ElementFlowDocument) as FlowDocument;
-			//controlSection = GetTemplateChild(ElementSection) as Section;
-			//controlParagraph = GetTemplateChild(ElementParagraph) as Paragraph;
+			controlTextBlock = GetTemplateChild(ElementTextBlock) as TextBlock;
 			controlIndeteminant = GetTemplateChild(ElementIndeteminant) as Run;
 			controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as Run;
-
-			//if (controlRichTextBox != null)
-			//{
-			//	controlRichTextBox.PreviewMouseLeftButtonDown += PolynomialTermControl_PreviewMouseLeftButtonDown;
-			//	controlRichTextBox.PreviewMouseLeftButtonUp += PolynomialTermControl_PreviewMouseLeftButtonUp;
-			//}
-
-			if (controlBorder != null)
-			{
-				//controlBorder.PreviewMouseLeftButtonDown += PolynomialTermControl_PreviewMouseLeftButtonDown;
-				//controlBorder.PreviewMouseLeftButtonUp += PolynomialTermControl_PreviewMouseLeftButtonUp;
-				//controlBorder.PreviewMouseMove += PolynomialTermControl_PreviewMouseMove;
-				//controlBorder.MouseLeave += PolynomialTermControl_MouseLeave;
-			}
 
 			controlCoefficient = GetTemplateChild(ElementCoefficient) as Run;
 			if (controlCoefficient != null)
@@ -265,29 +247,37 @@ namespace MathEquationControl
 
 		private void SetControls()
 		{
-			if (controlExponent != null && Exponent != default(int))
+			if (controlExponent != null && controlCoefficient != null)
 			{
+				controlMultiplicationSymbol.Text = MultiplicationSymbolValue;
+				controlIndeteminant.Text = IndeteminantSymbolValue;
+
 				if (Exponent == 0)
 				{
-					controlIndeteminant.Text = " ";
-					controlMultiplicationSymbol.Text = " ";
-					controlExponent.Text = " ";
+					controlMultiplicationSymbol.Text = "";
+					controlIndeteminant.Text = "";
+					controlExponent.Text = "";
 				}
 				else if (Exponent == 1)
 				{
-					controlExponent.Text = " ";
+					controlExponent.Text = "";
 				}
 				else
 				{
 					controlExponent.Text = Exponent.ToString();
 				}
-			}
 
-			if (controlCoefficient != null && Coefficient != default(int))
-			{
-				if (Coefficient == 1 && Exponent != 0)
+				if (Coefficient == 0)
 				{
-					controlCoefficient.Text = " ";
+					controlCoefficient.Text = "0";
+					controlMultiplicationSymbol.Text = "";
+					controlIndeteminant.Text = "";
+					controlExponent.Text = "";
+				}
+				else if (Coefficient == 1 && Exponent != 0)
+				{
+					controlCoefficient.Text = "";
+					controlMultiplicationSymbol.Text = "";
 				}
 				else
 				{
@@ -297,15 +287,24 @@ namespace MathEquationControl
 
 			string termString = $"{controlCoefficient.Text}*x {controlExponent.Text}";
 
-			double calculatedWidth = MeasureString(termString).Width;
+			Size measuredStringSize = MeasureString(termString);
 
-			double padding_1 = controlFlowDocument.PagePadding.Left + controlFlowDocument.PagePadding.Right;
-			double padding_2 = controlRichTextBox.Padding.Left + controlRichTextBox.Padding.Right;
-			double margin = controlRichTextBox.Margin.Left + controlRichTextBox.Margin.Right;
+			double calculatedWidth = measuredStringSize.Width;
+			double calculatedHeight = measuredStringSize.Height;
 
-			double totalWidth = calculatedWidth + padding_1 + padding_2 + margin;
+			double widthPadding1 = controlBorder.Padding.Left + controlBorder.Padding.Right;
+			double widthPadding2 = controlTextBlock.Padding.Left + controlTextBlock.Padding.Right;
+			double widthMargin = controlTextBlock.Margin.Left + controlTextBlock.Margin.Right;
 
-			controlRichTextBox.Width = totalWidth;
+			double heightPadding1 = controlBorder.Padding.Top + controlBorder.Padding.Bottom;
+			double heightPadding2 = controlTextBlock.Padding.Top + controlTextBlock.Padding.Bottom;
+			double heightMargin = controlTextBlock.Margin.Top + controlTextBlock.Margin.Bottom;
+
+			double totalWidth = calculatedWidth + widthPadding1 + widthPadding2 + widthMargin;
+			double totalHeight = calculatedHeight + heightPadding1 + heightPadding2 + heightMargin;
+
+			controlTextBlock.Width = totalWidth;
+			controlTextBlock.Height = totalHeight * 2;
 		}
 
 		private Size MeasureString(string candidate)
@@ -314,14 +313,16 @@ namespace MathEquationControl
 				candidate,
 				CultureInfo.CurrentCulture,
 				FlowDirection.LeftToRight,
-				new Typeface(controlRichTextBox.FontFamily, controlRichTextBox.FontStyle, controlRichTextBox.FontWeight, controlRichTextBox.FontStretch),
-				controlRichTextBox.FontSize,
+				new Typeface(controlTextBlock.FontFamily, controlTextBlock.FontStyle, controlTextBlock.FontWeight, controlTextBlock.FontStretch),
+				controlTextBlock.FontSize,
 				Brushes.Black,
 				new NumberSubstitution(),
 				1);
 
 			return new Size(formattedText.Width, formattedText.Height);
 		}
+
+		#region Click and Drag
 
 		private bool _isDragging = false;
 		private Point _dragStartPosition = default(Point);
@@ -380,6 +381,8 @@ namespace MathEquationControl
 			Point topLeft = this.PointToScreen(this.TransformToVisual(this).Transform(new Point(0, 0)));
 			return new Rect(topLeft.X, topLeft.Y, this.ActualWidth, this.ActualHeight);
 		}
+
+		#endregion
 
 	}
 }
