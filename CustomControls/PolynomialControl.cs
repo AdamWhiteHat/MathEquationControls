@@ -113,6 +113,8 @@ namespace MathEquationControl
 
 		#endregion
 
+		#region Constructors
+
 		static PolynomialControl()
 		{
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(PolynomialControl), new FrameworkPropertyMetadata(typeof(PolynomialControl)));
@@ -123,6 +125,10 @@ namespace MathEquationControl
 			this.IsHitTestVisible = true;
 			this.Loaded += PolynomialControl_Loaded;
 		}
+
+		#endregion
+
+		#region Set Controls
 
 		public override void OnApplyTemplate()
 		{
@@ -179,6 +185,8 @@ namespace MathEquationControl
 				controlContentsPanel.Children.Add(termCtrl);
 			}
 		}
+
+		#endregion
 
 		#region Click and Drag
 

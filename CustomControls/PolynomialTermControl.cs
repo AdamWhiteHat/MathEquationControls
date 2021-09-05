@@ -73,6 +73,11 @@ namespace MathEquationControl
 			set => SetValue(ExponentProperty, value);
 		}
 
+		public Term GetPolynomialTerm()
+		{
+			return new Term(this.Coefficient, this.Exponent);
+		}
+
 		#endregion
 
 		#region Dependency Properties
@@ -203,10 +208,7 @@ namespace MathEquationControl
 
 		#endregion
 
-		public Term GetPolynomialTerm()
-		{
-			return new Term(this.Coefficient, this.Exponent);
-		}
+		#region Set Controls
 
 		public override void OnApplyTemplate()
 		{
@@ -321,6 +323,8 @@ namespace MathEquationControl
 
 			return new Size(formattedText.Width, formattedText.Height);
 		}
+
+		#endregion
 
 		#region Click and Drag
 
