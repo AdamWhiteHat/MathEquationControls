@@ -14,11 +14,13 @@
 
 		<Button Grid.Row="0" x:Name="btnAdd" Content="Add" Height="20" Width="40" Click="Add_Click" />
 
-		<WrapPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" >
+		<WrapPanel Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" >
 			<local:PolynomialControl x:Name="polynomialCtrl"
+									 DockToParent="True"
 									 Style="{DynamicResource PolynomialControlStyle}"
 									 PolynomialUpdated="polynomialCtrl_PolynomialUpdated" />
-			<TextBox x:Name="outputTextBox" Width="200" Height="300" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+			<TextBlock Width="30" />
+			<TextBox x:Name="outputTextBox" Width="200" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 		</WrapPanel>
 
 

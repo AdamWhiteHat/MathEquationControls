@@ -58,6 +58,12 @@ namespace MathEquationControl
 			set => SetValue(PolynomialProperty, value);
 		}
 
+		public bool DockToParent
+		{
+			get => (bool)GetValue(DockToParentProperty);
+			set => SetValue(DockToParentProperty, value);
+		}
+
 		#endregion
 
 		#region Dependency Properties
@@ -71,6 +77,8 @@ namespace MathEquationControl
 																					new PropertyChangedCallback(PolynomialControl.OnPolynomialChanged)
 																				)
 																	   );
+
+		public static readonly DependencyProperty DockToParentProperty = DependencyProperty.Register(nameof(DockToParent), typeof(bool), typeof(PolynomialControl));
 
 		#endregion
 
@@ -163,6 +171,16 @@ namespace MathEquationControl
 		private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
 		{
 			this.PolynomialChanged += PolynomialControl_PolynomialChanged;
+
+			if (DockToParent)
+			{
+				FrameworkElement parent = (FrameworkElement)WPFHelper.GetParent(this);
+
+				double parentHeight = parent.Height;
+				double parentActualHeight = parent.ActualHeight;
+
+				this.Height = parentActualHeight;
+			}
 		}
 
 		private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
@@ -198,7 +216,7 @@ namespace MathEquationControl
 
 				PolynomialTermControl termCtrl = new PolynomialTermControl(term);
 				termCtrl.Style = (Style)FindResource("PolynomialTermStyle");
-				termCtrl.Height = 300;
+				termCtrl.Height = this.Height;
 				termCtrl.TermUpdated += TermCtrl_TermUpdated;
 				controlContentsPanel.Children.Add(termCtrl);
 			}
@@ -305,30 +323,7 @@ namespace MathEquationControl
 			object element = InputHitTest(Mouse.GetPosition(this));
 			PolynomialTermControl result = null;
 
-			while (result == null && element != null)
-			{
-				if (element is PolynomialTermControl)
-				{
-					result = element as PolynomialTermControl;
-				}
-				else if (element is FrameworkContentElement)
-				{
-					element = ((FrameworkContentElement)element).Parent;
-				}
-				else if (element is FrameworkElement)
-				{
-					FrameworkElement frameworkElement = element as FrameworkElement;
-
-					if (frameworkElement.Parent != null)
-					{
-						element = frameworkElement.Parent;
-					}
-					else
-					{
-						element = frameworkElement.TemplatedParent;
-					}
-				}
-			}
+			result = WPFHelper.GetParentOfType<PolynomialTermControl>((DependencyObject)element);
 
 			return result;
 		}

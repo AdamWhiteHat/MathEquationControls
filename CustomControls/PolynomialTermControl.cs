@@ -302,22 +302,11 @@ namespace MathEquationControl
 
 			Size measuredStringSize = MeasureString(termString);
 
-			double calculatedWidth = measuredStringSize.Width;
-			double calculatedHeight = measuredStringSize.Height;
+			double measuredWidth = measuredStringSize.Width;
+			double measuredHeight = measuredStringSize.Height;
 
-			double widthPadding1 = controlBorder.Padding.Left + controlBorder.Padding.Right;
-			double widthPadding2 = controlTextBlock.Padding.Left + controlTextBlock.Padding.Right;
-			double widthMargin = controlTextBlock.Margin.Left + controlTextBlock.Margin.Right;
-
-			double heightPadding1 = controlBorder.Padding.Top + controlBorder.Padding.Bottom;
-			double heightPadding2 = controlTextBlock.Padding.Top + controlTextBlock.Padding.Bottom;
-			double heightMargin = controlTextBlock.Margin.Top + controlTextBlock.Margin.Bottom;
-
-			double totalWidth = calculatedWidth + widthPadding1 + widthPadding2 + widthMargin;
-			double totalHeight = calculatedHeight + heightPadding1 + heightPadding2 + heightMargin;
-
-			controlTextBlock.Width = totalWidth;
-			controlTextBlock.Height = totalHeight * 2;
+			controlTextBlock.Width = measuredWidth;
+			controlTextBlock.Height = measuredHeight * 2;
 		}
 
 		private Size MeasureString(string candidate)

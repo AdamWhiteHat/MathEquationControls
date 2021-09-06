@@ -35,5 +35,10 @@ namespace MathEquationControl
 		{
 			polynomialCtrl.Polynomial = "144*x^2 + 12*x^1 + 1*x^0";
 		}
+
+		private void polynomialCtrl_PolynomialUpdated(object sender, EventArgs e)
+		{
+			outputTextBox.AppendText("PolynomialUpdated!" + Environment.NewLine);
+		}
 	}
 }
