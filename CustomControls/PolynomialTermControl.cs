@@ -106,6 +106,8 @@ namespace MathEquationControl
 
 		#region Events
 
+		public event TermUpdatedEventHandler TermUpdated;
+
 		public event RoutedPropertyChangedEventHandler<int> CoefficientChanged
 		{
 			add { base.AddHandler(CoefficientChangedEvent, value); }
@@ -135,6 +137,13 @@ namespace MathEquationControl
 		#endregion
 
 		#region Raise Event Methods
+
+		protected virtual void OnTermUpdated(TermUpdatedEventArgs e)
+		{
+			TermUpdatedEventHandler handler = TermUpdated;
+			handler?.Invoke(this, e);
+		}
+
 
 		protected virtual void OnCoefficientChanged(int oldValue, int newValue)
 		{
@@ -240,11 +249,13 @@ namespace MathEquationControl
 		private void PolynomialTermControl_ExponentChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
 		{
 			SetControls();
+			OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
 		}
 
 		private void PolynomialTermControl_CoefficientChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
 		{
 			SetControls();
+			OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
 		}
 
 		private void SetControls()
@@ -327,65 +338,74 @@ namespace MathEquationControl
 		#endregion
 
 		#region Click and Drag
+		/*
+				private bool _isDragging = false;
 
-		private bool _isDragging = false;
-		private Point _dragStartPosition = default(Point);
-		private int _numericStartValue = 0;
+						private Point _dragStartPosition = default(Point);
+						private int _numericStartValue = 0;
 
-		private void PolynomialTermControl_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			Point pointerLocation = this.PointToScreen(Mouse.GetPosition(this));
 
-			Rect clientRect = GetClientRectangle();
+						private void PolynomialTermControl_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+						{
+							if (_isDragging == false)
+							{
+								Point pointerLocation = this.PointToScreen(Mouse.GetPosition(this));
 
-			if (pointerLocation.X >= clientRect.Left && pointerLocation.X <= clientRect.Right)
-			{
-				_dragStartPosition = pointerLocation;
-				_isDragging = true;
-				_numericStartValue = Coefficient;
-				e.Handled = true;
-			}
-		}
+								Rect clientRect = GetClientRectangle();
+								if (pointerLocation.X >= clientRect.Left && pointerLocation.X <= clientRect.Right)
+								{
+									_dragStartPosition = pointerLocation;
+									_isDragging = true;
+									_numericStartValue = Coefficient;
+									e.Handled = true;
+								}
+							}
+						}
 
-		private void PolynomialTermControl_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-		{
-			if (_isDragging == true)
-			{
-				_isDragging = false;
-				e.Handled = true;
-			}
-		}
-		private void PolynomialTermControl_MouseLeave(object sender, MouseEventArgs e)
-		{
-			if (_isDragging == true)
-			{
-				_isDragging = false;
-				e.Handled = true;
-			}
-		}
+						private void PolynomialTermControl_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+						{
+							if (_isDragging == true)
+							{
+								_isDragging = false;
+								_dragStartPosition = default(Point);
+								_numericStartValue = 0;
+								e.Handled = true;
+							}
+						}
 
-		private void PolynomialTermControl_PreviewMouseMove(object sender, MouseEventArgs e)
-		{
-			if (_isDragging)
-			{
-				Point currentPosition = this.PointToScreen(Mouse.GetPosition(this));
+						private void PolynomialTermControl_MouseLeave(object sender, MouseEventArgs e)
+						{
+							if (_isDragging == true)
+							{
+								_isDragging = false;
+								_dragStartPosition = default(Point);
+								_numericStartValue = 0;
+								e.Handled = true;
+							}
+						}
 
-				int deltaY = -(int)Math.Round(currentPosition.Y - _dragStartPosition.Y);
+						private void PolynomialTermControl_PreviewMouseMove(object sender, MouseEventArgs e)
+						{
+							if (_isDragging == true)
+							{
+								Point currentPosition = this.PointToScreen(Mouse.GetPosition(this));
 
-				int newCoeff = _numericStartValue + deltaY;
+								int deltaY = -(int)Math.Round(currentPosition.Y - _dragStartPosition.Y);
 
-				Coefficient = newCoeff;
+								int newCoeff = _numericStartValue + deltaY;
 
-				e.Handled = true;
-			}
-		}
+								Coefficient = newCoeff;
 
-		public Rect GetClientRectangle()
-		{
-			Point topLeft = this.PointToScreen(this.TransformToVisual(this).Transform(new Point(0, 0)));
-			return new Rect(topLeft.X, topLeft.Y, this.ActualWidth, this.ActualHeight);
-		}
+								e.Handled = true;
+							}
+						}
 
+						public Rect GetClientRectangle()
+						{
+							Point topLeft = this.PointToScreen(this.TransformToVisual(this).Transform(new Point(0, 0)));
+							return new Rect(topLeft.X, topLeft.Y, this.ActualWidth, this.ActualHeight);
+						}
+		*/
 		#endregion
 
 	}

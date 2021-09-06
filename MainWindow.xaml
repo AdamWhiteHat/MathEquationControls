@@ -16,7 +16,9 @@
 
 		<WrapPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" >
 			<local:PolynomialControl x:Name="polynomialCtrl"
-									 Style="{DynamicResource PolynomialControlStyle}" />
+									 Style="{DynamicResource PolynomialControlStyle}"
+									 PolynomialUpdated="polynomialCtrl_PolynomialUpdated" />
+			<TextBox x:Name="outputTextBox" Width="200" Height="300" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 		</WrapPanel>
 
 
