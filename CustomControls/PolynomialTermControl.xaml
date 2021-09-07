@@ -21,7 +21,7 @@
 								   VerticalAlignment="Center"
 								   HorizontalAlignment="Center"
 								   
-								   ><Run Name="PART_Coefficient" Text="0" /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="x" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
+								   ><Run Name="PART_Coefficient" Text="0" /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="X" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
 
 					</Border>
 				</ControlTemplate>

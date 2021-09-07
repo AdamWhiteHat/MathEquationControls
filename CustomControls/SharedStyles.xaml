@@ -20,12 +20,12 @@
 
 	<Style x:Key="PolynomialControlStyle" TargetType="local:PolynomialControl" BasedOn="{StaticResource  ControlStyle}">
 		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="BorderBrush" Value="Green" />
+		<!--Setter Property="BorderBrush" Value="Green" /-->
 	</Style>
 
 	<Style x:Key="PolynomialTermStyle" TargetType="local:PolynomialTermControl"  BasedOn="{StaticResource  ControlStyle}">
 		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="BorderBrush" Value="Blue" />
+		<!--Setter Property="BorderBrush" Value="Blue" /-->
 
 		<Setter Property="Cursor" Value="SizeNS" />
 		<Setter Property="ForceCursor" Value="True" />
@@ -47,6 +47,11 @@
 	<Style x:Key="OperatorStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
 		<Setter Property="Cursor" Value="Arrow" />
 		<Setter Property="ForceCursor" Value="True" />
+	</Style>
+
+	<Style x:Key="TextControlStyle" TargetType="Control" BasedOn="{StaticResource  FrameworkElementStyle}">
+		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
+		<Setter Property="FontSize" Value="30" />
 	</Style>
 
 	<Style TargetType="{x:Type Run}">

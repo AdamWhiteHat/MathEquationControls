@@ -5,24 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MathEquationControl"
         mc:Ignorable="d"
+		ContentRendered="Window_ContentRendered"
         Title="MainWindow" Height="450" Width="800">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<Button Grid.Row="0" x:Name="btnAdd" Content="Add" Height="20" Width="40" Click="Add_Click" />
+		<local:PolynomialControl Grid.Row="0"
+								 x:Name="dividendPolynomialCtrl"
+								 DockToParent="True"
+								 Style="{DynamicResource PolynomialControlStyle}" />
 
-		<WrapPanel Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" >
-			<local:PolynomialControl x:Name="polynomialCtrl"
+		<WrapPanel Grid.Row="1" HorizontalAlignment="Center">
+			<Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
+			<local:PolynomialControl x:Name="modulusPolynomialCtrl"
 									 DockToParent="True"
-									 Style="{DynamicResource PolynomialControlStyle}"
-									 PolynomialUpdated="polynomialCtrl_PolynomialUpdated" />
-			<TextBlock Width="30" VerticalAlignment="Stretch" />
-			<TextBox x:Name="outputTextBox" Width="200" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+									 Style="{DynamicResource PolynomialControlStyle}" />
+			<Label Width="30" />
+			<Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
+			<TextBox x:Name="modulusInteger" Text="2" Style="{DynamicResource TextControlStyle}" TextChanged="modulusInteger_TextChanged" />
+
 		</WrapPanel>
 
+		<WrapPanel Grid.Row="2" HorizontalAlignment="Center">
+			<TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
+			<TextBlock x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" />
+		</WrapPanel>
 
 	</Grid>
 </Window>

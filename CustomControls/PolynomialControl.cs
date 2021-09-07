@@ -85,8 +85,6 @@ namespace MathEquationControl
 
 		#region Events
 
-		public event EventHandler PolynomialUpdated;
-
 		public event RoutedPropertyChangedEventHandler<string> PolynomialChanged
 		{
 			add { base.AddHandler(PolynomialChangedEvent, value); }
@@ -104,12 +102,6 @@ namespace MathEquationControl
 		#endregion
 
 		#region Raise Event Methods
-
-		protected virtual void OnPolynomialUpdated(EventArgs e)
-		{
-			EventHandler handler = PolynomialUpdated;
-			handler?.Invoke(this, e);
-		}
 
 		protected virtual void OnPolynomialChanged(string oldValue, string newValue)
 		{
@@ -135,6 +127,7 @@ namespace MathEquationControl
 
 		private Border controlBorder;
 		private StackPanel controlContentsPanel;
+		private bool selfUpdate = false;
 
 		#endregion
 
@@ -164,8 +157,6 @@ namespace MathEquationControl
 
 			controlBorder.PreviewMouseLeftButtonDown += PolynomialControl_PreviewMouseLeftButtonDown;
 			controlBorder.PreviewMouseLeftButtonUp += PolynomialControl_PreviewMouseLeftButtonUp;
-			//controlBorder.PreviewMouseMove += PolynomialControl_PreviewMouseMove;
-			//controlBorder.MouseLeave += PolynomialControl_MouseLeave;
 		}
 
 		private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
@@ -187,11 +178,16 @@ namespace MathEquationControl
 			_draggingTimer.Tick += DraggingTimer_Tick;
 		}
 
-
-
 		private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
 		{
-			BuidPolynomialTermControls(e.NewValue);
+			if (selfUpdate)
+			{
+				selfUpdate = false;
+			}
+			else
+			{
+				BuidPolynomialTermControls(e.NewValue);
+			}
 		}
 
 		private void BuidPolynomialTermControls(string polynomial)
@@ -230,10 +226,20 @@ namespace MathEquationControl
 
 		private void TermCtrl_TermUpdated(object sender, TermUpdatedEventArgs e)
 		{
-			if (_isDragging == false)
-			{
-				OnPolynomialUpdated(EventArgs.Empty);
-			}
+			//if (_isDragging == false)
+			//{
+			UpdatePolynomialFromTerms();
+			//}
+		}
+
+		private void UpdatePolynomialFromTerms()
+		{
+			var terms = controlContentsPanel.Children.OfType<PolynomialTermControl>().Select(ctrl => ctrl.GetPolynomialTerm()).ToArray();
+			ExtendedArithmetic.Polynomial poly = new ExtendedArithmetic.Polynomial(terms);
+			string newPoly = poly.ToString();
+
+			selfUpdate = true;
+			this.Polynomial = newPoly;
 		}
 
 		#endregion
@@ -304,7 +310,7 @@ namespace MathEquationControl
 
 				if (isUpdateRequired)
 				{
-					OnPolynomialUpdated(EventArgs.Empty);
+					UpdatePolynomialFromTerms();
 				}
 			}
 		}

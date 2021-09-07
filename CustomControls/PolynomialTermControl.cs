@@ -177,7 +177,7 @@ namespace MathEquationControl
 
 		#region Template Constants & Private Controls
 
-		private static string IndeteminantSymbolValue = "x";
+		private static string IndeteminantSymbolValue = "X";
 		private static string MultiplicationSymbolValue = "*";
 
 		private const string ElementBorder = "PART_Border";

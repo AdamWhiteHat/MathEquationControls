@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ExtendedArithmetic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,26 +22,57 @@ namespace MathEquationControl
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private Polynomial dividendPoly = null;
+		private Polynomial modPoly = null;
+		private Polynomial quotientPoly = null;
+
 		public MainWindow()
 		{
 			InitializeComponent();
-			this.Loaded += MainWindow_Loaded;
 		}
 
-		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+		private void Window_ContentRendered(object sender, EventArgs e)
 		{
+			dividendPolynomialCtrl.Polynomial = "36*X^3 + 144*X^2 + 12*X + 13";
+			modulusPolynomialCtrl.Polynomial = "X^2 - 1";
 
+			dividendPoly = Polynomial.Parse(dividendPolynomialCtrl.Polynomial);
+			modPoly = Polynomial.Parse(modulusPolynomialCtrl.Polynomial);
+			Calculate();
+
+			dividendPolynomialCtrl.PolynomialChanged += dividendPolynomialCtrl_PolynomialChanged;
+			modulusPolynomialCtrl.PolynomialChanged += modulusPolynomialCtrl_PolynomialChanged;
 		}
 
-		private void Add_Click(object sender, RoutedEventArgs e)
+		private void dividendPolynomialCtrl_PolynomialChanged(object sender, EventArgs e)
 		{
-			polynomialCtrl.Polynomial = "144*x^2 + 12*x^1 + 1*x^0";
+			dividendPoly = Polynomial.Parse(dividendPolynomialCtrl.Polynomial);
+			Calculate();
 		}
 
-		private void polynomialCtrl_PolynomialUpdated(object sender, EventArgs e)
+		private void modulusPolynomialCtrl_PolynomialChanged(object sender, EventArgs e)
 		{
-			outputTextBox.AppendText("PolynomialUpdated!" + Environment.NewLine);
+			modPoly = Polynomial.Parse(modulusPolynomialCtrl.Polynomial);
+			Calculate();
 		}
 
+		private void modulusInteger_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			Calculate();
+		}
+
+		private void Calculate()
+		{
+			if (dividendPoly != null && modPoly != null && !string.IsNullOrWhiteSpace(modulusInteger.Text))
+			{
+				BigInteger mod = BigInteger.Parse(modulusInteger.Text);
+
+				if (mod != 0)
+				{
+					quotientPoly = Polynomial.Field.ModMod(dividendPoly, modPoly, mod);
+					quotient.Text = quotientPoly.ToString();
+				}
+			}
+		}
 	}
 }
