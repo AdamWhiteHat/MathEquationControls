@@ -8,6 +8,24 @@ namespace MathEquationControl
 {
 	public static class WPFHelper
 	{
+		public static Rect GetClientRectangle(FrameworkElement element)
+		{
+			Point topLeft = element.PointToScreen(element.TransformToVisual(element).Transform(new Point(0, 0)));
+			return new Rect(topLeft.X, topLeft.Y, element.ActualWidth, element.ActualHeight);
+		}
+
+		public static bool IsPointInRect(Point point, Rect rect)
+		{
+			if (point.X >= rect.Left && point.X <= rect.Right)
+			{
+				if (point.Y >= rect.Top && point.Y <= rect.Bottom)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public static T GetParentOfType<T>(DependencyObject element) where T : DependencyObject
 		{
 			return GetParents(element).OfType<T>().FirstOrDefault();

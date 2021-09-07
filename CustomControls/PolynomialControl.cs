@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -110,7 +111,6 @@ namespace MathEquationControl
 			handler?.Invoke(this, e);
 		}
 
-
 		protected virtual void OnPolynomialChanged(string oldValue, string newValue)
 		{
 			RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
@@ -164,8 +164,8 @@ namespace MathEquationControl
 
 			controlBorder.PreviewMouseLeftButtonDown += PolynomialControl_PreviewMouseLeftButtonDown;
 			controlBorder.PreviewMouseLeftButtonUp += PolynomialControl_PreviewMouseLeftButtonUp;
-			controlBorder.PreviewMouseMove += PolynomialControl_PreviewMouseMove;
-			controlBorder.MouseLeave += PolynomialControl_MouseLeave;
+			//controlBorder.PreviewMouseMove += PolynomialControl_PreviewMouseMove;
+			//controlBorder.MouseLeave += PolynomialControl_MouseLeave;
 		}
 
 		private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
@@ -181,7 +181,13 @@ namespace MathEquationControl
 
 				this.Height = parentActualHeight;
 			}
+
+			_draggingTimer = new DispatcherTimer();
+			_draggingTimer.Interval = TimeSpan.FromMilliseconds(10);
+			_draggingTimer.Tick += DraggingTimer_Tick;
 		}
+
+
 
 		private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
 		{
@@ -239,20 +245,26 @@ namespace MathEquationControl
 		private int _numericStartValue = 0;
 		private PolynomialTermControl _polyTermControl = null;
 
+		DispatcherTimer _draggingTimer = null;
+		DragPosition _dragPosition = DragPosition.Neither;
+
 		private void PolynomialControl_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (_isDragging == false)
 			{
-				Point pointerLocation = this.PointToScreen(Mouse.GetPosition(this));
-
-				PolynomialTermControl polyTermControl = PolynomialTermHitTest();
-				if (polyTermControl != null)
+				if (this.IsMouseOver)
 				{
-					_polyTermControl = polyTermControl;
-					_dragStartPosition = pointerLocation;
-					_numericStartValue = _polyTermControl.Coefficient;
-					_isDragging = true;
-					e.Handled = true;
+					PolynomialTermControl polyTermControl = PolynomialTermHitTest();
+					if (polyTermControl != null)
+					{
+						_dragStartPosition = GetCurrentPointerPosition();
+						_numericStartValue = polyTermControl.Coefficient;
+						_polyTermControl = polyTermControl;
+						_polyTermControl.PreviewMouseMove += PolynomialTermControl_PreviewMouseMove;
+						_polyTermControl.MouseLeave += PolynomialTermControl_MouseLeave;
+						_isDragging = true;
+						e.Handled = true;
+					}
 				}
 			}
 		}
@@ -262,7 +274,7 @@ namespace MathEquationControl
 			StopDragging(e);
 		}
 
-		private void PolynomialControl_MouseLeave(object sender, MouseEventArgs e)
+		private void PolynomialTermControl_MouseLeave(object sender, MouseEventArgs e)
 		{
 			StopDragging(e);
 		}
@@ -271,6 +283,10 @@ namespace MathEquationControl
 		{
 			if (_isDragging == true)
 			{
+				_draggingTimer.Stop();
+				_isDragging = false;
+				e.Handled = true;
+
 				bool isUpdateRequired = false;
 
 				int deltaY = CalculateDragYDelta();
@@ -279,11 +295,12 @@ namespace MathEquationControl
 					isUpdateRequired = true;
 				}
 
-				_isDragging = false;
 				_dragStartPosition = default(Point);
 				_numericStartValue = 0;
+				_dragPosition = DragPosition.Neither;
+				_polyTermControl.PreviewMouseMove -= PolynomialTermControl_PreviewMouseMove;
+				_polyTermControl.MouseLeave -= PolynomialTermControl_MouseLeave;
 				_polyTermControl = null;
-				e.Handled = true;
 
 				if (isUpdateRequired)
 				{
@@ -292,55 +309,150 @@ namespace MathEquationControl
 			}
 		}
 
-		private void PolynomialControl_PreviewMouseMove(object sender, MouseEventArgs e)
+		private void PolynomialTermControl_PreviewMouseMove(object sender, MouseEventArgs e)
 		{
 			if (_isDragging == true)
 			{
-				Point currentPosition = this.PointToScreen(Mouse.GetPosition(this));
-
-				PolynomialTermControl polyTermControl = PolynomialTermHitTest();
-				if (polyTermControl != null)
+				if (this.IsMouseOver)
 				{
 					int deltaY = CalculateDragYDelta();
 
-					int newCoeffValue = _numericStartValue + deltaY;
+					if (DockToParent == false)
+					{
+						int sign = Math.Sign(deltaY);
 
-					_polyTermControl.Coefficient = newCoeffValue;
+						if (sign == 1)
+						{
+							_dragPosition = DragPosition.Top;
+						}
+						else if (sign == -1)
+						{
+							_dragPosition = DragPosition.Bottom;
+						}
+						else if (sign == 0)
+						{
+							_dragPosition = DragPosition.Neither;
+						}
+
+						if (!_draggingTimer.IsEnabled && _dragPosition != DragPosition.Neither)
+						{
+							_draggingTimer.Start();
+						}
+						else if (_draggingTimer.IsEnabled && _dragPosition == DragPosition.Neither)
+						{
+							_draggingTimer.Stop();
+						}
+					}
+					else
+					{
+						_dragPosition = GetDragPosition();
+
+						if (_dragPosition == DragPosition.Neither)
+						{
+							if (_draggingTimer.IsEnabled)
+							{
+								_draggingTimer.Stop();
+							}
+
+							int newCoeffValue = _numericStartValue + deltaY;
+							_polyTermControl.Coefficient = newCoeffValue;
+						}
+						else
+						{
+							if (_draggingTimer.IsEnabled == false)
+							{
+								_draggingTimer.Start();
+							}
+						}
+					}
 
 					e.Handled = true;
 				}
 			}
 		}
+		private void DraggingTimer_Tick(object sender, EventArgs e)
+		{
+			if (_isDragging == false)
+			{
+				_draggingTimer.Stop();
+				return;
+			}
+			if (this.IsMouseOver == false)
+			{
+				_draggingTimer.Stop();
+				return;
+			}
+
+			DragPosition position = GetDragPosition();
+			if (position == DragPosition.Top)
+			{
+				_polyTermControl.Coefficient += 1;
+				_numericStartValue += 1;
+			}
+			else if (position == DragPosition.Bottom)
+			{
+				_polyTermControl.Coefficient -= 1;
+				_numericStartValue -= 1;
+			}
+		}
 
 		private int CalculateDragYDelta()
 		{
-			Point currentPosition = this.PointToScreen(Mouse.GetPosition(this));
-			return -(int)Math.Round(currentPosition.Y - _dragStartPosition.Y);
+			Point currentMousePosition = GetCurrentPointerPosition();
+			return -(int)Math.Round(currentMousePosition.Y - _dragStartPosition.Y);
+		}
+
+		private Point GetCurrentPointerPosition()
+		{
+			return this.PointToScreen(Mouse.GetPosition(this));
+		}
+
+		private DragPosition GetDragPosition()
+		{
+			Point currentPointerPosition = GetCurrentPointerPosition();
+
+			Rect ctrlRect = WPFHelper.GetClientRectangle(_polyTermControl);
+
+			double oneFifth = _polyTermControl.ActualHeight / 5;
+			double marginSize = Math.Min(oneFifth, 20);
+
+			double topStart = ctrlRect.Top;
+			double topStop = ctrlRect.Top + marginSize;
+
+			if (currentPointerPosition.Y >= topStart && currentPointerPosition.Y <= topStop)
+			{
+				return DragPosition.Top;
+			}
+
+			double bottomStart = ctrlRect.Bottom - marginSize;
+			double bottomStop = ctrlRect.Bottom;
+
+			if (currentPointerPosition.Y >= bottomStart && currentPointerPosition.Y <= bottomStop)
+			{
+				return DragPosition.Bottom;
+			}
+
+			return DragPosition.Neither;
 		}
 
 		private PolynomialTermControl PolynomialTermHitTest()
 		{
 			object element = InputHitTest(Mouse.GetPosition(this));
-			PolynomialTermControl result = null;
 
+			PolynomialTermControl result = null;
 			result = WPFHelper.GetParentOfType<PolynomialTermControl>((DependencyObject)element);
 
 			return result;
 		}
 
-		private bool IsPointInRect(Point point, Rect rect)
-		{
-			if (point.X >= rect.Left && point.X <= rect.Right)
-			{
-				if (point.Y >= rect.Top && point.Y <= rect.Bottom)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
 		#endregion
 
+		public enum DragPosition
+		{
+			Neither,
+			Top,
+			Bottom
+		}
 	}
+
 }

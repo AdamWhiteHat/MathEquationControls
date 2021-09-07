@@ -40,5 +40,6 @@ namespace MathEquationControl
 		{
 			outputTextBox.AppendText("PolynomialUpdated!" + Environment.NewLine);
 		}
+
 	}
 }

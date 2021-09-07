@@ -19,7 +19,7 @@
 									 DockToParent="True"
 									 Style="{DynamicResource PolynomialControlStyle}"
 									 PolynomialUpdated="polynomialCtrl_PolynomialUpdated" />
-			<TextBlock Width="30" />
+			<TextBlock Width="30" VerticalAlignment="Stretch" />
 			<TextBox x:Name="outputTextBox" Width="200" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 		</WrapPanel>
 
