@@ -44,6 +44,16 @@
 		<Setter Property="FontSize" Value="30" />
 	</Style>
 
+	<Style x:Key="RichTextBoxStyle" TargetType="RichTextBox" BasedOn="{StaticResource  FrameworkElementStyle}">
+		<Setter Property="Background" Value="Transparent" />
+
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+
+		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
+		<Setter Property="FontSize" Value="30" />
+	</Style>
+
 	<Style x:Key="OperatorStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
 		<Setter Property="Cursor" Value="Arrow" />
 		<Setter Property="ForceCursor" Value="True" />
@@ -52,6 +62,8 @@
 	<Style x:Key="TextControlStyle" TargetType="Control" BasedOn="{StaticResource  FrameworkElementStyle}">
 		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
 		<Setter Property="FontSize" Value="30" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="MinWidth" Value="30" />
 	</Style>
 
 	<Style TargetType="{x:Type Run}">

@@ -4,20 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MathEquationControl"
+		xmlns:converters="clr-namespace:MathEquationControl.ValueConverters"
         mc:Ignorable="d"
 		ContentRendered="Window_ContentRendered"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" 
+		Height="800" Width="800">
+	<Window.Resources>
+		<converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
+	</Window.Resources>
+
 	<Grid>
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<local:PolynomialControl Grid.Row="0"
+		<Border BorderBrush="Black" BorderThickness="1">
+			<local:PolynomialControl Grid.Row="0"
 								 x:Name="dividendPolynomialCtrl"
 								 DockToParent="True"
 								 Style="{DynamicResource PolynomialControlStyle}" />
+		</Border>
 
 		<WrapPanel Grid.Row="1" HorizontalAlignment="Center">
 			<Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
@@ -26,7 +35,10 @@
 									 Style="{DynamicResource PolynomialControlStyle}" />
 			<Label Width="30" />
 			<Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
-			<TextBox x:Name="modulusInteger" Text="2" Style="{DynamicResource TextControlStyle}" TextChanged="modulusInteger_TextChanged" />
+			<local:NumberBox x:Name="modulusInteger" 
+							 Value="{Binding Path=Modulus, Mode=TwoWay, Converter={StaticResource String2BigIntegerConverter}}"
+							 Style="{DynamicResource TextControlStyle}" 
+							 ValueChanged="modulusInteger_ValueChanged" />
 
 		</WrapPanel>
 

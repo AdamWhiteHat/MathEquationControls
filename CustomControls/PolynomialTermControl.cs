@@ -1,20 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Numerics;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using System.Globalization;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Collections.Generic;
 using System.Windows.Shapes;
+using System.Windows.Navigation;
+using System.Windows.Media.Imaging;
+using System.Windows.Interactivity;
+
 using ExtendedArithmetic;
+using MathEquationControl.Behaviors;
 
 namespace MathEquationControl
 {
@@ -48,10 +51,6 @@ namespace MathEquationControl
 	///
 	/// </summary>
 	[TemplatePart(Name = PolynomialTermControl.ElementBorder, Type = typeof(Border))]
-	//[TemplatePart(Name = PolynomialTermControl.ElementRichTextBox, Type = typeof(RichTextBox))]
-	//[TemplatePart(Name = PolynomialTermControl.ElementFlowDocument, Type = typeof(FlowDocument))]
-	//[TemplatePart(Name = PolynomialTermControl.ElementSection, Type = typeof(Section))]
-	//[TemplatePart(Name = PolynomialTermControl.ElementParagraph, Type = typeof(Paragraph))]
 	[TemplatePart(Name = PolynomialTermControl.ElementTextBlock, Type = typeof(TextBlock))]
 	[TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Run))]
 	[TemplatePart(Name = PolynomialTermControl.ElementMultiplicationSymbol, Type = typeof(Run))]
@@ -61,9 +60,9 @@ namespace MathEquationControl
 	{
 		#region Public Properties
 
-		public int Coefficient
+		public BigInteger Coefficient
 		{
-			get => (int)GetValue(CoefficientProperty);
+			get => (BigInteger)GetValue(CoefficientProperty);
 			set => SetValue(CoefficientProperty, value);
 		}
 
@@ -84,10 +83,10 @@ namespace MathEquationControl
 
 		public static readonly DependencyProperty CoefficientProperty = DependencyProperty.Register(
 																				nameof(Coefficient),
-																				typeof(int),
+																				typeof(BigInteger),
 																				typeof(PolynomialTermControl),
 																				new PropertyMetadata(
-																					default(int),
+																					default(BigInteger),
 																					new PropertyChangedCallback(PolynomialTermControl.OnCoefficientChanged)
 																				)
 																	   );
@@ -108,7 +107,7 @@ namespace MathEquationControl
 
 		public event TermUpdatedEventHandler TermUpdated;
 
-		public event RoutedPropertyChangedEventHandler<int> CoefficientChanged
+		public event RoutedPropertyChangedEventHandler<BigInteger> CoefficientChanged
 		{
 			add { base.AddHandler(CoefficientChangedEvent, value); }
 			remove { base.RemoveHandler(CoefficientChangedEvent, value); }
@@ -125,7 +124,7 @@ namespace MathEquationControl
 		public static readonly RoutedEvent CoefficientChangedEvent = EventManager.RegisterRoutedEvent(
 																			nameof(CoefficientChanged),
 																			RoutingStrategy.Bubble,
-																			typeof(RoutedPropertyChangedEventHandler<int>),
+																			typeof(RoutedPropertyChangedEventHandler<BigInteger>),
 																			typeof(PolynomialTermControl));
 
 		public static readonly RoutedEvent ExponentChangedEvent = EventManager.RegisterRoutedEvent(
@@ -145,9 +144,9 @@ namespace MathEquationControl
 		}
 
 
-		protected virtual void OnCoefficientChanged(int oldValue, int newValue)
+		protected virtual void OnCoefficientChanged(BigInteger oldValue, BigInteger newValue)
 		{
-			RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
+			RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
 			e.RoutedEvent = CoefficientChangedEvent;
 			base.RaiseEvent(e);
 		}
@@ -155,7 +154,7 @@ namespace MathEquationControl
 		private static void OnCoefficientChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			PolynomialTermControl element = (PolynomialTermControl)d;
-			element.OnCoefficientChanged((int)e.OldValue, (int)e.NewValue);
+			element.OnCoefficientChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
 		}
 
 		protected virtual void OnExponentChanged(int oldValue, int newValue)
@@ -187,11 +186,12 @@ namespace MathEquationControl
 		private const string ElementIndeteminant = "PART_Indeteminant";
 		private const string ElementExponent = "PART_Exponent";
 
-		private Border controlBorder;
-		private TextBlock controlTextBlock;
-		private Run controlCoefficient;
+		private MouseWheelAdjustValueBehavior behavior;
 		private Run controlMultiplicationSymbol;
+		private RichTextBox controlTextBlock;
+		private Run controlCoefficient;
 		private Run controlIndeteminant;
+		private Border controlBorder;
 		private Run controlExponent;
 
 		#endregion
@@ -206,12 +206,13 @@ namespace MathEquationControl
 		public PolynomialTermControl()
 		{
 			this.Loaded += PolynomialTermControl_Loaded;
+			this.DataContext = this;
 		}
 
 		public PolynomialTermControl(Term polynomalTerm)
 			: this()
 		{
-			this.Coefficient = (int)polynomalTerm.CoEfficient;
+			this.Coefficient = polynomalTerm.CoEfficient;
 			this.Exponent = polynomalTerm.Exponent;
 		}
 
@@ -224,12 +225,12 @@ namespace MathEquationControl
 			base.OnApplyTemplate();
 
 			controlBorder = GetTemplateChild(ElementBorder) as Border;
-			controlTextBlock = GetTemplateChild(ElementTextBlock) as TextBlock;
+			controlTextBlock = GetTemplateChild(ElementTextBlock) as RichTextBox;
 			controlIndeteminant = GetTemplateChild(ElementIndeteminant) as Run;
 			controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as Run;
 
 			controlCoefficient = GetTemplateChild(ElementCoefficient) as Run;
-			if (controlCoefficient != null)
+			if(controlCoefficient != null)
 			{
 				CoefficientChanged += PolynomialTermControl_CoefficientChanged;
 			}
@@ -239,6 +240,9 @@ namespace MathEquationControl
 			{
 				ExponentChanged += PolynomialTermControl_ExponentChanged;
 			}
+
+			behavior = new MouseWheelAdjustValueBehavior(CoefficientProperty);
+			Interaction.GetBehaviors(this).Add(behavior);
 		}
 
 		private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
@@ -246,13 +250,13 @@ namespace MathEquationControl
 			SetControls();
 		}
 
-		private void PolynomialTermControl_ExponentChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
+		private void PolynomialTermControl_CoefficientChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
 		{
 			SetControls();
 			OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
 		}
 
-		private void PolynomialTermControl_CoefficientChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
+		private void PolynomialTermControl_ExponentChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
 		{
 			SetControls();
 			OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
@@ -298,25 +302,10 @@ namespace MathEquationControl
 				}
 			}
 
-			string termString = $"{controlCoefficient.Text}*x {controlExponent.Text}";
+			string termString = $"{controlCoefficient.Text}*X^{controlExponent.Text}";
 
-			Size measuredStringSize = MeasureString(termString);
+			Size measuredStringSize = WPFHelper.MeasureString(termString, this, controlTextBlock);
 			controlTextBlock.Width = measuredStringSize.Width;
-		}
-
-		private Size MeasureString(string candidate)
-		{
-			var formattedText = new FormattedText(
-				candidate,
-				CultureInfo.CurrentCulture,
-				FlowDirection.LeftToRight,
-				new Typeface(controlTextBlock.FontFamily, controlTextBlock.FontStyle, controlTextBlock.FontWeight, controlTextBlock.FontStretch),
-				controlTextBlock.FontSize,
-				Brushes.Black,
-				new NumberSubstitution(),
-				1);
-
-			return new Size(formattedText.Width, formattedText.Height);
 		}
 
 		#endregion

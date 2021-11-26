@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Numerics;
 
 namespace MathEquationControl
 {
@@ -248,7 +249,7 @@ namespace MathEquationControl
 
 		private bool _isDragging = false;
 		private Point _dragStartPosition = default(Point);
-		private int _numericStartValue = 0;
+		private BigInteger _numericStartValue = 0;
 		private PolynomialTermControl _polyTermControl = null;
 
 		DispatcherTimer _draggingTimer = null;
@@ -302,7 +303,7 @@ namespace MathEquationControl
 				}
 
 				_dragStartPosition = default(Point);
-				_numericStartValue = 0;
+				_numericStartValue = BigInteger.Zero;
 				_dragPosition = DragPosition.Neither;
 				_polyTermControl.PreviewMouseMove -= PolynomialTermControl_PreviewMouseMove;
 				_polyTermControl.MouseLeave -= PolynomialTermControl_MouseLeave;
@@ -360,7 +361,7 @@ namespace MathEquationControl
 								_draggingTimer.Stop();
 							}
 
-							int newCoeffValue = _numericStartValue + deltaY;
+							BigInteger newCoeffValue = _numericStartValue + (BigInteger)deltaY;
 							_polyTermControl.Coefficient = newCoeffValue;
 						}
 						else
@@ -393,12 +394,12 @@ namespace MathEquationControl
 			if (position == DragPosition.Top)
 			{
 				_polyTermControl.Coefficient += 1;
-				_numericStartValue += 1;
+				_numericStartValue += BigInteger.One;
 			}
 			else if (position == DragPosition.Bottom)
 			{
 				_polyTermControl.Coefficient -= 1;
-				_numericStartValue -= 1;
+				_numericStartValue -= BigInteger.One;
 			}
 		}
 

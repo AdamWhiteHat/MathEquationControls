@@ -6,6 +6,7 @@
 		<ResourceDictionary Source="/MathEquationControl;component/CustomControls/Fraction.xaml"/>
 		<ResourceDictionary Source="/MathEquationControl;component/CustomControls/PolynomialTermControl.xaml"/>
 		<ResourceDictionary Source="/MathEquationControl;component/CustomControls/PolynomialControl.xaml"/>
+		<ResourceDictionary Source="/MathEquationControl;component/CustomControls/NumberBox.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

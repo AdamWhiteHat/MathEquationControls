@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using System.Globalization;
+using System.Windows.Controls;
 
 namespace MathEquationControl
 {
@@ -117,5 +119,41 @@ namespace MathEquationControl
 			}
 		}
 
+		public static Size MeasureString(string candidate, Visual visual, Control textBox)
+		{
+			DpiScale dpiScale = VisualTreeHelper.GetDpi(visual);
+
+			var formattedText = new FormattedText(
+				candidate,
+				CultureInfo.CurrentCulture,
+				FlowDirection.LeftToRight,
+				new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch),
+				textBox.FontSize,
+				Brushes.Black,
+				new NumberSubstitution(),
+				dpiScale.PixelsPerDip);
+
+			formattedText.TextAlignment = TextAlignment.Center;
+			formattedText.Trimming = TextTrimming.None;
+
+			var textBlock = new TextBlock
+			{
+				Text = candidate,
+				FontFamily = textBox.FontFamily,
+				FontSize = textBox.FontSize,
+				FontStyle = textBox.FontStyle,
+				FontWeight = textBox.FontWeight,
+				FontStretch = textBox.FontStretch,
+				TextWrapping = TextWrapping.NoWrap,
+				TextAlignment = TextAlignment.Center,
+				TextTrimming = TextTrimming.None,
+			};
+
+			// auto sized
+			textBlock.Measure(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+			textBlock.Arrange(new Rect(textBlock.DesiredSize));
+
+			return new Size(formattedText.Width + textBox.Padding.Left + textBox.Padding.Right, formattedText.Height);
+		}
 	}
 }
