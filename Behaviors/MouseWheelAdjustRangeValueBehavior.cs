@@ -12,11 +12,11 @@ using MathEquationControl.Primitives;
 
 namespace MathEquationControl.Behaviors
 {
-	public class MouseWheelAdjustValueBehavior : Behavior<UIElement>
+	public class MouseWheelAdjustRangeValueBehavior : Behavior<BigRangeBase>
 	{
 		private DependencyProperty _valueProperty;
 
-		public MouseWheelAdjustValueBehavior(DependencyProperty valueProperty)
+		public MouseWheelAdjustRangeValueBehavior(DependencyProperty valueProperty)
 		{
 			_valueProperty = valueProperty;
 		}
@@ -46,15 +46,15 @@ namespace MathEquationControl.Behaviors
 
 			if (Keyboard.Modifiers == ModifierKeys.Shift)
 			{
-				multiplier = 10;
+				multiplier = AssociatedObject.SmallChange;
 			}
 			else if (Keyboard.Modifiers == ModifierKeys.Control)
 			{
-				multiplier = 100;
+				multiplier = AssociatedObject.MediumChange;
 			}
 			else if (Keyboard.Modifiers == ModifierKeys.Alt)
 			{
-				multiplier = 1000;
+				multiplier = AssociatedObject.LargeChange;
 			}
 
 			AddValue(((BigInteger)(e.Delta / Mouse.MouseWheelDeltaForOneLine)) * multiplier);

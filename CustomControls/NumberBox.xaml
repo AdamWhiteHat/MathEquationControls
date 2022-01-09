@@ -5,7 +5,6 @@
 					xmlns:local="clr-namespace:MathEquationControl"
 					xmlns:converters="clr-namespace:MathEquationControl.ValueConverters"
 					mc:Ignorable="d"
-					
 					>
 
 	<Style TargetType="{x:Type local:NumberBox}">
@@ -27,8 +26,8 @@
 							VerticalAlignment="{TemplateBinding  VerticalAlignment}" >
 
 						<TextBox x:Name="PART_TextBox" d:Text="2" 
-								Text="{Binding Path=Value, Converter={StaticResource String2BigIntegerConverter}}"
-								 Style="{DynamicResource TextControlStyle}"	 />
+								 Text="{Binding Path=Value, Mode=TwoWay, Converter={StaticResource String2BigIntegerConverter}}"
+								 Style="{DynamicResource TextControlStyle}" />
 
 					</Border>
 				</ControlTemplate>

@@ -7,11 +7,11 @@
 					mc:Ignorable="d">
 
 	<Style TargetType="{x:Type local:PolynomialTermControl}">
-		
+
 		<Style.Resources>
 			<converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
 		</Style.Resources>
-		
+
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type local:PolynomialTermControl}">
@@ -24,11 +24,11 @@
 							HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
 							VerticalAlignment="{TemplateBinding VerticalAlignment}" >
 
-						<RichTextBox x:Name="PART_TextBlock" Style="{DynamicResource RichTextBoxStyle}">
+						<RichTextBox IsReadOnly="True" IsReadOnlyCaretVisible="False" x:Name="PART_RichTextBox" Style="{DynamicResource RichTextBoxStyle}"  AcceptsReturn="False" >
 
 							<FlowDocument>
-								<Paragraph>
-									<TextBlock Style="{DynamicResource TextBlockStyle}" ><Run x:Name="PART_Coefficient" d:Text="2" Text="{Binding Path=Coefficient, Converter={StaticResource String2BigIntegerConverter}}" /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="X" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
+								<Paragraph Style="{DynamicResource FocusableParagraph}">
+									<TextBlock x:Name="PART_TextBlock" Style="{DynamicResource TextBlockStyle}" ><Run x:Name="PART_Coefficient" d:Text="2" Text="{Binding Path=Coefficient, Converter={StaticResource String2BigIntegerConverter}}" /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="X" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
 								</Paragraph>
 							</FlowDocument>
 

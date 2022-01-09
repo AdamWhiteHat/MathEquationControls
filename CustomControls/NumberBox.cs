@@ -1,5 +1,6 @@
 ﻿using ExtendedArithmetic;
 using MathEquationControl.Behaviors;
+using MathEquationControl.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -52,59 +54,15 @@ namespace MathEquationControl
 	/// </summary>
 	[TemplatePart(Name = NumberBox.ElementBorder, Type = typeof(Border))]
 	[TemplatePart(Name = NumberBox.ElementTextBox, Type = typeof(TextBox))]
-	public class NumberBox : Control, INotifyPropertyChanged
+	public class NumberBox : BigRangeBase, INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
-
-		public BigInteger Value
-		{
-			get => (BigInteger)GetValue(ValueProperty);
-			set
-			{
-				SetValue(ValueProperty, value);
-				RaisePropertyChanged(nameof(Value));
-			}
-		}
-
-		public string Text
-		{
-			get { return controlTextBox.Text; }
-			set
-			{
-				if (controlTextBox.Text != value)
-				{
-					controlTextBox.Text = value;
-				}
-			}
-		}
-
-		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-																				nameof(Value),
-																				typeof(BigInteger),
-																				typeof(NumberBox),
-																				new PropertyMetadata(
-																					default(BigInteger),
-																					new PropertyChangedCallback(NumberBox.OnValueChanged)
-																				)
-																	   );
-
-		public event RoutedPropertyChangedEventHandler<BigInteger> ValueChanged
-		{
-			add { base.AddHandler(ValueChangedEvent, value); }
-			remove { base.RemoveHandler(ValueChangedEvent, value); }
-		}
-
-		public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent(
-																			nameof(ValueChanged),
-																			RoutingStrategy.Bubble,
-																			typeof(RoutedPropertyChangedEventHandler<BigInteger>),
-																			typeof(NumberBox));
 
 		private const string ElementTextBox = "PART_TextBox";
 		private const string ElementBorder = "PART_Border";
 		private TextBox controlTextBox;
 		private Border controlBorder;
-		private MouseWheelAdjustValueBehavior behavior;
+		private MouseWheelAdjustRangeValueBehavior behavior;
 
 		static NumberBox()
 		{
@@ -113,6 +71,12 @@ namespace MathEquationControl
 
 		public NumberBox()
 		{
+			this.Minimum = null;
+			this.Maximum = null;
+			this.UnitaryChange = 1;
+			this.SmallChange = 10;
+			this.MediumChange = 100;
+			this.LargeChange = 1000;
 		}
 
 		public override void OnApplyTemplate()
@@ -123,33 +87,17 @@ namespace MathEquationControl
 
 			controlTextBox.DataContext = this;
 
-			ValueChanged += NumberBox_ValueChanged;
+			ValueChanged += NumberBox_ValueChanged; ;
 
-			behavior = new MouseWheelAdjustValueBehavior(ValueProperty);
+			behavior = new MouseWheelAdjustRangeValueBehavior(ValueProperty);
 			Interaction.GetBehaviors(this).Add(behavior);
 		}
 
 		private void NumberBox_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
 		{
-			Text = Value.ToString();
-			Size measuredStringSize = WPFHelper.MeasureString($" {Text} ", this, controlTextBox);
+			string text = e.NewValue.ToString();
+			Size measuredStringSize = WPFHelper.MeasureString($" {text} ", this, controlTextBox);
 			controlTextBox.Width = measuredStringSize.Width;
-		}
-
-		protected virtual void OnValueChanged(BigInteger oldValue, BigInteger newValue)
-		{
-			if (oldValue.ToString() != newValue.ToString())
-			{
-				RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
-				e.RoutedEvent = ValueChangedEvent;
-				base.RaiseEvent(e);
-			}
-		}
-
-		private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			NumberBox element = (NumberBox)d;
-			element.OnValueChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
 		}
 
 		protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)

@@ -24,6 +24,8 @@ namespace MathEquationControl
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+
+
 		public BigInteger Modulus
 		{
 			get => (BigInteger)GetValue(ModulusProperty);
@@ -66,6 +68,56 @@ namespace MathEquationControl
 			element.OnModulusChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
 		}
 
+
+
+
+
+
+		public BigInteger BaseValue
+		{
+			get => (BigInteger)GetValue(BaseValueProperty);
+			set => SetValue(BaseValueProperty, value);
+		}
+
+		public static readonly DependencyProperty BaseValueProperty = DependencyProperty.Register(
+																		nameof(BaseValue),
+																		typeof(BigInteger),
+																		typeof(MainWindow),
+																		new PropertyMetadata(
+																			default(BigInteger),
+																			new PropertyChangedCallback(MainWindow.OnBaseValueChanged)
+																		)
+															   );
+
+		public event RoutedPropertyChangedEventHandler<BigInteger> BaseValueChanged
+		{
+			add { base.AddHandler(BaseValueChangedEvent, value); }
+			remove { base.RemoveHandler(BaseValueChangedEvent, value); }
+		}
+
+		public static readonly RoutedEvent BaseValueChangedEvent = EventManager.RegisterRoutedEvent(
+																		nameof(BaseValueChanged),
+																		RoutingStrategy.Bubble,
+																		typeof(RoutedPropertyChangedEventHandler<BigInteger>),
+																		typeof(MainWindow));
+
+		protected virtual void OnBaseValueChanged(BigInteger oldValue, BigInteger newValue)
+		{
+			RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
+			e.RoutedEvent = BaseValueChangedEvent;
+			base.RaiseEvent(e);
+		}
+
+		private static void OnBaseValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			MainWindow element = (MainWindow)d;
+			element.OnBaseValueChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
+		}
+
+
+
+
+
 		private Polynomial dividendPoly = null;
 		private Polynomial modPoly = null;
 		private Polynomial quotientPoly = null;
@@ -77,9 +129,10 @@ namespace MathEquationControl
 
 		private void Window_ContentRendered(object sender, EventArgs e)
 		{
-			dividendPolynomialCtrl.Polynomial = "429*X^5 + 221*X^4 + 136*X^3 + 144*X^2 + 112*X + 133";
+			dividendPolynomialCtrl.Polynomial = "1*X^5 + 2*X^4 + 3*X^3 + 4*X^2 + 5*X + 6";
 			modulusPolynomialCtrl.Polynomial = "X^2 - 1";
-			modulusInteger.Value = 2;
+			Modulus = 10;
+			BaseValue = 10;
 
 			dividendPoly = Polynomial.Parse(dividendPolynomialCtrl.Polynomial);
 			modPoly = Polynomial.Parse(modulusPolynomialCtrl.Polynomial);
@@ -89,6 +142,7 @@ namespace MathEquationControl
 
 			base.DataContext = this;
 			modulusInteger.DataContext = this;
+			xIntegerValue.DataContext = this;
 
 			Calculate();
 		}
@@ -105,7 +159,7 @@ namespace MathEquationControl
 			Calculate();
 		}
 
-		private void modulusInteger_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
+		private void numberboxControl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
 		{
 			Calculate();
 		}
@@ -114,15 +168,41 @@ namespace MathEquationControl
 		{
 			if (dividendPoly != null && modPoly != null)
 			{
-				if (modulusInteger.Value == 0 || dividendPoly.Equals(Polynomial.Zero) || modPoly.Equals(Polynomial.Zero))
+				bool calcIntegerTotals = false;
+				if (modulusInteger.Value == 0 || dividendPoly.Equals(Polynomial.Zero))
 				{
 					quotientPoly = Polynomial.Zero;
 					quotient.Text = quotientPoly.ToString();
+					integerTotal_Dividend.Text = "0";
+					integerTotal_Quotient.Text = "0";
+				}
+				else if (modPoly.Equals(Polynomial.Zero))
+				{
+					quotientPoly = Polynomial.Field.Modulus(dividendPoly, modulusInteger.Value);
+					quotient.Text = quotientPoly.ToString();
+
+					calcIntegerTotals = true;
 				}
 				else
 				{
 					quotientPoly = Polynomial.Field.ModMod(dividendPoly, modPoly, modulusInteger.Value);
 					quotient.Text = quotientPoly.ToString();
+
+					calcIntegerTotals = true;
+				}
+
+				if (calcIntegerTotals)
+				{
+					BigInteger x = xIntegerValue.Value;
+
+					BigInteger integerValue_dividend = dividendPoly.Evaluate(x);
+					integerTotal_Dividend.Text = integerValue_dividend.ToString();
+
+					BigInteger integerValue_quotient = quotientPoly.Evaluate(x);
+					integerTotal_Quotient.Text = integerValue_quotient.ToString();
+
+					BigInteger integerValue_quotientMod = integerValue_quotient.Mod(modulusInteger.Value);
+					integerTotal_QuotientMod.Text = integerValue_quotientMod.ToString();
 				}
 			}
 		}

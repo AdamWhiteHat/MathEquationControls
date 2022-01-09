@@ -33,11 +33,28 @@
 
 	<!-- Polynomial Control Elements -->
 
+	<Style x:Key="TextElementStyle" TargetType="TextElement">
+		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
+		<Setter Property="FontSize" Value="30" />
+	</Style>
+
 	<Style x:Key="TextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource  FrameworkElementStyle}">
 		<Setter Property="Background" Value="Transparent" />
 
 		<Setter Property="TextWrapping" Value="NoWrap" />
 		<Setter Property="TextTrimming" Value="None" />
+		<Setter Property="TextAlignment" Value="Center" />
+
+		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
+		<Setter Property="FontSize" Value="30" />
+
+		<Setter Property="Focusable" Value="True" />
+	</Style>
+
+	<Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource  FrameworkElementStyle}">
+		<Setter Property="Background" Value="Transparent" />
+
+		<Setter Property="TextWrapping" Value="NoWrap" />
 		<Setter Property="TextAlignment" Value="Center" />
 
 		<Setter Property="FontFamily" Value="Libertinus Math Regular" />
@@ -64,6 +81,10 @@
 		<Setter Property="FontSize" Value="30" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
 		<Setter Property="MinWidth" Value="30" />
+	</Style>
+
+	<Style x:Key="FocusableParagraph" TargetType="Paragraph">
+		<Setter Property="Focusable" Value="False"/>		
 	</Style>
 
 	<Style TargetType="{x:Type Run}">
