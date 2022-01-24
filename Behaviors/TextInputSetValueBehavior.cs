@@ -38,7 +38,7 @@ namespace MathEquationControl.Behaviors
 			BigInteger numericValue;
 			if (BigInteger.TryParse(value, out numericValue))
 			{
-				AssociatedObject.SetValue(_valueProperty, numericValue);
+				AssociatedObject.SetCurrentValue(_valueProperty, numericValue);
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace MathEquationControl.Behaviors
 				}
 
 				TextBlock textBlock = AssociatedObject as TextBlock;
-				if(textBlock!=null)
+				if (textBlock != null)
 				{
 					string text = textBlock.Text;
 					SetValue(text);

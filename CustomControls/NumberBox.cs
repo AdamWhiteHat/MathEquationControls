@@ -71,12 +71,6 @@ namespace MathEquationControl
 
 		public NumberBox()
 		{
-			this.Minimum = null;
-			this.Maximum = null;
-			this.UnitaryChange = 1;
-			this.SmallChange = 10;
-			this.MediumChange = 100;
-			this.LargeChange = 1000;
 		}
 
 		public override void OnApplyTemplate()

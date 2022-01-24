@@ -37,7 +37,7 @@ namespace MathEquationControl.Behaviors
 		{
 			BigInteger currentValue = (BigInteger)AssociatedObject.GetValue(_valueProperty);
 			BigInteger result = currentValue + value;
-			AssociatedObject.SetValue(_valueProperty, result);
+			AssociatedObject.SetCurrentValue(_valueProperty, result);
 		}
 
 		private void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

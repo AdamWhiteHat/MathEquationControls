@@ -125,13 +125,14 @@ namespace MathEquationControl
 			DpiScale dpiScale = VisualTreeHelper.GetDpi(visual);
 
 			var formattedText = new FormattedText(
-				candidate,
+				candidate,			
 				CultureInfo.CurrentCulture,
 				FlowDirection.LeftToRight,
 				new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch),
 				textBox.FontSize,
 				Brushes.Black,
 				new NumberSubstitution(),
+				TextFormattingMode.Display,
 				dpiScale.PixelsPerDip);
 
 			formattedText.TextAlignment = TextAlignment.Center;

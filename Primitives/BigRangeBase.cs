@@ -208,7 +208,7 @@ namespace MathEquationControl.Primitives
 		/// <summary> The DependencyProperty for the SmallChange property.</summary>
 		public static readonly DependencyProperty SmallChangeProperty =
 			DependencyProperty.Register("SmallChange", typeof(BigInteger), typeof(BigRangeBase),
-				new FrameworkPropertyMetadata(BigInteger.One), new ValidateValueCallback(IsValidChange));
+				new FrameworkPropertyMetadata(new BigInteger(10)), new ValidateValueCallback(IsValidChange));
 
 		/// <summary> SmallChange property </summary>
 		[Bindable(true), Category("Behavior")]
@@ -226,7 +226,7 @@ namespace MathEquationControl.Primitives
 		public static readonly DependencyProperty MediumChangeProperty =
 			DependencyProperty.Register(
 				"MediumChange", typeof(BigInteger), typeof(BigRangeBase),
-				new FrameworkPropertyMetadata(BigInteger.One), new ValidateValueCallback(IsValidChange));
+				new FrameworkPropertyMetadata(new BigInteger(100)), new ValidateValueCallback(IsValidChange));
 
 		/// <summary> MediumChange property </summary>
 		[Bindable(true), Category("Behavior")]
@@ -243,7 +243,7 @@ namespace MathEquationControl.Primitives
 		/// <summary> The DependencyProperty for the LargeChange property. </summary>
 		public static readonly DependencyProperty LargeChangeProperty =
 			DependencyProperty.Register("LargeChange", typeof(BigInteger), typeof(BigRangeBase),
-				new FrameworkPropertyMetadata(BigInteger.One), new ValidateValueCallback(IsValidChange));
+				new FrameworkPropertyMetadata(new BigInteger(1000)), new ValidateValueCallback(IsValidChange));
 
 		/// <summary> LargeChange property </summary>
 		[Bindable(true), Category("Behavior")]

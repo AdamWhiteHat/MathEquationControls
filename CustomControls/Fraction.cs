@@ -145,7 +145,7 @@ namespace MathEquationControl
 		#endregion
 
 		#endregion
-		
+
 		#region Template Constants & Private Controls
 
 		private const string ElementControlStackPanel = "PART_ControlStackPanel";
@@ -171,8 +171,8 @@ namespace MathEquationControl
 		public Fraction(int numerator, int denominator)
 			: this()
 		{
-			Numerator = numerator;
-			Denominator = denominator;
+			this.SetCurrentValue(NumeratorProperty, numerator);
+			this.SetCurrentValue(DenominatorProperty, denominator);
 		}
 
 		static Fraction()

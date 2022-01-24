@@ -24,8 +24,6 @@ namespace MathEquationControl
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-
-
 		public BigInteger Modulus
 		{
 			get => (BigInteger)GetValue(ModulusProperty);
@@ -67,10 +65,6 @@ namespace MathEquationControl
 			MainWindow element = (MainWindow)d;
 			element.OnModulusChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
 		}
-
-
-
-
 
 
 		public BigInteger BaseValue
@@ -131,8 +125,8 @@ namespace MathEquationControl
 		{
 			dividendPolynomialCtrl.Polynomial = "1*X^5 + 2*X^4 + 3*X^3 + 4*X^2 + 5*X + 6";
 			modulusPolynomialCtrl.Polynomial = "X^2 - 1";
-			Modulus = 10;
-			BaseValue = 10;
+			Modulus = 8;
+			BaseValue = 9;
 
 			dividendPoly = Polynomial.Parse(dividendPolynomialCtrl.Polynomial);
 			modPoly = Polynomial.Parse(modulusPolynomialCtrl.Polynomial);

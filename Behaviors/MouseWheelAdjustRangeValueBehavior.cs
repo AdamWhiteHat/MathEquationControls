@@ -37,24 +37,24 @@ namespace MathEquationControl.Behaviors
 		{
 			BigInteger currentValue = (BigInteger)AssociatedObject.GetValue(_valueProperty);
 			BigInteger result = currentValue + value;
-			AssociatedObject.SetValue(_valueProperty, result);
+			AssociatedObject.SetCurrentValue(_valueProperty, result);
 		}
 
 		private void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			BigInteger multiplier = 1;
 
-			if (Keyboard.Modifiers == ModifierKeys.Shift)
+			if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
 			{
-				multiplier = AssociatedObject.SmallChange;
+				multiplier *= AssociatedObject.SmallChange;
 			}
-			else if (Keyboard.Modifiers == ModifierKeys.Control)
+			if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
 			{
-				multiplier = AssociatedObject.MediumChange;
+				multiplier *= AssociatedObject.MediumChange;
 			}
-			else if (Keyboard.Modifiers == ModifierKeys.Alt)
+			if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
 			{
-				multiplier = AssociatedObject.LargeChange;
+				multiplier *= AssociatedObject.LargeChange;
 			}
 
 			AddValue(((BigInteger)(e.Delta / Mouse.MouseWheelDeltaForOneLine)) * multiplier);

@@ -240,7 +240,7 @@ namespace MathEquationControl
 			string newPoly = poly.ToString();
 
 			selfUpdate = true;
-			this.Polynomial = newPoly;
+			this.SetCurrentValue(PolynomialProperty, newPoly);
 		}
 
 		#endregion

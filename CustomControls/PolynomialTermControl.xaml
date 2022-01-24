@@ -28,7 +28,7 @@
 
 							<FlowDocument>
 								<Paragraph Style="{DynamicResource FocusableParagraph}">
-									<TextBlock x:Name="PART_TextBlock" Style="{DynamicResource TextBlockStyle}" ><Run x:Name="PART_Coefficient" d:Text="2" Text="{Binding Path=Coefficient, Converter={StaticResource String2BigIntegerConverter}}" /><Run Name="PART_MultiplicationSymbol" Text="*" /><Run Name="PART_Indeteminant" Text="X" /><Run Name="PART_Exponent" Text="2" Style="{DynamicResource Exponent}" /></TextBlock>
+									<TextBlock x:Name="PART_TextBlock" Style="{DynamicResource TextBlockStyle}" ></TextBlock>
 								</Paragraph>
 							</FlowDocument>
 
