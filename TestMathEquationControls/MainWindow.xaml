@@ -1,0 +1,53 @@
+﻿<Window x:Class="TestMathEquationControls.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:TestMathEquationControls"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+		MinHeight="400" MinWidth="200"
+		Height="Auto" Width="Auto"
+		>
+
+	<Window.Resources>
+		<Style TargetType="GroupBox">
+			<Setter Property="Padding" Value="30,0,0,0" />
+			<Setter Property="Margin" Value="0,10" />
+		</Style>
+	</Window.Resources>
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="100" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0">
+			
+			<GroupBox Header="Polynomial examples:">
+				<StackPanel>
+					<TextBlock>
+				<Hyperlink x:Name="link_Polynomial_QuotientField" Click="link_Polynomial_QuotientField_Click" >
+					View: Quotient Field 
+				</Hyperlink>
+					</TextBlock>
+					<TextBlock>
+				<Hyperlink x:Name="link_Polynomial_BaseMExpansion" Click="link_Polynomial_BaseMExpansion_Click" >
+					View: Base-m Expansion
+				</Hyperlink>
+					</TextBlock>
+				</StackPanel>
+			</GroupBox>
+
+			<GroupBox Header="Fraction examples:">
+				
+			</GroupBox>
+
+			<GroupBox Header="Misc examples:">
+
+			</GroupBox>
+			
+		</StackPanel>
+	</Grid>
+</Window>

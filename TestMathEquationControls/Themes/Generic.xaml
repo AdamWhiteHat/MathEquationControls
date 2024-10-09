@@ -1,0 +1,13 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls">
+
+
+	
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/MathEquationControls;component/CustomControls/SharedStyles.xaml" />
+        <ResourceDictionary Source="/MathEquationControls;component/Themes/Generic.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

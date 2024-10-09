@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathEquationControl", "MathEquationControl.csproj", "{07DB7055-44BA-48E2-BE10-3CCF1F214085}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathEquationControls", "MathEquationControls\MathEquationControls.csproj", "{C71D435A-5CF1-4BE7-A21A-20A05C4244F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestMathEquationControls", "TestMathEquationControls\TestMathEquationControls.csproj", "{B6290E1A-7686-4F52-A493-D52D97A16CB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{07DB7055-44BA-48E2-BE10-3CCF1F214085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07DB7055-44BA-48E2-BE10-3CCF1F214085}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07DB7055-44BA-48E2-BE10-3CCF1F214085}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07DB7055-44BA-48E2-BE10-3CCF1F214085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C71D435A-5CF1-4BE7-A21A-20A05C4244F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C71D435A-5CF1-4BE7-A21A-20A05C4244F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C71D435A-5CF1-4BE7-A21A-20A05C4244F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C71D435A-5CF1-4BE7-A21A-20A05C4244F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6290E1A-7686-4F52-A493-D52D97A16CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6290E1A-7686-4F52-A493-D52D97A16CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6290E1A-7686-4F52-A493-D52D97A16CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6290E1A-7686-4F52-A493-D52D97A16CB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
