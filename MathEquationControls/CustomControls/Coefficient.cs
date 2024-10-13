@@ -132,7 +132,9 @@ namespace MathEquationControls
 
         private void Coefficient_Loaded(object sender, RoutedEventArgs e)
         {
-            ApplyTemplate();
+            controlTextBox.TextChanged += ControlTextBox_TextChanged;
+            controlTextBox.KeyUp += ControlTextBox_KeyUp;
+            ValueChanged += Coefficient_ValueChanged;
         }
 
         private void Coefficient_Unloaded(object sender, RoutedEventArgs e)
@@ -156,9 +158,6 @@ namespace MathEquationControls
             mouseDragBehavior = new DragUpDownAdjustValueBehavior(ValueProperty);
             Interaction.GetBehaviors(this).Add(mouseDragBehavior);
 
-            controlTextBox.TextChanged += ControlTextBox_TextChanged;
-            controlTextBox.KeyUp += ControlTextBox_KeyUp;
-            ValueChanged += Coefficient_ValueChanged;
         }
 
 

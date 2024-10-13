@@ -17,18 +17,21 @@
 
                     <Border x:Name="PART_Border"						
 							Width="Auto"
-							Height="Auto"  >
+							Height="Auto" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}" >
 
                         <TextBox x:Name="PART_TextBox" d:Text="1"
                                  Padding="0,5,0,5"
                                  Style="{DynamicResource CoefficientDefaultTextBoxStyle}" >
-                            <TextBox.Text>
-                                <Binding Path="Value" Mode="TwoWay">
-                                    <Binding.Converter>
-                                        <converters:StringToBigIntegerConverter />
-                                    </Binding.Converter>
-                                </Binding>
-                            </TextBox.Text>
+                            <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}">
+                                <Binding.Converter>
+                                    <converters:StringToBigIntegerConverter />
+                                </Binding.Converter>
+                            </Binding>
                         </TextBox>
 
                     </Border>

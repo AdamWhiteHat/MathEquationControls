@@ -189,6 +189,9 @@ namespace MathEquationControls
         private Border controlBorder;
         private StackPanel controlContentsPanel;
 
+        private Dictionary<int, PolynomialTermControl> _controlCache_Terms;
+        private Dictionary<int, TextBlock> _controlCache_TextBlock;
+
         #endregion
 
         #region Constructors
@@ -203,6 +206,8 @@ namespace MathEquationControls
             this.IsHitTestVisible = true;
             this.Loaded += PolynomialControl_Loaded;
             this.Unloaded += PolynomialControl_Unloaded;
+            _controlCache_Terms = new Dictionary<int, PolynomialTermControl>();
+            _controlCache_TextBlock = new Dictionary<int, TextBlock>();
         }
 
         private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
@@ -319,6 +324,88 @@ namespace MathEquationControls
                 termCtrl.TermUpdated += TermCtrl_TermUpdated;
                 controlContentsPanel.Children.Add(termCtrl);
             }
+        }
+
+        private void ConstructTermControlsFromPolynomial_2(ExtendedArithmetic.Polynomial poly)
+        {
+            controlContentsPanel.Children.Clear();
+
+            bool firstPass = true;
+            foreach (ExtendedArithmetic.Term term in poly.Terms.Reverse())
+            {
+                if (firstPass)
+                {
+                    firstPass = false;
+                }
+                else
+                {
+                    TextBlock additiveSymbol = GetTextBlockControl(term);
+                        controlContentsPanel.Children.Add(additiveSymbol);
+                }
+
+
+                PolynomialTermControl termCtrl = GetTermControl(term);
+                controlContentsPanel.Children.Add(termCtrl);
+            }
+        }
+
+        private PolynomialTermControl GetTermControl(Term term)
+        {
+            PolynomialTermControl result = null;
+            if(_controlCache_Terms.ContainsKey(term.Exponent))
+            {
+                result = _controlCache_Terms[term.Exponent];
+                result.Term = term;
+            }
+            else
+            {
+                result = new PolynomialTermControl(term);
+                result.Style = (Style)FindResource("PolynomialTermStyle");
+                result.Height = this.Height;
+                result.TermUpdated += TermCtrl_TermUpdated;
+                _controlCache_Terms[term.Exponent] = result;
+            }
+            return result;
+        }
+
+        private TextBlock GetTextBlockControl(Term term)
+        {
+            TextBlock result = null;
+            if(_controlCache_TextBlock.ContainsKey(term.Exponent))
+            {
+                result = _controlCache_TextBlock[term.Exponent];
+            }
+            else
+            {
+                result = new TextBlock();
+                result.Style = (Style)FindResource("TextBlockStyle");
+                _controlCache_TextBlock[term.Exponent] = result;
+            }
+
+            bool skip = false;
+            if (term.CoEfficient.Sign == -1)
+            {
+                result.Text = " - ";
+            }
+            else if (term.CoEfficient.Sign == 1)
+            {
+                result.Text = " + ";
+            }
+            else if (term.CoEfficient.Sign == 0)
+            {
+                skip = true;
+            }
+
+            if (skip)
+            {
+                result.Visibility = Visibility.Hidden;
+            }
+            else 
+            {
+                result.Visibility = Visibility.Visible;
+            }
+
+            return result;
         }
 
         private void TermCtrl_TermUpdated(object sender, TermUpdatedEventArgs e)

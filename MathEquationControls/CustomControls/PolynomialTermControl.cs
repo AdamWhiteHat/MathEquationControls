@@ -101,13 +101,13 @@ namespace MathEquationControls
             }
         }
 
-        public string Text
-        {
-            get
-            {
-                return GetStringRepresentation();
-            }
-        }
+       //public string Text
+       //{
+       //    get
+       //    {
+       //        return GetStringRepresentation();
+       //    }
+       //}
 
         public Term GetPolynomialTerm()
         {
