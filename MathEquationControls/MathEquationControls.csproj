@@ -11,10 +11,4 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="System.Windows.Interactivity">
-			<HintPath>..\..\..\..\..\Program Files (x86)\Microsoft SDKs\Expression\Blend\.NETFramework\v4.5\Libraries\System.Windows.Interactivity.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
 </Project>

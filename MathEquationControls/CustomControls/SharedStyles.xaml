@@ -17,6 +17,22 @@
         <Setter Property="VerticalContentAlignment"  Value="Center" />
     </Style>
 
+    <Style x:Key="CoefficientDefaultTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+
+        <Setter Property="Cursor" Value="ScrollNS" />
+
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextAlignment" Value="Center" />
+
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+
+        <Setter Property="FontFamily" Value="Libertinus Math Regular" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="Focusable" Value="True" />
+    </Style>
+
     <!-- Polynomial Controls -->
 
     <Style x:Key="PolynomialControlStyle" TargetType="local:PolynomialControl" BasedOn="{StaticResource  ControlStyle}">
@@ -24,17 +40,22 @@
         <!--Setter Property="BorderBrush" Value="Green" /-->
     </Style>
 
-    <Style x:Key="PolynomialTermStyle" TargetType="local:PolynomialTermControl"  BasedOn="{StaticResource  ControlStyle}">
+    <Style x:Key="PolynomialTermStyle" TargetType="local:PolynomialTermControl" >
         <Setter Property="BorderThickness" Value="1" />
         <!--Setter Property="BorderBrush" Value="Blue" /-->
 
-        <Setter Property="Cursor" Value="SizeNS" />
+        <Setter Property="Cursor" Value="ScrollNS" />
         <Setter Property="ForceCursor" Value="True" />
     </Style>
 
     <!-- Polynomial Control Elements -->
 
-    <Style x:Key="TextElementStyle" TargetType="TextElement">
+    <Style x:Key="CommonFontStyle" TargetType="TextElement">
+        <Setter Property="FontFamily" Value="Libertinus Math Regular" />
+        <Setter Property="FontSize" Value="30" />
+    </Style>
+
+    <Style x:Key="TextElementStyle" TargetType="TextElement" BasedOn="{StaticResource CommonFontStyle}">
         <Setter Property="FontFamily" Value="Libertinus Math Regular" />
         <Setter Property="FontSize" Value="30" />
     </Style>
@@ -45,6 +66,10 @@
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="TextTrimming" Value="None" />
         <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="BaselineOffset" Value="0" />
+        <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
 
         <Setter Property="FontFamily" Value="Libertinus Math Regular" />
         <Setter Property="FontSize" Value="30" />
@@ -60,6 +85,7 @@
 
         <Setter Property="FontFamily" Value="Libertinus Math Regular" />
         <Setter Property="FontSize" Value="30" />
+        <Setter Property="Focusable" Value="True" />
     </Style>
 
     <Style x:Key="RichTextBoxStyle" TargetType="RichTextBox" BasedOn="{StaticResource  FrameworkElementStyle}">
@@ -75,12 +101,23 @@
     <Style x:Key="OperatorStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
         <Setter Property="Cursor" Value="Arrow" />
         <Setter Property="ForceCursor" Value="True" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Light" />
+    </Style>
+
+    <Style x:Key="ExponentStyle" TargetType="Run">
+        <Setter Property="FontFamily" Value="Libertinus Math Regular" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="BaselineAlignment" Value="Superscript" />
+        <Setter Property="Block.LineStackingStrategy" Value="BlockLineHeight" />
+        <Setter Property="Focusable" Value="False" />
     </Style>
 
     <Style x:Key="TextControlStyle" TargetType="Control" BasedOn="{StaticResource FrameworkElementStyle}">
         <Setter Property="FontFamily" Value="Libertinus Math Regular" />
         <Setter Property="FontSize" Value="30" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="MinWidth" Value="30" />
     </Style>
 
@@ -89,11 +126,7 @@
     </Style>
 
     <Style TargetType="{x:Type Run}">
-        <Setter Property="BaselineAlignment" Value="Center" />
-    </Style>
-
-    <Style x:Key="Exponent" TargetType="Run">
-        <Setter Property="BaselineAlignment" Value="Superscript" />
+        <Setter Property="BaselineAlignment" Value="Baseline" />
     </Style>
 
 </ResourceDictionary>

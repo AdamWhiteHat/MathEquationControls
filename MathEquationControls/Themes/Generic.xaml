@@ -8,7 +8,7 @@
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Fraction.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialTermControl.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialControl.xaml"/>
-        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/NumberBox.xaml" />
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Coefficient.xaml" />
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/SharedStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 

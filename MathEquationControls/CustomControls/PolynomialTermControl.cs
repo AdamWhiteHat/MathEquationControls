@@ -51,12 +51,11 @@ namespace MathEquationControls
     ///
     /// </summary>
     [TemplatePart(Name = PolynomialTermControl.ElementBorder, Type = typeof(Border))]
-    [TemplatePart(Name = PolynomialTermControl.ElementTextBlock, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PolynomialTermControl.ElementRichTextBox, Type = typeof(RichTextBox))]
-    //[TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Run))]
-    //[TemplatePart(Name = PolynomialTermControl.ElementMultiplicationSymbol, Type = typeof(Run))]
-    //[TemplatePart(Name = PolynomialTermControl.ElementIndeteminant, Type = typeof(Run))]
-    //[TemplatePart(Name = PolynomialTermControl.ElementExponent, Type = typeof(Run))]
+    [TemplatePart(Name = PolynomialTermControl.ElementWrapPanel, Type = typeof(WrapPanel))]
+    [TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Coefficient))]
+    [TemplatePart(Name = PolynomialTermControl.ElementMultiplicationSymbol, Type = typeof(TextBlock))]
+    [TemplatePart(Name = PolynomialTermControl.ElementIndeteminant, Type = typeof(TextBlock))]
+    [TemplatePart(Name = PolynomialTermControl.ElementExponent, Type = typeof(Run))]
     public class PolynomialTermControl : Control
     {
         #region Public Properties
@@ -114,6 +113,13 @@ namespace MathEquationControls
         {
             return new Term(this.Coefficient, this.Exponent);
         }
+
+        #endregion
+
+        #region Private Symbols
+
+        private static string IndeteminantSymbolValue = "X";
+        private static string MultiplicationSymbolValue = "•"; // 
 
         #endregion
 
@@ -216,29 +222,22 @@ namespace MathEquationControls
 
         #region Template Constants & Private Controls
 
-        private static string IndeteminantSymbolValue = "X";
-        private static string MultiplicationSymbolValue = "×";
-
         private const string ElementBorder = "PART_Border";
-        private const string ElementRichTextBox = "PART_RichTextBox";
-        private const string ElementTextBlock = "PART_TextBlock";
-        //private const string ElementCoefficient = "PART_Coefficient";
-        //private const string ElementMultiplicationSymbol = "PART_MultiplicationSymbol";
-        //private const string ElementIndeteminant = "PART_Indeteminant";
-        //private const string ElementExponent = "PART_Exponent";
+        private const string ElementWrapPanel = "PART_WrapPanel";
+        private const string ElementCoefficient = "PART_Coefficient";
+        private const string ElementMultiplicationSymbol = "PART_MultiplicationSymbol";
+        private const string ElementIndeteminant = "PART_Indeteminant";
+        private const string ElementExponent = "PART_Exponent";
 
-        private MouseWheelAdjustValueBehavior mouseBehavior;
-        private TextInputSetValueBehavior textinputBehavior;
+        //private MouseWheelAdjustValueBehavior mouseBehavior;
+        //private TextInputSetValueBehavior textinputBehavior;
 
-        private Run controlCoefficient;
-        private Run controlMultiplicationSymbol;
-        private Run controlIndeteminant;
-        private Run controlExponent;
-
-        private RichTextBox controlRichTextBox;
-        private TextBlock controlTextBlock;
         private Border controlBorder;
-
+        private WrapPanel controlWrapPanel;
+        private Coefficient controlCoefficient;
+        private TextBlock controlMultiplicationSymbol;
+        private TextBlock controlIndeteminant;
+        private Run controlExponent;
 
         private bool SuppressTermUpdateEvent = false;
 
@@ -263,14 +262,14 @@ namespace MathEquationControls
 
         private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
         {
-            CoefficientChanged += PolynomialTermControl_CoefficientChanged1;
-            ExponentChanged += PolynomialTermControl_ExponentChanged1;
+            CoefficientChanged += PolynomialTermControl_CoefficientChanged;
+            ExponentChanged += PolynomialTermControl_ExponentChanged;
         }
 
         private void PolynomialTermControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            CoefficientChanged -= PolynomialTermControl_CoefficientChanged1;
-            ExponentChanged -= PolynomialTermControl_ExponentChanged1;
+            CoefficientChanged -= PolynomialTermControl_CoefficientChanged;
+            ExponentChanged -= PolynomialTermControl_ExponentChanged;
         }
 
         #endregion
@@ -282,39 +281,35 @@ namespace MathEquationControls
             base.OnApplyTemplate();
 
             controlBorder = GetTemplateChild(ElementBorder) as Border;
-            controlRichTextBox = GetTemplateChild(ElementRichTextBox) as RichTextBox;
-            controlTextBlock = GetTemplateChild(ElementTextBlock) as TextBlock;
 
-            /*
-			controlIndeteminant = GetTemplateChild(ElementIndeteminant) as Run;
-			controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as Run;
+            controlCoefficient = GetTemplateChild(ElementCoefficient) as Coefficient;
+            if (controlCoefficient != null)
+            {
+                controlCoefficient.ValueChanged += PolynomialTermControl_CoefficientChanged;
+            }
 
-			controlCoefficient = GetTemplateChild(ElementCoefficient) as Run;
-			if (controlCoefficient != null)
-			{
-				CoefficientChanged += PolynomialTermControl_CoefficientChanged;
-			}
+            controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as TextBlock;
+            controlMultiplicationSymbol.Text = MultiplicationSymbolValue;
 
-			controlExponent = GetTemplateChild(ElementExponent) as Run;
-			if (controlExponent != null)
-			{
-				ExponentChanged += PolynomialTermControl_ExponentChanged;
-			}
-			*/
+            controlIndeteminant = GetTemplateChild(ElementIndeteminant) as TextBlock;
+            controlIndeteminant.Text = IndeteminantSymbolValue;
 
-            mouseBehavior = new MouseWheelAdjustValueBehavior(CoefficientProperty);
-            Interaction.GetBehaviors(this).Add(mouseBehavior);
+            controlExponent = GetTemplateChild(ElementExponent) as Run;
+
+            //mouseBehavior = new MouseWheelAdjustValueBehavior(CoefficientProperty);
+            // new DragUpDownAdjustValueBehavior(
+            //Interaction.GetBehaviors(this).Add(mouseBehavior);
 
             SetControls();
         }
 
-        private void PolynomialTermControl_CoefficientChanged1(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
+        private void PolynomialTermControl_CoefficientChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
             SetControls();
             OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
         }
 
-        private void PolynomialTermControl_ExponentChanged1(object sender, RoutedPropertyChangedEventArgs<int> e)
+        private void PolynomialTermControl_ExponentChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
         {
             SetControls();
             OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
@@ -323,17 +318,29 @@ namespace MathEquationControls
         private void SetControls()
         {
             Term term = GetPolynomialTerm();
-            string termString = GetStringRepresentation();
 
-            if (controlTextBlock != null)
+            if (term.CoEfficient != controlCoefficient.Value)
             {
-                controlTextBlock.Text = termString;
+                controlCoefficient.Value = term.CoEfficient;
             }
 
-            string measureString = $"_{termString}_";
+            if (term.Exponent.ToString() != controlExponent.Text)
+            {
+                controlExponent.Text = term.Exponent.ToString();//ConvertToSuperScript(term.Exponent.ToString());
+            }
 
-            Size measuredStringSize = WPFHelper.MeasureString(measureString, this, controlRichTextBox);
-            controlRichTextBox.Width = measuredStringSize.Width;
+
+            //string termString = GetStringRepresentation();
+
+            //if (controlTextBlock != null)
+            //{
+            //    controlTextBlock.Text = termString;
+            //}
+
+            //string measureString = $"_{termString}_";
+
+            //Size measuredStringSize = WPFHelper.MeasureString(measureString, this, controlRichTextBox);
+            //controlRichTextBox.Width = measuredStringSize.Width;
         }
 
         #endregion

@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         Title="BaseMExpansion"
 		Height="450" Width="800"
-		ContentRendered="Window_ContentRendered"
+        Loaded="Window_Loaded"
+        Unloaded="Window_Unloaded"
 		>
     <Window.Resources>
         <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
@@ -26,55 +27,51 @@
             <Grid>
                 <WrapPanel HorizontalAlignment="Center" >
                     <Label Content="m =" Style="{DynamicResource TextControlStyle}" />
-                    <mathctrls:NumberBox x:Name="nboxBaseMValue"
-										 Value="{Binding Path=PolynomialBaseM, Mode=TwoWay}"
+                    <mathctrls:Coefficient x:Name="ctrlPolynomialBaseM"										 
 										 Style="{DynamicResource TextControlStyle}" 
-										 ValueChanged="baseMValue_ValueChanged"
 										 />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
                     <Label Content="degree:" Style="{DynamicResource TextControlStyle}" />
-                    <mathctrls:NumberBox x:Name="nboxDegree"
+                    <mathctrls:Coefficient x:Name="ctrlDegree"
 										 Value="{Binding Path=PolynomialDegree, Mode=TwoWay}"
-										 Style="{DynamicResource TextControlStyle}" 
-										 ValueChanged="nboxDegree_ValueChanged"
+										 Style="{DynamicResource TextControlStyle}" 										 
 										 />
                 </WrapPanel>
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Stretch" Margin="0,-1,0,0">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <mathctrls:PolynomialControl x:Name="polyControl" 
 											 DockToParent="False"
 											 Style="{DynamicResource PolynomialControlStyle}"
                                              Height="Auto" Width="Auto" d:Text="X^3 - X^2 - 12*X + 35"
 											 />
-                <WrapPanel x:Name="wrappanelLockTerms" HorizontalAlignment="Center">
-                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" Padding="5" />
-                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="2" Padding="5" />
-                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="1" Padding="5" />
-                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="1" Padding="5" />
+                <WrapPanel x:Name="wrappanelTermLocks" HorizontalAlignment="Center">
+                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" />
                 </WrapPanel>
             </StackPanel>
         </Border>
 
+
+
         <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+            
             <Grid>
                 <StackPanel HorizontalAlignment="Center">
                     <WrapPanel HorizontalAlignment="Center">
                         <Label Content="=" Style="{DynamicResource TextControlStyle}" />
-                        <mathctrls:NumberBox x:Name="nboxTargetValue"
+                        <mathctrls:Coefficient x:Name="ctrlTargetValue"
 											 Value="{Binding Path=TargetValue, Mode=TwoWay}"
-											 Style="{DynamicResource TextControlStyle}" 
-											 ValueChanged="nboxTargetValue_ValueChanged"
+											 Style="{DynamicResource TextControlStyle}" 											 
 											/>
 
                     </WrapPanel>
                     <Label Content="(target value)" Style="{DynamicResource TextControlStyle}" />
                 </StackPanel>
-                <CheckBox HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,5"
+                <CheckBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,5"
 						  FontFamily="Libertinus Math Regular" FontSize="17" IsChecked="True"
 						  x:Name="checkboxSmallCoefficients" Content="Reduce coefficient size" 
 						  Click="checkboxSmallCoefficients_Click" />

@@ -120,7 +120,12 @@ namespace MathEquationControls
 			}
 		}
 
-		public static Size MeasureString(string candidate, Visual visual, Control textBox)
+		public static DependencyObject GetChild(DependencyObject element)
+		{
+			return GetChildren(element).First();
+		}
+
+            public static Size MeasureString(string candidate, Visual visual, Control textBox)
 		{
 			DpiScale dpiScale = VisualTreeHelper.GetDpi(visual);
 

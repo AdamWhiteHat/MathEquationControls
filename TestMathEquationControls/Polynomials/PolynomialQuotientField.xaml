@@ -10,71 +10,77 @@
         mc:Ignorable="d"
 		ContentRendered="Window_ContentRendered"
 		Height="594" Width="800">
-	<Window.Resources>
-		<converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
-	</Window.Resources>
+    <Window.Resources>
+        <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
 
-	<Grid>
+        <Style x:Key="WrapPanelStyle" TargetType="WrapPanel">
+            <Setter Property="HorizontalAlignment"  Value="Center" />
+            <Setter Property="VerticalAlignment"  Value="Center" />
+        </Style>
+    </Window.Resources>
 
-		<Grid.RowDefinitions>
+    <Grid>
+
+        <Grid.RowDefinitions>
             <RowDefinition Height="30" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="30" />
-		</Grid.RowDefinitions>
+        </Grid.RowDefinitions>
 
-		<WrapPanel Grid.Row="1" HorizontalAlignment="Center">
-			<Label Content="X =" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:NumberBox x:Name="xIntegerValue" d:Text="1"
+        <WrapPanel Grid.Row="1" Style="{DynamicResource WrapPanelStyle}">
+            <Label Content="X =" Style="{DynamicResource TextControlStyle}" />
+            <mathctrls:Coefficient x:Name="xIntegerValue" d:Text="1"
 								 Value="{Binding Path=BaseValue, Mode=TwoWay}"
 								 Style="{DynamicResource TextControlStyle}" 
 								 ValueChanged="numberboxControl_ValueChanged"
 								 />
 
-		</WrapPanel>
+        </WrapPanel>
 
-		<Border BorderBrush="Black" BorderThickness="1" Grid.Row="2">
-			<mathctrls:PolynomialControl x:Name="dividendPolynomialCtrl"
-										 DockToParent="True"
+        <WrapPanel Grid.Row="2" Style="{DynamicResource WrapPanelStyle}">
+            <mathctrls:PolynomialControl x:Name="dividendPolynomialCtrl"
+                                         Width="Auto" Height="Auto" MinHeight="30"
+										 
 										 Style="{DynamicResource PolynomialControlStyle}" />
-		</Border>
+        </WrapPanel>
 
-		<WrapPanel Grid.Row="3" HorizontalAlignment="Center">
-			<TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
-			<TextBox x:Name="integerTotal_Dividend" Text="0" Style="{DynamicResource TextBoxStyle}" />
-		</WrapPanel>
+        <WrapPanel Grid.Row="3" Style="{DynamicResource WrapPanelStyle}">
+            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
+            <TextBox x:Name="integerTotal_Dividend" Text="0" Style="{DynamicResource TextBoxStyle}" />
+        </WrapPanel>
 
-		<WrapPanel Grid.Row="4" HorizontalAlignment="Center">
-			<Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
-			<mathctrls:PolynomialControl x:Name="modulusPolynomialCtrl"
+        <WrapPanel Grid.Row="4" Style="{DynamicResource WrapPanelStyle}">
+            <Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
+            <mathctrls:PolynomialControl x:Name="modulusPolynomialCtrl"
 									 DockToParent="True"
 									 Style="{DynamicResource PolynomialControlStyle}" />
-			<Label Width="30" />
-			<Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:NumberBox x:Name="modulusInteger" d:Text="1"						 
+            <Label Width="30" />
+            <Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
+            <mathctrls:Coefficient x:Name="modulusInteger"					 
 							 Value="{Binding Path=Modulus, Mode=TwoWay}"
 							 Style="{DynamicResource TextControlStyle}" 
 							 ValueChanged="numberboxControl_ValueChanged" />
 
-		</WrapPanel>
+        </WrapPanel>
 
-		<WrapPanel Grid.Row="5" HorizontalAlignment="Center">
-			<TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
-			<TextBlock x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" />
-		</WrapPanel>
+        <WrapPanel Grid.Row="5" Style="{DynamicResource WrapPanelStyle}">
+            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" />
+        </WrapPanel>
 
-		<WrapPanel Grid.Row="6" HorizontalAlignment="Center">
-			<TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
-			<TextBox x:Name="integerTotal_Quotient" Text="0" Style="{DynamicResource TextBoxStyle}" />
-			<TextBlock Text=" ≡" Style="{DynamicResource TextBlockStyle}" />
-			<TextBlock Text="(" Style="{DynamicResource TextBlockStyle}" />
-			<TextBox x:Name="integerTotal_QuotientMod" Text="0" Style="{DynamicResource TextBoxStyle}" />
-			<TextBlock Text=")" Style="{DynamicResource TextBlockStyle}" />
-		</WrapPanel>
+        <WrapPanel Grid.Row="6" Style="{DynamicResource WrapPanelStyle}">
+            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
+            <TextBox x:Name="integerTotal_Quotient" Text="0" Style="{DynamicResource TextBoxStyle}" />
+            <TextBlock Text=" ≡" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text="(" Style="{DynamicResource TextBlockStyle}" />
+            <TextBox x:Name="integerTotal_QuotientMod" Text="0" Style="{DynamicResource TextBoxStyle}" />
+            <TextBlock Text=")" Style="{DynamicResource TextBlockStyle}" />
+        </WrapPanel>
 
-	</Grid>
+    </Grid>
 </Window>

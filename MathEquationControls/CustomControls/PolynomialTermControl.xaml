@@ -6,38 +6,37 @@
 					xmlns:converters="clr-namespace:MathEquationControls.ValueConverters"
 					mc:Ignorable="d">
 
-	<Style TargetType="{x:Type local:PolynomialTermControl}">
+    <Style TargetType="{x:Type local:PolynomialTermControl}">
 
-		<Style.Resources>
-			<converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
-		</Style.Resources>
+        <Style.Resources>
+            <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
+        </Style.Resources>
 
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type local:PolynomialTermControl}">
-					<Border x:Name="PART_Border"
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PolynomialTermControl}">                    
+                    <Border x:Name="PART_Border"
 							Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-							Width="{TemplateBinding Width}"
-							Height="{TemplateBinding Height}"
-							HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-							VerticalAlignment="{TemplateBinding VerticalAlignment}" >
+							Width="Auto"
+							Height="Auto"
+							HorizontalAlignment="Center"  
+                            VerticalAlignment="Center"                           
+                            >
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}"></local:Coefficient>
+                            <TextBlock x:Name="PART_MultiplicationSymbol"  Style="{DynamicResource OperatorStyle}"></TextBlock>
+                            <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}"></TextBlock>
+                            <TextBlock>
+                                <Run x:Name="PART_Exponent" Style="{DynamicResource ExponentStyle}"></Run>
+                            </TextBlock>
+                        </WrapPanel>
 
-						<RichTextBox IsReadOnly="True" IsReadOnlyCaretVisible="False" x:Name="PART_RichTextBox" Style="{DynamicResource RichTextBoxStyle}"  AcceptsReturn="False" >
-
-							<FlowDocument>
-								<Paragraph Style="{DynamicResource FocusableParagraph}">
-									<TextBlock x:Name="PART_TextBlock" Style="{DynamicResource TextBlockStyle}" ></TextBlock>
-								</Paragraph>
-							</FlowDocument>
-
-						</RichTextBox>
-
-					</Border>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>
