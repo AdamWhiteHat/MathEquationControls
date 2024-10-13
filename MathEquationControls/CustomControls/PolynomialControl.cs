@@ -296,49 +296,6 @@ namespace MathEquationControls
                 }
                 else
                 {
-                    bool skip = false;
-                    TextBlock plusSymbol = new TextBlock();
-                    if (term.CoEfficient.Sign == -1)
-                    {
-                        plusSymbol.Text = " - ";
-                    }
-                    else if (term.CoEfficient.Sign == 1)
-                    {
-                        plusSymbol.Text = " + ";
-                    }
-                    else if (term.CoEfficient.Sign == 0)
-                    {
-                        skip = true;
-                    }
-
-                    if (!skip)
-                    {
-                        plusSymbol.Style = (Style)FindResource("TextBlockStyle");
-                        controlContentsPanel.Children.Add(plusSymbol);
-                    }
-                }
-
-                PolynomialTermControl termCtrl = new PolynomialTermControl(term);
-                termCtrl.Style = (Style)FindResource("PolynomialTermStyle");
-                termCtrl.Height = this.Height;
-                termCtrl.TermUpdated += TermCtrl_TermUpdated;
-                controlContentsPanel.Children.Add(termCtrl);
-            }
-        }
-
-        private void ConstructTermControlsFromPolynomial_2(ExtendedArithmetic.Polynomial poly)
-        {
-            controlContentsPanel.Children.Clear();
-
-            bool firstPass = true;
-            foreach (ExtendedArithmetic.Term term in poly.Terms.Reverse())
-            {
-                if (firstPass)
-                {
-                    firstPass = false;
-                }
-                else
-                {
                     TextBlock additiveSymbol = GetTextBlockControl(term);
                         controlContentsPanel.Children.Add(additiveSymbol);
                 }
