@@ -96,6 +96,8 @@ namespace MathEquationControls
         }
         private string _text = null;
 
+        private bool SuppressUpdateEvents = false;
+
         public bool DockToParent
         {
             get => (bool)GetValue(DockToParentProperty);
@@ -169,12 +171,18 @@ namespace MathEquationControls
 
         private void RaisePolynomialChanged()
         {
-            PolynomialChanged?.Invoke(this, new EventArgs());
+            if (!SuppressUpdateEvents)
+            {
+                PolynomialChanged?.Invoke(this, new EventArgs());
+            }
         }
 
         private void RaiseTextChanged()
         {
-            TextChanged?.Invoke(this, new EventArgs());
+            if (!SuppressUpdateEvents)
+            {
+                TextChanged?.Invoke(this, new EventArgs());
+            }
         }
 
         #endregion
@@ -208,6 +216,7 @@ namespace MathEquationControls
             this.Unloaded += PolynomialControl_Unloaded;
             _controlCache_Terms = new Dictionary<int, PolynomialTermControl>();
             _controlCache_TextBlock = new Dictionary<int, TextBlock>();
+            SuppressUpdateEvents = false;
         }
 
         private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
@@ -285,31 +294,42 @@ namespace MathEquationControls
 
         private void ConstructTermControlsFromPolynomial(ExtendedArithmetic.Polynomial poly)
         {
+            SuppressUpdateEvents = true;
+
             controlContentsPanel.Children.Clear();
 
             bool firstPass = true;
             foreach (ExtendedArithmetic.Term term in poly.Terms.Reverse())
             {
+                TextBlock additiveSymbol = GetTextBlockControl(term);
+                if (firstPass)
+                {
+                    if (term.CoEfficient.Sign == -1)
+                    {
+                        controlContentsPanel.Children.Add(additiveSymbol);
+                    }
+                }
+                else
+                {
+                    controlContentsPanel.Children.Add(additiveSymbol);
+                }
+
+                PolynomialTermControl termCtrl = GetTermControl(term);
+                controlContentsPanel.Children.Add(termCtrl);
+
                 if (firstPass)
                 {
                     firstPass = false;
                 }
-                else
-                {
-                    TextBlock additiveSymbol = GetTextBlockControl(term);
-                        controlContentsPanel.Children.Add(additiveSymbol);
-                }
-
-
-                PolynomialTermControl termCtrl = GetTermControl(term);
-                controlContentsPanel.Children.Add(termCtrl);
             }
+
+            SuppressUpdateEvents = false;
         }
 
         private PolynomialTermControl GetTermControl(Term term)
         {
             PolynomialTermControl result = null;
-            if(_controlCache_Terms.ContainsKey(term.Exponent))
+            if (_controlCache_Terms.ContainsKey(term.Exponent))
             {
                 result = _controlCache_Terms[term.Exponent];
                 result.Term = term;
@@ -328,7 +348,7 @@ namespace MathEquationControls
         private TextBlock GetTextBlockControl(Term term)
         {
             TextBlock result = null;
-            if(_controlCache_TextBlock.ContainsKey(term.Exponent))
+            if (_controlCache_TextBlock.ContainsKey(term.Exponent))
             {
                 result = _controlCache_TextBlock[term.Exponent];
             }
@@ -357,7 +377,7 @@ namespace MathEquationControls
             {
                 result.Visibility = Visibility.Hidden;
             }
-            else 
+            else
             {
                 result.Visibility = Visibility.Visible;
             }
@@ -367,7 +387,10 @@ namespace MathEquationControls
 
         private void TermCtrl_TermUpdated(object sender, TermUpdatedEventArgs e)
         {
-            UpdatePolynomialFromTerms();
+            if (!SuppressUpdateEvents)
+            {
+                UpdatePolynomialFromTerms();
+            }
         }
 
         private void UpdatePolynomialFromTerms()

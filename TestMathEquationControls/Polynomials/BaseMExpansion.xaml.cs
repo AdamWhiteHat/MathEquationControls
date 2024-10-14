@@ -190,8 +190,7 @@ namespace TestMathEquationControls.Polynomials
             SetValue(PolynomialBaseMProperty, new BigInteger(148));
             PolynomialDegree = 3;
 
-            SetPolynomial();
-            //PopulateTermLockCheckboxes();
+            SetPolynomial();            
 
             ctrlTargetValue.ValueChanged += targetValue_ValueChanged;
             ctrlDegree.ValueChanged += polynomialDegree_ValueChanged;
@@ -227,8 +226,7 @@ namespace TestMathEquationControls.Polynomials
 
         private void polynomialDegree_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
-            SetPolynomial();
-            PopulateTermLockCheckboxes();
+            SetPolynomial();            
         }
 
         private void checkboxSmallCoefficients_Click(object sender, RoutedEventArgs e)
@@ -247,6 +245,8 @@ namespace TestMathEquationControls.Polynomials
                 _poynomial = Polynomial.MakeCoefficientsSmaller(_poynomial, PolynomialBaseM);
             }
             polyControl.Polynomial = _poynomial;
+
+            PopulateTermLockCheckboxes();
         }
 
         /// <summary>
