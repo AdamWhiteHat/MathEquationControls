@@ -53,159 +53,21 @@ namespace MathEquationControls
     ///     <MyNamespace:Coefficient/>
     ///
     /// </summary>
-    [TemplatePart(Name = Coefficient.ElementBorder, Type = typeof(Border))]
-    [TemplatePart(Name = Coefficient.ElementTextBox, Type = typeof(TextBox))]
-    public class Coefficient : BigRangeBase, INotifyPropertyChanged
+    public class Coefficient : NumberBox
     {
-        public string Text
-        {
-            get => controlTextBox.Text;
-            set
-            {
-                if (controlTextBox.Text != value)
-                {
-                    controlTextBox.Text = value;
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
-        #region TextValueConverter Dependency Propery and Routed Event
-
-        public IValueConverter TextValueConverter
-        {
-            get => (IValueConverter)GetValue(TextValueConverterProperty);
-            set => SetValue(TextValueConverterProperty, value);
-        }
-        public static readonly DependencyProperty TextValueConverterProperty = DependencyProperty.Register(
-                                                                              nameof(TextValueConverter),
-                                                                              typeof(IValueConverter),
-                                                                              typeof(Coefficient),
-                                                                              new PropertyMetadata(
-                                                                                  new StringToBigIntegerConverter(),
-                                                                                  new PropertyChangedCallback(Coefficient.OnTextValueConverterChanged)
-                                                                              )
-                                                                     );
-        public event RoutedPropertyChangedEventHandler<IValueConverter> TextValueConverterChanged
-        {
-            add { base.AddHandler(TextValueConverterChangedEvent, value); }
-            remove { base.RemoveHandler(TextValueConverterChangedEvent, value); }
-        }
-        public static readonly RoutedEvent TextValueConverterChangedEvent = EventManager.RegisterRoutedEvent(
-                                                                            nameof(TextValueConverterChanged),
-                                                                            RoutingStrategy.Direct,
-                                                                            typeof(RoutedPropertyChangedEventHandler<IValueConverter>),
-                                                                            typeof(Coefficient));
-        protected virtual void OnTextValueConverterChanged(IValueConverter oldValue, IValueConverter newValue)
-        {
-            RoutedPropertyChangedEventArgs<IValueConverter> e = new RoutedPropertyChangedEventArgs<IValueConverter>(oldValue, newValue);
-            e.RoutedEvent = TextValueConverterChangedEvent;
-            base.RaiseEvent(e);
-        }
-        private static void OnTextValueConverterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Coefficient element = (Coefficient)d;
-            element.OnTextValueConverterChanged((IValueConverter)e.OldValue, (IValueConverter)e.NewValue);
-        }
-
-        #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private const string ElementTextBox = "PART_TextBox";
-        private const string ElementBorder = "PART_Border";
-        private TextBox controlTextBox;
-        private Border controlBorder;
-        private MouseWheelAdjustRangeValueBehavior mouseWheelBehavior;
-        private DragUpDownAdjustValueBehavior mouseDragBehavior;
-
         static Coefficient()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Coefficient), new FrameworkPropertyMetadata(typeof(Coefficient)));
         }
 
         public Coefficient()
-        {
-            this.Unloaded += Coefficient_Unloaded;
-            this.Loaded += Coefficient_Loaded;
-        }
-
-        private void Coefficient_Loaded(object sender, RoutedEventArgs e)
-        {
-            controlTextBox.TextChanged += ControlTextBox_TextChanged;
-            controlTextBox.KeyUp += ControlTextBox_KeyUp;
-            ValueChanged += Coefficient_ValueChanged;
-        }
-
-        private void Coefficient_Unloaded(object sender, RoutedEventArgs e)
-        {
-            controlTextBox.TextChanged -= ControlTextBox_TextChanged;
-            controlTextBox.KeyUp -= ControlTextBox_KeyUp;
-            ValueChanged -= Coefficient_ValueChanged;
+            : base()
+        {            
         }
 
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-
-            controlBorder = GetTemplateChild(ElementBorder) as Border;
-            controlTextBox = GetTemplateChild(ElementTextBox) as TextBox;
-            controlTextBox.DataContext = this;
-
-            mouseWheelBehavior = new MouseWheelAdjustRangeValueBehavior(ValueProperty);
-            Interaction.GetBehaviors(this).Add(mouseWheelBehavior);
-
-            mouseDragBehavior = new DragUpDownAdjustValueBehavior(ValueProperty);
-            Interaction.GetBehaviors(this).Add(mouseDragBehavior);
-
-        }
-
-
-        private void Coefficient_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
-        {
-            string text = e.NewValue.ToString();
-            Size measuredStringSize = WPFHelper.MeasureString($" {text} ", this, controlTextBox);
-            controlTextBox.Width = measuredStringSize.Width;
-        }
-
-        private void ControlTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            if (textBox == null)
-            {
-                return;
-            }
-
-            if (e.Key == Key.Enter)
-            {
-                e.Handled = true;
-                textBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-            }
-        }
-
-        private void ControlTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            if (textBox == null)
-            {
-                return;
-            }
-
-            if (textBox.Text != Value.ToString())
-            {
-                BigInteger temp = new BigInteger();
-                if (BigInteger.TryParse(textBox.Text, out temp))
-                {
-                    //Value = temp;
-                    this.SetValue(ValueProperty, temp);
-                }
-
-            }
-        }
-
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            base.OnApplyTemplate();       
         }
     }
 }

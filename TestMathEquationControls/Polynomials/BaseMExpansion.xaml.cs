@@ -1,4 +1,5 @@
 ﻿using ExtendedArithmetic;
+using MathEquationControls;
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
@@ -41,17 +42,9 @@ namespace TestMathEquationControls.Polynomials
 
         public BigInteger PolynomialBaseM
         {
-            get => ctrlPolynomialBaseM.Value;
-            set
-            {
-                if (ctrlPolynomialBaseM.Value != value)
-                {
-                    ctrlPolynomialBaseM.Value = value;
-                    RaisePropertyChanged();
-                }
-            }
+            get { return (BigInteger)GetValue(PolynomialBaseMProperty); }
+            set { SetValue(PolynomialBaseMProperty, value); }
         }
-        private BigInteger _polynomialBaseM;
 
         public BigInteger PolynomialDegree
         {
@@ -67,6 +60,105 @@ namespace TestMathEquationControls.Polynomials
         }
         private BigInteger _polynomialDegree;
 
+        #region Dependency Properties
+
+        public static readonly DependencyProperty PolynomialBaseMProperty = DependencyProperty.Register(
+                                                                                nameof(PolynomialBaseM),
+                                                                                typeof(BigInteger),
+                                                                                typeof(BaseMExpansion),
+                                                                                new PropertyMetadata(
+                                                                                    BigInteger.One,
+                                                                                    new PropertyChangedCallback(BaseMExpansion.OnPolynomialBaseMChanged)
+                                                                                )
+                                                                       );
+
+        public event RoutedPropertyChangedEventHandler<BigInteger> PolynomialBaseMChanged
+        {
+            add { base.AddHandler(PolynomialBaseMChangedEvent, value); }
+            remove { base.RemoveHandler(PolynomialBaseMChangedEvent, value); }
+        }
+
+        public static readonly RoutedEvent PolynomialBaseMChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                        nameof(PolynomialBaseMChanged),
+                                                                        RoutingStrategy.Bubble,
+                                                                        typeof(RoutedPropertyChangedEventHandler<BigInteger>),
+                                                                        typeof(BaseMExpansion));
+
+
+
+        protected virtual void OnPolynomialBaseMChanged(BigInteger oldValue, BigInteger newValue)
+        {
+            RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
+            e.RoutedEvent = PolynomialBaseMChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void OnPolynomialBaseMChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            BaseMExpansion element = (BaseMExpansion)d;
+            element.OnPolynomialBaseMChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+
+
+
+        public static readonly DependencyProperty ExponentProperty = DependencyProperty.Register(
+                                                                                nameof(Exponent),
+                                                                                typeof(int),
+                                                                                typeof(PolynomialTermControl),
+                                                                                new PropertyMetadata(
+                                                                                    default(int),
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.OnExponentChanged)
+                                                                                )
+                                                                        );
+
+
+        public event RoutedPropertyChangedEventHandler<int> ExponentChanged
+        {
+            add { base.AddHandler(ExponentChangedEvent, value); }
+            remove { base.RemoveHandler(ExponentChangedEvent, value); }
+        }
+
+    
+
+        public static readonly RoutedEvent ExponentChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                        nameof(ExponentChanged),
+                                                                        RoutingStrategy.Bubble,
+                                                                        typeof(RoutedPropertyChangedEventHandler<int>),
+                                                                        typeof(PolynomialTermControl));
+
+        protected virtual void OnExponentChanged(int oldValue, int newValue)
+        {
+            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
+            e.RoutedEvent = ExponentChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void OnExponentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.OnExponentChanged((int)e.OldValue, (int)e.NewValue);
+        }
+        */
+
+        #endregion
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Polynomial _poynomial = null;
@@ -76,7 +168,7 @@ namespace TestMathEquationControls.Polynomials
         public BaseMExpansion()
         {
             InitializeComponent();
-            this.DataContext = this;
+            //this.DataContext = this;
             _indexIsTermLockedDictionary = new Dictionary<int, bool>();
             _poynomial = new Polynomial();
             wrappanelTermLocks.Children.Clear();
@@ -89,13 +181,13 @@ namespace TestMathEquationControls.Polynomials
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            base.DataContext = this;
+            //this.DataContext = this;
             ctrlPolynomialBaseM.DataContext = this;
             ctrlTargetValue.DataContext = this;
             ctrlDegree.DataContext = this;
 
             TargetValue = 3218147;
-            PolynomialBaseM = 148;
+            SetValue(PolynomialBaseMProperty, new BigInteger(148));
             PolynomialDegree = 3;
 
             SetPolynomial();

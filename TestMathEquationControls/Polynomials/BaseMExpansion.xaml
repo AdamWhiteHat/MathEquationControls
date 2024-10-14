@@ -14,6 +14,7 @@
 		>
     <Window.Resources>
         <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
+        <converters:StringToAbsoluteValueBigIntegerConverter  x:Key="StringToAbsoluteValueBigIntegerConverter" />
     </Window.Resources>
 
     <Grid>
@@ -27,16 +28,11 @@
             <Grid>
                 <WrapPanel HorizontalAlignment="Center" >
                     <Label Content="m =" Style="{DynamicResource TextControlStyle}" />
-                    <mathctrls:Coefficient x:Name="ctrlPolynomialBaseM"										 
-										 Style="{DynamicResource TextControlStyle}" 
-										 />
+                    <mathctrls:NumberBox x:Name="ctrlPolynomialBaseM" d:DataContext="-2" Value="{Binding Path=PolynomialBaseM}" MinWidth="30" MinHeight="60" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right">
                     <Label Content="degree:" Style="{DynamicResource TextControlStyle}" />
-                    <mathctrls:Coefficient x:Name="ctrlDegree"
-										 Value="{Binding Path=PolynomialDegree, Mode=TwoWay}"
-										 Style="{DynamicResource TextControlStyle}" 										 
-										 />
+                    <mathctrls:NumberBox x:Name="ctrlDegree" Value="{Binding Path=PolynomialDegree, Mode=TwoWay}" />
                 </WrapPanel>
             </Grid>
         </Border>
@@ -58,16 +54,11 @@
 
 
         <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-            
             <Grid>
                 <StackPanel HorizontalAlignment="Center">
                     <WrapPanel HorizontalAlignment="Center">
                         <Label Content="=" Style="{DynamicResource TextControlStyle}" />
-                        <mathctrls:Coefficient x:Name="ctrlTargetValue"
-											 Value="{Binding Path=TargetValue, Mode=TwoWay}"
-											 Style="{DynamicResource TextControlStyle}" 											 
-											/>
-
+                        <mathctrls:NumberBox x:Name="ctrlTargetValue" Value="{Binding Path=TargetValue, Mode=TwoWay}" />
                     </WrapPanel>
                     <Label Content="(target value)" Style="{DynamicResource TextControlStyle}" />
                 </StackPanel>

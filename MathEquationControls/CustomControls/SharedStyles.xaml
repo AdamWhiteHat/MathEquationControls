@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:MathEquationControls.ValueConverters"
 					xmlns:local="clr-namespace:MathEquationControls"					
 					>
 
@@ -17,8 +18,24 @@
         <Setter Property="VerticalContentAlignment"  Value="Center" />
     </Style>
 
-    <Style x:Key="CoefficientDefaultTextBoxStyle" TargetType="TextBox">
+    <!-- NumberBox Controls -->
+
+    <Style x:Key="NumberBox_Default_BorderStyle" TargetType="Border">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Height" Value="Auto" />
+
+        <Setter Property="HorizontalAlignment"  Value="Center" />
+        <Setter Property="VerticalAlignment"  Value="Center" />
+
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0.5" />
+        <Setter Property="BorderBrush" Value="LightGray" />
+    </Style>
+
+    <Style x:Key="NumberBox_Default_TextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+
+        <Setter Property="Padding" Value="0,5,0,5" />
 
         <Setter Property="Cursor" Value="ScrollNS" />
 
@@ -33,10 +50,34 @@
         <Setter Property="Focusable" Value="True" />
     </Style>
 
+    <Style x:Key="NumberBox_TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource NumberBox_Default_TextBoxStyle}">
+        <Setter Property="Text">
+            <Setter.Value>
+                <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}">
+                    <Binding.Converter>
+                        <converters:StringToBigIntegerConverter />
+                    </Binding.Converter>
+                </Binding>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Coefficient_TextBoxStyle" TargetType="TextBox"  BasedOn="{StaticResource NumberBox_Default_TextBoxStyle}">
+        <Setter Property="Text">
+            <Setter.Value>
+                <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}">
+                    <Binding.Converter>
+                        <converters:StringToAbsoluteValueBigIntegerConverter />
+                    </Binding.Converter>
+                </Binding>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Polynomial Controls -->
 
     <Style x:Key="PolynomialControlStyle" TargetType="local:PolynomialControl" BasedOn="{StaticResource  ControlStyle}">
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="0.5" />
         <!--Setter Property="BorderBrush" Value="Green" /-->
     </Style>
 
@@ -119,6 +160,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="MinWidth" Value="30" />
+        <Setter Property="MinHeight" Value="60" />
     </Style>
 
     <Style x:Key="FocusableParagraph" TargetType="Paragraph">

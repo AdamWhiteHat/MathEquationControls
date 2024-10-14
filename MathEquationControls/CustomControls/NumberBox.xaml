@@ -6,23 +6,23 @@
 					xmlns:converters="clr-namespace:MathEquationControls.ValueConverters"
 					mc:Ignorable="d">
 
-    <Style TargetType="{x:Type local:Coefficient}">
+    <Style TargetType="{x:Type local:NumberBox}">
         <Style.Resources>
             <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
             <converters:StringToAbsoluteValueBigIntegerConverter  x:Key="StringToAbsoluteValueBigIntegerConverter" />
         </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:Coefficient}">
+                <ControlTemplate TargetType="{x:Type local:NumberBox}">
                     <Border x:Name="PART_Border" Style="{DynamicResource NumberBox_Default_BorderStyle}" >
                         <WrapPanel Orientation="Horizontal">
-                            <TextBox x:Name="PART_TextBox" d:Text="1" Style="{DynamicResource Coefficient_TextBoxStyle}" />
+                            <TextBox x:Name="PART_TextBox" d:Text="-2" Style="{DynamicResource NumberBox_TextBoxStyle}" />
                         </WrapPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-
+    
 </ResourceDictionary>
     

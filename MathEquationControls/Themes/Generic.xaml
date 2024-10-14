@@ -8,6 +8,7 @@
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Fraction.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialTermControl.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialControl.xaml"/>
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/NumberBox.xaml" />
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Coefficient.xaml" />
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/SharedStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -25,7 +26,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Column="0" Grid.Row="0" Width="Auto" Height="Auto" VerticalAlignment="Center"  HorizontalAlignment="Center">
-                            <TextBlock Text="&#x1f512;" Name="LockIcon" FontSize="25" LineHeight="Auto" TextAlignment="Center" Foreground="Green" />
+                            <TextBlock Text="&#x1f512;" Name="LockIcon" FontSize="25" LineHeight="Auto" TextAlignment="Center" Foreground="Red" />
                         </Grid>
                         <ContentPresenter 
                             Grid.Column="1" Grid.Row="0"
@@ -42,12 +43,12 @@
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="LockIcon" Property="Text" Value="&#x1f512;" />
                             <!-- Locked -->
-                            <Setter TargetName="LockIcon" Property="Foreground" Value="Green" />
+                            <Setter TargetName="LockIcon" Property="Foreground" Value="Red" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="False">
                             <Setter Property="Text" TargetName="LockIcon" Value="&#x1f513;" />
                             <!-- Unlocked -->
-                            <Setter TargetName="LockIcon" Property="Foreground" Value="Red" />
+                            <Setter TargetName="LockIcon" Property="Foreground" Value="Green" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
