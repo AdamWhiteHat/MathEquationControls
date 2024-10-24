@@ -26,14 +26,23 @@
                             >
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}"></local:Coefficient>
-                            <TextBlock x:Name="PART_MultiplicationSymbol"  Style="{DynamicResource OperatorStyle}"></TextBlock>
+                            <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}"></TextBlock>
                             <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}"></TextBlock>
-                            <TextBlock>
+                            <TextBlock x:Name="exponentBlock">
                                 <Run x:Name="PART_Exponent" Style="{DynamicResource ExponentStyle}"></Run>
                             </TextBlock>
                         </WrapPanel>
 
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Exponent" Value="0">
+                            <Trigger.Setters>
+                                <Setter TargetName="PART_MultiplicationSymbol" Property="Visibility" Value="Hidden"/>
+                                <Setter TargetName="PART_Indeteminant" Property="Visibility" Value="Hidden"/>
+                                <Setter TargetName="exponentBlock" Property="Visibility" Value="Hidden"/>
+                            </Trigger.Setters>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

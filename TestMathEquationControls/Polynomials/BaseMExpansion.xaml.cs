@@ -84,8 +84,6 @@ namespace TestMathEquationControls.Polynomials
                                                                         typeof(RoutedPropertyChangedEventHandler<BigInteger>),
                                                                         typeof(BaseMExpansion));
 
-
-
         protected virtual void OnPolynomialBaseMChanged(BigInteger oldValue, BigInteger newValue)
         {
             RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
@@ -99,79 +97,19 @@ namespace TestMathEquationControls.Polynomials
             element.OnPolynomialBaseMChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-
-
-
-        public static readonly DependencyProperty ExponentProperty = DependencyProperty.Register(
-                                                                                nameof(Exponent),
-                                                                                typeof(int),
-                                                                                typeof(PolynomialTermControl),
-                                                                                new PropertyMetadata(
-                                                                                    default(int),
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.OnExponentChanged)
-                                                                                )
-                                                                        );
-
-
-        public event RoutedPropertyChangedEventHandler<int> ExponentChanged
-        {
-            add { base.AddHandler(ExponentChangedEvent, value); }
-            remove { base.RemoveHandler(ExponentChangedEvent, value); }
-        }
-
-    
-
-        public static readonly RoutedEvent ExponentChangedEvent = EventManager.RegisterRoutedEvent(
-                                                                        nameof(ExponentChanged),
-                                                                        RoutingStrategy.Bubble,
-                                                                        typeof(RoutedPropertyChangedEventHandler<int>),
-                                                                        typeof(PolynomialTermControl));
-
-        protected virtual void OnExponentChanged(int oldValue, int newValue)
-        {
-            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
-            e.RoutedEvent = ExponentChangedEvent;
-            base.RaiseEvent(e);
-        }
-
-        private static void OnExponentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            PolynomialTermControl element = (PolynomialTermControl)d;
-            element.OnExponentChanged((int)e.OldValue, (int)e.NewValue);
-        }
-        */
-
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Polynomial _poynomial = null;
+        private Polynomial _polynomial = null;
         private Dictionary<int, bool> _indexIsTermLockedDictionary;
-        //private Dictionary<int, (bool, Term)> _indexLockTermDictionary;
 
         public BaseMExpansion()
         {
             InitializeComponent();
-            //this.DataContext = this;
-            _indexIsTermLockedDictionary = new Dictionary<int, bool>();
-            _poynomial = new Polynomial();
             wrappanelTermLocks.Children.Clear();
+            _indexIsTermLockedDictionary = new Dictionary<int, bool>();
+            _polynomial = new Polynomial();
         }
 
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
@@ -181,57 +119,158 @@ namespace TestMathEquationControls.Polynomials
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //this.DataContext = this;
+            _targetValue = 3218147;
+            _polynomialDegree = 3;
+            SetValue(PolynomialBaseMProperty, new BigInteger(148));
+
             ctrlPolynomialBaseM.DataContext = this;
             ctrlTargetValue.DataContext = this;
             ctrlDegree.DataContext = this;
 
-            TargetValue = 3218147;
-            SetValue(PolynomialBaseMProperty, new BigInteger(148));
-            PolynomialDegree = 3;
-
-            SetPolynomial();            
-
             ctrlTargetValue.ValueChanged += targetValue_ValueChanged;
             ctrlDegree.ValueChanged += polynomialDegree_ValueChanged;
             ctrlPolynomialBaseM.ValueChanged += polynomialBaseM_ValueChanged;
-            polyControl.PolynomialChanged += PolyControl_PolynomialChanged;
+            checkboxSmallCoefficients.Click += checkboxSmallCoefficients_Click;
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            polyControl.PolynomialChanged -= PolyControl_PolynomialChanged;
+            checkboxSmallCoefficients.Click -= checkboxSmallCoefficients_Click;
             ctrlPolynomialBaseM.ValueChanged -= polynomialBaseM_ValueChanged;
             ctrlDegree.ValueChanged -= polynomialDegree_ValueChanged;
             ctrlTargetValue.ValueChanged -= targetValue_ValueChanged;
         }
 
-        private void PolyControl_PolynomialChanged(object sender, EventArgs e)
-        {
-            //if (IsLockInEffect())
-            //{
-            //    ClampPolynomial();
-            //}
-        }
-
         private void polynomialBaseM_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
-            SetPolynomial();
+            ClampPolynomial();
         }
 
         private void targetValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
-            SetPolynomial();
+            ClampPolynomial();
         }
 
         private void polynomialDegree_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
-            SetPolynomial();            
+            ClampPolynomial();
         }
 
         private void checkboxSmallCoefficients_Click(object sender, RoutedEventArgs e)
         {
-            SetPolynomial();
+            ClampPolynomial();
+        }
+
+        /// <summary>
+        /// Returns true if any of the "Lock Term" checkboxes are checked, i.e. any lock is in effect
+        /// </summary>
+        private bool IsLockInEffect()
+        {
+            return _indexIsTermLockedDictionary.Values.Any(v => v == true);
+        }
+
+        /// <summary>
+        /// Like <see cref="SetPolynomial"/> except it takes the locked terms as extra constraints, only modifying the unlocked term.
+        /// </summary>
+        private void ClampPolynomial()
+        {
+            if (!IsLockInEffect())
+            {
+                SetPolynomial();
+            }
+            else
+            {
+                List<KeyValuePair<int, bool>> lockedKVPs = _indexIsTermLockedDictionary.Where(kvp => kvp.Value == true).ToList();
+                List<int> lockedIndices = lockedKVPs.Select(kvp => kvp.Key).ToList();
+
+                List<Term> lockedTerms = _polynomial.Terms.Where(term => lockedIndices.Contains(term.Exponent)).ToList();
+                BigInteger lockedValue = lockedTerms.Select(term => term.Evaluate(PolynomialBaseM)).Sum();
+
+                BigInteger valueRemaining = TargetValue - lockedValue;
+
+                List<int> degreeRemaining = new List<int>();
+
+                int deg = (int)PolynomialDegree;
+                while (deg >= 0)
+                {
+                    degreeRemaining.Add(deg);
+                    deg--;
+                }
+                degreeRemaining = degreeRemaining.Except(lockedIndices).ToList();
+
+                List<Term> newTerms = new List<Term>();
+                newTerms.AddRange(lockedTerms);
+
+                foreach (int d in degreeRemaining)
+                {
+                    if (BigInteger.Abs(valueRemaining) == 0)
+                    {
+                        break;
+                    }
+
+                    BigInteger placeValue = BigInteger.Pow(PolynomialBaseM, d);
+                    if (placeValue == 1)
+                    {
+                        newTerms.Add(new Term(valueRemaining, d));
+                        valueRemaining = 0;
+                        break;
+                    }
+                    else if (placeValue == BigInteger.Abs(valueRemaining))
+                    {
+                        newTerms.Add(new Term(valueRemaining.Sign, d));
+                        valueRemaining -= placeValue;
+                        break;
+                    }
+                    else if (placeValue < BigInteger.Abs(valueRemaining))
+                    {
+                        BigInteger quotient = BigInteger.Divide(valueRemaining, placeValue);
+
+                        newTerms.Add(new Term(quotient, d));
+                        BigInteger toSubtract = BigInteger.Multiply(quotient, placeValue);
+                        valueRemaining -= toSubtract;
+                    }
+                    else if (placeValue > BigInteger.Abs(valueRemaining))
+                    {
+                        newTerms.Add(new Term(0, d));
+                    }
+                }
+
+                newTerms = newTerms.OrderBy(trm => trm.Exponent).ToList();
+
+                if (checkboxSmallCoefficients.IsChecked.HasValue && checkboxSmallCoefficients.IsChecked.Value == true)
+                {
+                    BigInteger maxCoeff = PolynomialBaseM / 2;
+
+                    int i = 0;
+                    for (int maxDegree = newTerms.Max(trm => trm.Exponent); i <= maxDegree; i++)
+                    {
+                        if (newTerms[i].CoEfficient > maxCoeff)
+                        {
+                            if (lockedIndices.Contains(i) || lockedIndices.Contains(i + 1) || (i + 1) > maxDegree)
+                            {
+                                continue;
+                            }
+
+                            BigInteger newCoeff = -(PolynomialBaseM - newTerms[i].CoEfficient);
+                            BigInteger newCoeff2 = newTerms[i + 1].CoEfficient + 1;
+
+                            newTerms[i] = new Term(newCoeff, i);
+                            newTerms[i + 1] = new Term(newCoeff2, i + 1);
+                        }
+                    }
+                }
+
+                newTerms.RemoveAll((Term t) => t.CoEfficient == 0L);
+                if (!newTerms.Any())
+                {
+                    newTerms = Term.GetTerms(new BigInteger[1] { 0 }).ToList();
+                }
+
+                _polynomial = new Polynomial(newTerms.ToArray());
+                polyControl.Text = _polynomial.ToString();
+            }
+
+            PopulateTermLockCheckboxes();
         }
 
         /// <summary>
@@ -239,14 +278,42 @@ namespace TestMathEquationControls.Polynomials
         /// </summary>
         private void SetPolynomial()
         {
-            _poynomial = new Polynomial(TargetValue, PolynomialBaseM, (int)PolynomialDegree);
+            _polynomial = new Polynomial(TargetValue, PolynomialBaseM, (int)PolynomialDegree);
             if (checkboxSmallCoefficients.IsChecked.HasValue && checkboxSmallCoefficients.IsChecked.Value == true)
             {
-                _poynomial = Polynomial.MakeCoefficientsSmaller(_poynomial, PolynomialBaseM);
-            }
-            polyControl.Polynomial = _poynomial;
+                BigInteger maxCoeff = PolynomialBaseM / 2;
+                List<Term> newTerms = _polynomial.Terms.ToList();
 
-            PopulateTermLockCheckboxes();
+                int maxExp = newTerms.Max(trm => trm.Exponent);
+
+                while (maxExp < PolynomialDegree)
+                {
+                    maxExp++;
+                    newTerms.Add(new Term(0, maxExp));
+                }
+
+                int i = 0;
+                for (int maxDegree = (int)PolynomialDegree; i <= maxDegree; i++)
+                {
+                    if (newTerms[i].CoEfficient > maxCoeff)
+                    {
+                        if ((i + 1) > maxDegree)
+                        {
+                            break;
+                        }
+
+                        BigInteger newCoeff = -(PolynomialBaseM - newTerms[i].CoEfficient);
+                        BigInteger newCoeff2 = newTerms[i + 1].CoEfficient + 1;
+
+                        newTerms[i] = new Term(newCoeff, i);
+                        newTerms[i + 1] = new Term(newCoeff2, i + 1);
+                    }
+                }
+
+                _polynomial = new Polynomial(newTerms.ToArray());
+            }
+
+            polyControl.Polynomial = _polynomial;
         }
 
         /// <summary>
@@ -255,9 +322,9 @@ namespace TestMathEquationControls.Polynomials
         private void PopulateTermLockCheckboxes()
         {
             int lockedTerms_Degree = Math.Max(0, _indexIsTermLockedDictionary.Count - 1);
-            if (_poynomial.Degree < lockedTerms_Degree)
+            if (_polynomial.Degree < lockedTerms_Degree)
             {
-                while (_poynomial.Degree < lockedTerms_Degree)
+                while (_polynomial.Degree < lockedTerms_Degree)
                 {
                     _indexIsTermLockedDictionary.Remove(lockedTerms_Degree);
 
@@ -267,175 +334,27 @@ namespace TestMathEquationControls.Polynomials
                     lockedTerms_Degree = Math.Max(0, _indexIsTermLockedDictionary.Count - 1);
                 }
             }
-            else if (_poynomial.Degree > lockedTerms_Degree)
+            else if (_polynomial.Degree > lockedTerms_Degree)
             {
-                if (_poynomial.Degree > 0)
+                if (_polynomial.Degree > 0)
                 {
-                    foreach (Term term in _poynomial.Terms.Reverse())
+                    foreach (Term term in _polynomial.Terms.Reverse())
                     {
                         if (!_indexIsTermLockedDictionary.ContainsKey(term.Exponent))
                         {
+                            PolynomialTermControl termControl = polyControl.Children.Where(ptc => ptc.Exponent == term.Exponent).Single();
                             double cbWidth = polyControl.ActualWidth / polyControl.Polynomial.Terms.Length;
                             CheckBox checkBox = CreateLockTermCheckbox(term, cbWidth);
 
-                            wrappanelTermLocks.Children.Add(checkBox);
+                            int index = _polynomial.Degree - term.Exponent;
+
+                            wrappanelTermLocks.Children.Insert(index, checkBox);
                             _indexIsTermLockedDictionary.Add(term.Exponent, false);
                         }
                     }
                 }
             }
         }
-
-        /// <summary>
-        /// Returns true if any of the "Lock Term" checkboxes are checked, i.e. any lock is in effect
-        /// </summary>
-        private bool IsLockInEffect()
-        {
-            return ((_poynomial.Degree > 0) && (_indexIsTermLockedDictionary.Values.Any(v => v == true)));
-        }
-
-        /// <summary>
-        /// Like <see cref="SetPolynomial"/> except it takes the locked terms as extra constraints, only modifying the unlocked term.
-        /// </summary>
-        private void ClampPolynomial()
-        {
-            if (IsLockInEffect())
-            {
-                List<KeyValuePair<int, bool>> lockedKVPs = _indexIsTermLockedDictionary.Where(kvp => kvp.Value == true).ToList();
-                List<int> lockedIndices = lockedKVPs.Select(kvp => kvp.Key).ToList();
-
-                List<Term> lockedTerms = _poynomial.Terms.Where(term => lockedIndices.Contains(term.Exponent)).ToList();
-                BigInteger lockedValue = lockedTerms.Select(term => term.Evaluate(PolynomialBaseM)).Sum();
-
-                BigInteger remaining = TargetValue - lockedValue;
-
-                int d = _poynomial.Degree;
-
-                List<Term> newTerms = new List<Term>();
-
-
-                while ((d >= 0) && (BigInteger.Abs(remaining) > 0))
-                {
-                    if (lockedIndices.Contains(d))
-                    {
-                        newTerms.Add(_poynomial.Terms.Where(term => term.Exponent == d).Single());
-                        d--;
-                        continue;
-                    }
-
-                    BigInteger placeValue = BigInteger.Pow(PolynomialBaseM, d);
-                    if (placeValue == BigInteger.Abs(remaining))
-                    {
-                        newTerms.Add(new Term(remaining.Sign, d));
-                        remaining = 0;
-                    }
-                    else if (placeValue < BigInteger.Abs(remaining))
-                    {
-                        BigInteger quotient = BigInteger.Divide(remaining, placeValue);
-
-
-                        newTerms.Add(new Term(quotient, d));
-                        BigInteger toSubtract = BigInteger.Multiply(quotient, placeValue);
-
-                        if (remaining.Sign == -1)
-                        {
-                            remaining += toSubtract;
-                        }
-                        else
-                        {
-                            remaining -= toSubtract;
-                        }
-
-                    }
-                    else if (placeValue > BigInteger.Abs(remaining))
-                    {
-                        newTerms.Add(new Term(0, d));
-                    }
-                    d--;
-                }
-
-                _poynomial = new Polynomial(newTerms.ToArray());
-                polyControl.Text = _poynomial.ToString();
-            }
-        }
-
-
-        private List<Term> Recursive_ClampPolynomial(int d, BigInteger remaining, List<int> lockedIndices)
-        {
-            List<Term> results = new List<Term>();
-
-            while ((d >= 0) && (BigInteger.Abs(remaining) > 0))
-            {
-                if (lockedIndices.Contains(d))
-                {
-                    results.Add(_poynomial.Terms.Where(term => term.Exponent == d).Single());
-                    d--;
-                    continue;
-                }
-
-                BigInteger placeValue = BigInteger.Pow(PolynomialBaseM, d);
-                if (placeValue == BigInteger.Abs(remaining))
-                {
-                    results.Add(new Term(remaining.Sign, d));
-                    remaining = 0;
-                }
-                else if (placeValue < BigInteger.Abs(remaining))
-                {
-                    BigInteger quotient = BigInteger.Divide(remaining, placeValue);
-
-                    results.Add(new Term(quotient, d));
-                    BigInteger toSubtract = BigInteger.Multiply(quotient, placeValue);
-
-                    if (remaining.Sign == -1)
-                    {
-                        remaining += toSubtract;
-                    }
-                    else
-                    {
-                        remaining -= toSubtract;
-                    }
-                }
-                else if (placeValue > BigInteger.Abs(remaining))
-                {
-                    //newTerms.Add(new Term(0, d));
-
-                    BigInteger coefficient = -1;
-                    List<Term> newTerms = new List<Term>();
-
-                    do
-                    {
-                        coefficient++;
-
-                        Term thisTerm = new Term(coefficient, d);
-                        BigInteger thisContribution = thisTerm.Evaluate(PolynomialBaseM);
-                        BigInteger proposedRemaining = remaining - thisContribution;
-
-                        newTerms = Recursive_ClampPolynomial(d - 1, proposedRemaining, lockedIndices);
-
-                        if (newTerms.Any())
-                        {
-                            results.Add(thisTerm);
-                            results.AddRange(newTerms);
-
-                            BigInteger newContribution = newTerms.Select(term => term.Evaluate(PolynomialBaseM)).Sum();
-                            BigInteger newRemaining = proposedRemaining - newContribution;
-
-                            if (newRemaining != 0)
-                            {
-                                throw new ArithmeticException($"There is a bug in the logic. NewRemaining should be zero, but was found to be: {newRemaining}");
-                            }
-
-                            return results;
-                        }
-                    }
-                    while (!newTerms.Any() && (coefficient < PolynomialBaseM));
-                }
-                d--;
-            }
-
-            return results;
-        }
-
 
         private CheckBox CreateLockTermCheckbox(Term term, double cbWidth)
         {
@@ -479,7 +398,7 @@ namespace TestMathEquationControls.Polynomials
                 int key = (int)checkBox.Tag;
                 _indexIsTermLockedDictionary[key] = true;
 
-                ClampPolynomial();
+                //ClampPolynomial();
             }
         }
 

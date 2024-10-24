@@ -17,28 +17,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <Grid Background="{TemplateBinding Background}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Column="0" Grid.Row="0" Width="Auto" Height="Auto" VerticalAlignment="Center"  HorizontalAlignment="Center">
-                            <TextBlock Text="&#x1f512;" Name="LockIcon" FontSize="25" LineHeight="Auto" TextAlignment="Center" Foreground="Red" />
-                        </Grid>
-                        <ContentPresenter 
-                            Grid.Column="1" Grid.Row="0"
+                    <WrapPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
+                        <TextBlock Name="LockIcon" Text="&#x1f512;" FontSize="25" Foreground="Red"                                                                     
+                                    Width="Auto" Height="Auto" LineHeight="Auto" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
+                        <ContentPresenter                
+                            Height="Auto" Width="Auto" TextBlock.LineHeight="Auto"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
-                            Margin="8 16"                     
-                            Height="Auto" Width="Auto"
-                            RecognizesAccessKey="True" 
-                            TextBlock.Foreground="{TemplateBinding Foreground}" 
-                            TextBlock.LineHeight="Auto"
-                            />
-                    </Grid>
+                            RecognizesAccessKey="True"
+                            TextBlock.Foreground="{TemplateBinding Foreground}"                             
+                       />
+                    </WrapPanel>
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="LockIcon" Property="Text" Value="&#x1f512;" />
@@ -51,6 +42,7 @@
                             <Setter TargetName="LockIcon" Property="Foreground" Value="Green" />
                         </Trigger>
                     </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

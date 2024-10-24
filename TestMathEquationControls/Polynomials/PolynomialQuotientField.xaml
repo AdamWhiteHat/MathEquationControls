@@ -60,25 +60,30 @@
 									 DockToParent="True"
 									 Style="{DynamicResource PolynomialControlStyle}" />
             <Label Width="30" />
-            <Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:Coefficient x:Name="modulusInteger"					 
-							 Value="{Binding Path=Modulus, Mode=TwoWay}"
-							 Style="{DynamicResource TextControlStyle}" 
-							 ValueChanged="numberboxControl_ValueChanged" />
+          
 
         </WrapPanel>
 
-        <WrapPanel Grid.Row="5" Style="{DynamicResource WrapPanelStyle}">
+        <WrapPanel Grid.Row="5" Style="{DynamicResource WrapPanelStyle}" >
             <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
-            <TextBlock x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
+            <TextBlock x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" d:Width="24" />            
         </WrapPanel>
 
         <WrapPanel Grid.Row="6" Style="{DynamicResource WrapPanelStyle}">
-            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
-            <TextBox x:Name="integerTotal_Quotient" Text="0" Style="{DynamicResource TextBoxStyle}" />
-            <TextBlock Text=" ≡" Style="{DynamicResource TextBlockStyle}" />
-            <TextBlock Text="(" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" Visibility="Collapsed" />
+            <TextBox x:Name="integerTotal_Quotient" Text="0" Style="{DynamicResource TextBoxStyle}" Visibility="Collapsed" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
+            <TextBlock Text="≡" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <TextBox x:Name="integerTotal_QuotientMod" Text="0" Style="{DynamicResource TextBoxStyle}" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
+            <TextBlock Text="(" Style="{DynamicResource TextBlockStyle}" />
+            <Label Content="mod" Style="{DynamicResource TextControlStyle}" />
+            <mathctrls:Coefficient x:Name="modulusInteger"					 
+						 Value="{Binding Path=Modulus, Mode=TwoWay}"
+						 Style="{DynamicResource TextControlStyle}" 
+						 ValueChanged="numberboxControl_ValueChanged" />
             <TextBlock Text=")" Style="{DynamicResource TextBlockStyle}" />
         </WrapPanel>
 

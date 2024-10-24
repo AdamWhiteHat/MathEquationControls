@@ -20,6 +20,12 @@ namespace MathEquationControls.Behaviors
         public static int DragDistanceStepSize = 10;
         public static int MaxMultiplier = 4;
 
+        public DragUpDownAdjustValueBehavior(DependencyProperty valueProperty, int updateTimerResolutionMS)
+            : this(valueProperty)
+        {
+            TimerResolutionMS = updateTimerResolutionMS;
+        }
+
         public DragUpDownAdjustValueBehavior(DependencyProperty valueProperty)
         {
             _valueProperty = valueProperty;
@@ -55,7 +61,7 @@ namespace MathEquationControls.Behaviors
 
             // AssociatedObject.PreviewMouseMove += AssociatedObject_PreviewMouseMove;
 
-            _draggingTimer = new DispatcherTimer();
+            _draggingTimer = new DispatcherTimer(DispatcherPriority.Input);            
             _draggingTimer.Interval = TimeSpan.FromMilliseconds(TimerResolutionMS);
             _draggingTimer.Tick += DraggingTimer_Tick;
 

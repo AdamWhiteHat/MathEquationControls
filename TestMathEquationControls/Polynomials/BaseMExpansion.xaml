@@ -64,8 +64,7 @@
                 </StackPanel>
                 <CheckBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,5"
 						  FontFamily="Libertinus Math Regular" FontSize="17" IsChecked="True"
-						  x:Name="checkboxSmallCoefficients" Content="Reduce coefficient size" 
-						  Click="checkboxSmallCoefficients_Click" />
+						  x:Name="checkboxSmallCoefficients" Content="Reduce coefficient size" />
             </Grid>
         </Border>
 
