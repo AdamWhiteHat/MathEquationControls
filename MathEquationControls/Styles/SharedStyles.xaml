@@ -55,7 +55,7 @@
             <Setter.Value>
                 <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}">
                     <Binding.Converter>
-                        <converters:StringToBigIntegerConverter />
+                        <converters:BigIntegerToStringConverter />
                     </Binding.Converter>
                 </Binding>
             </Setter.Value>
@@ -67,7 +67,7 @@
             <Setter.Value>
                 <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}">
                     <Binding.Converter>
-                        <converters:StringToAbsoluteValueBigIntegerConverter />
+                        <converters:AbsoluteBigIntegerToStringConverter />
                     </Binding.Converter>
                 </Binding>
             </Setter.Value>
@@ -82,8 +82,8 @@
     </Style>
 
     <Style x:Key="PolynomialTermStyle" TargetType="local:PolynomialTermControl" >
-        <Setter Property="BorderThickness" Value="1" />
-        <!--Setter Property="BorderBrush" Value="Blue" /-->
+        <!--Setter Property="BorderThickness" Value="0.5" /-->
+        <!--Setter Property="BorderBrush" Value="Black" /-->
 
         <Setter Property="Cursor" Value="ScrollNS" />
         <Setter Property="ForceCursor" Value="True" />
@@ -145,6 +145,10 @@
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontWeight" Value="Light" />
         <Setter Property="Width" Value="13" />
+    </Style>
+
+    <Style x:Key="AdditiveOperatorStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
+        <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
     <Style x:Key="ExponentStyle" TargetType="Run">

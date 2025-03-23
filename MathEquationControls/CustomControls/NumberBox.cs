@@ -24,35 +24,6 @@ using MathEquationControls.ValueConverters;
 
 namespace MathEquationControls
 {
-    /// <summary>
-    /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-    ///
-    /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:MathEquationControl.CustomControls"
-    ///
-    ///
-    /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:MathEquationControl.CustomControls;assembly=MathEquationControl.CustomControls"
-    ///
-    /// You will also need to add a project reference from the project where the XAML file lives
-    /// to this project and Rebuild to avoid compilation errors:
-    ///
-    ///     Right click on the target project in the Solution Explorer and
-    ///     "Add Reference"->"Projects"->[Browse to and select this project]
-    ///
-    ///
-    /// Step 2)
-    /// Go ahead and use your control in the XAML file.
-    ///
-    ///     <MyNamespace:Coefficient/>
-    ///
-    /// </summary>
     [TemplatePart(Name = NumberBox.ElementBorder, Type = typeof(Border))]
     [TemplatePart(Name = NumberBox.ElementTextBox, Type = typeof(TextBox))]
     public class NumberBox : BigRangeBase, INotifyPropertyChanged
@@ -77,6 +48,8 @@ namespace MathEquationControls
 
         private Border controlBorder;
         private TextBox controlTextBox;
+        private bool isBehaviorsAttached = false;
+        private KeyInputSetValueBehavior keyInputBehavior;
         private MouseWheelAdjustRangeValueBehavior mouseWheelBehavior;
         private DragUpDownAdjustValueBehavior mouseDragBehavior;
 
@@ -89,6 +62,7 @@ namespace MathEquationControls
         {
             this.Unloaded += Control_Unloaded;
             this.Loaded += Control_Loaded;
+            this.IsEnabledChanged += NumberBox_IsEnabledChanged;
         }
 
         private void Control_Loaded(object sender, RoutedEventArgs e)
@@ -103,6 +77,7 @@ namespace MathEquationControls
             // controlTextBox.TextChanged -= ControlTextBox_TextChanged;
             // controlTextBox.KeyUp -= ControlTextBox_KeyUp;
             ValueChanged -= Control_ValueChanged;
+            DetachInputBehaviors();
         }
 
         public override void OnApplyTemplate()
@@ -111,15 +86,75 @@ namespace MathEquationControls
 
             controlBorder = GetTemplateChild(ElementBorder) as Border;
             controlTextBox = GetTemplateChild(ElementTextBox) as TextBox;
-
             controlTextBox.DataContext = this;
 
-            mouseWheelBehavior = new MouseWheelAdjustRangeValueBehavior(ValueProperty);
-            Interaction.GetBehaviors(this).Add(mouseWheelBehavior);
+            if (IsEnabled)
+            {
+                AttachInputBehaviors();
+            }
+        }
 
-            mouseDragBehavior = new DragUpDownAdjustValueBehavior(ValueProperty);
-            Interaction.GetBehaviors(this).Add(mouseDragBehavior);
+        private void NumberBox_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue == e.NewValue) { return; }
 
+            bool isEnabled = (bool)e.NewValue;
+            if (isEnabled)
+            {
+                AttachInputBehaviors();
+            }
+            else
+            {
+                DetachInputBehaviors();
+            }
+        }
+
+        private void AttachInputBehaviors()
+        {
+            if (!isBehaviorsAttached)
+            {
+                isBehaviorsAttached = true;
+
+                mouseWheelBehavior = new MouseWheelAdjustRangeValueBehavior(ValueProperty);
+                Interaction.GetBehaviors(this).Add(mouseWheelBehavior);
+
+                mouseDragBehavior = new DragUpDownAdjustValueBehavior(ValueProperty);
+                Interaction.GetBehaviors(this).Add(mouseDragBehavior);
+
+                if (controlTextBox != null)
+                {
+                    keyInputBehavior = new KeyInputSetValueBehavior(controlTextBox, ValueProperty);
+                    Interaction.GetBehaviors(this).Add(keyInputBehavior);
+                }
+            }
+        }
+
+        private void DetachInputBehaviors()
+        {
+            if (isBehaviorsAttached)
+            {
+                if (mouseWheelBehavior != null)
+                {
+                    Interaction.GetBehaviors(this).Remove(mouseWheelBehavior);
+                    mouseWheelBehavior.Detach();
+                    mouseWheelBehavior = null;
+                }
+
+                if (mouseDragBehavior != null)
+                {
+                    Interaction.GetBehaviors(this).Remove(mouseDragBehavior);
+                    mouseDragBehavior.Detach();
+                    mouseDragBehavior = null;
+                }
+
+                if (controlTextBox != null && keyInputBehavior != null)
+                {
+                    Interaction.GetBehaviors(this).Remove(keyInputBehavior);
+                    keyInputBehavior.Detach();
+                    keyInputBehavior = null;
+                }
+                isBehaviorsAttached = false;
+            }
         }
 
 

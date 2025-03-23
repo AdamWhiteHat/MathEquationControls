@@ -10,7 +10,7 @@ using System.Windows.Data;
 
 namespace MathEquationControls.ValueConverters
 {
-	public class StringToBigIntegerConverter : IValueConverter
+	public class BigIntegerToStringConverter : IValueConverter
 	{
 		// This converts the BigInteger object to the string to display.
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

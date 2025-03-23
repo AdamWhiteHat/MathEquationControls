@@ -6,7 +6,7 @@
 
 	
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="/MathEquationControls;component/CustomControls/SharedStyles.xaml" />
+        <ResourceDictionary Source="/MathEquationControls;component/Styles/SharedStyles.xaml" />
         <ResourceDictionary Source="/MathEquationControls;component/Themes/Generic.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 

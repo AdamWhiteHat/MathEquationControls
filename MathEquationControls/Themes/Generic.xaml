@@ -10,26 +10,28 @@
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialControl.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/NumberBox.xaml" />
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Coefficient.xaml" />
-        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/SharedStyles.xaml" />
+        <ResourceDictionary Source="/MathEquationControls;component/Styles/SharedStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="ToggleLockStyle" TargetType="CheckBox">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <WrapPanel Orientation="Horizontal" Background="{TemplateBinding Background}">
-                        <TextBlock Name="LockIcon" Text="&#x1f512;" FontSize="25" Foreground="Red"                                                                     
-                                    Width="Auto" Height="Auto" LineHeight="Auto" 
+                    <Border Width="{TemplateBinding Width}">
+                        <WrapPanel Orientation="Horizontal" Background="{TemplateBinding Background}" HorizontalAlignment="Center">
+                            <TextBlock Name="LockIcon" Text="&#x1f512;" FontSize="25" Foreground="Red"                                                                     
+                                    Width="Auto" Height="Auto" LineHeight="Auto"                                    
                                     VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" />
-                        <ContentPresenter                
+                            <ContentPresenter                
                             Height="Auto" Width="Auto" TextBlock.LineHeight="Auto"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
+                            TextBlock.TextAlignment="Center"
                             RecognizesAccessKey="True"
                             TextBlock.Foreground="{TemplateBinding Foreground}"                             
                        />
-                    </WrapPanel>
-
+                        </WrapPanel>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="LockIcon" Property="Text" Value="&#x1f512;" />

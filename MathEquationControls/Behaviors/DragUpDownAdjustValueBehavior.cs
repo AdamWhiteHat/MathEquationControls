@@ -61,7 +61,7 @@ namespace MathEquationControls.Behaviors
 
             // AssociatedObject.PreviewMouseMove += AssociatedObject_PreviewMouseMove;
 
-            _draggingTimer = new DispatcherTimer(DispatcherPriority.Input);            
+            _draggingTimer = new DispatcherTimer(DispatcherPriority.Input);
             _draggingTimer.Interval = TimeSpan.FromMilliseconds(TimerResolutionMS);
             _draggingTimer.Tick += DraggingTimer_Tick;
 
@@ -70,14 +70,20 @@ namespace MathEquationControls.Behaviors
 
         protected override void OnDetaching()
         {
-            AssociatedObject.PreviewMouseLeftButtonDown -= AssociatedObject_PreviewMouseLeftButtonDown;
-            AssociatedObject.PreviewMouseLeftButtonUp -= AssociatedObject_PreviewMouseLeftButtonUp;
-            AssociatedObject.MouseEnter -= AssociatedObject_MouseEnter;
-            //AssociatedObject.PreviewMouseMove -= AssociatedObject_PreviewMouseMove;
+            if (AssociatedObject != null)
+            {
+                AssociatedObject.PreviewMouseLeftButtonDown -= AssociatedObject_PreviewMouseLeftButtonDown;
+                AssociatedObject.PreviewMouseLeftButtonUp -= AssociatedObject_PreviewMouseLeftButtonUp;
+                AssociatedObject.MouseEnter -= AssociatedObject_MouseEnter;
+                //AssociatedObject.PreviewMouseMove -= AssociatedObject_PreviewMouseMove;
+            }
 
-            _draggingTimer.Stop();
-            _draggingTimer.Tick -= DraggingTimer_Tick;
-            _draggingTimer = null;
+            if (_draggingTimer != null)
+            {
+                _draggingTimer.Stop();
+                _draggingTimer.Tick -= DraggingTimer_Tick;
+                _draggingTimer = null;
+            }
 
             base.OnDetaching();
         }

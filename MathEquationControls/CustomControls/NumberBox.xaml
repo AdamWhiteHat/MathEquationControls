@@ -8,8 +8,8 @@
 
     <Style TargetType="{x:Type local:NumberBox}">
         <Style.Resources>
-            <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
-            <converters:StringToAbsoluteValueBigIntegerConverter  x:Key="StringToAbsoluteValueBigIntegerConverter" />
+            <converters:BigIntegerToStringConverter x:Key="BigInteger2StringConverter" />
+            <converters:AbsoluteBigIntegerToStringConverter  x:Key="AbsoluteBigInteger2StringConverter" />
         </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>

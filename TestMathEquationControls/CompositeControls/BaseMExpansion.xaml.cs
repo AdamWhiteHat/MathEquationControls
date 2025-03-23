@@ -19,7 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace TestMathEquationControls.Polynomials
+namespace TestMathEquationControls.CompositeControls
 {
     /// <summary>
     /// Interaction logic for BaseMExpansion.xaml
@@ -170,10 +170,15 @@ namespace TestMathEquationControls.Polynomials
         }
 
         /// <summary>
-        /// Like <see cref="SetPolynomial"/> except it takes the locked terms as extra constraints, only modifying the unlocked term.
+        /// Like <see cref="SetPolynomial"/> except it takes the locked terms as extra constraints, only modifying the unlocked terms.
         /// </summary>
         private void ClampPolynomial()
         {
+            if (PolynomialBaseM == 0)
+            {
+                return;
+            }
+
             if (!IsLockInEffect())
             {
                 SetPolynomial();
@@ -282,14 +287,27 @@ namespace TestMathEquationControls.Polynomials
             if (checkboxSmallCoefficients.IsChecked.HasValue && checkboxSmallCoefficients.IsChecked.Value == true)
             {
                 BigInteger maxCoeff = PolynomialBaseM / 2;
-                List<Term> newTerms = _polynomial.Terms.ToList();
 
-                int maxExp = newTerms.Max(trm => trm.Exponent);
+                int maxExp = _polynomial.Terms.Max(trm => trm.Exponent);
+                maxExp = Math.Max(maxExp, (int)PolynomialDegree);
 
-                while (maxExp < PolynomialDegree)
+                var polyExponents = _polynomial.Terms.Select(t => t.Exponent).ToList();
+
+                List<Term> newTerms = new List<Term>();
+
+                int n = 0;
+                while (n <= maxExp)
                 {
-                    maxExp++;
-                    newTerms.Add(new Term(0, maxExp));
+                    if (polyExponents.Contains(n))
+                    {
+                        Term fromTerm = _polynomial.Terms.Where(t => n == t.Exponent).Single();
+                        newTerms.Add(new Term(fromTerm.CoEfficient, fromTerm.Exponent));
+                    }
+                    else
+                    {
+                        newTerms.Add(new Term(0, n));
+                    }
+                    n++;
                 }
 
                 int i = 0;
@@ -306,6 +324,10 @@ namespace TestMathEquationControls.Polynomials
                         BigInteger newCoeff2 = newTerms[i + 1].CoEfficient + 1;
 
                         newTerms[i] = new Term(newCoeff, i);
+                        if ((i + 1) > n)
+                        {
+                            newTerms.Add(new Term(0, i + 1));
+                        }
                         newTerms[i + 1] = new Term(newCoeff2, i + 1);
                     }
                 }
@@ -344,7 +366,8 @@ namespace TestMathEquationControls.Polynomials
                         {
                             PolynomialTermControl termControl = polyControl.Children.Where(ptc => ptc.Exponent == term.Exponent).Single();
                             double cbWidth = polyControl.ActualWidth / polyControl.Polynomial.Terms.Length;
-                            CheckBox checkBox = CreateLockTermCheckbox(term, cbWidth);
+
+                            CheckBox checkBox = CreateLockTermCheckbox(termControl, cbWidth);
 
                             int index = _polynomial.Degree - term.Exponent;
 
@@ -356,8 +379,9 @@ namespace TestMathEquationControls.Polynomials
             }
         }
 
-        private CheckBox CreateLockTermCheckbox(Term term, double cbWidth)
+        private CheckBox CreateLockTermCheckbox(PolynomialTermControl termControl, double cbWidth)
         {
+            Term term = termControl.Term;
             CheckBox checkBox = new CheckBox();
             checkBox.SetValue(Control.StyleProperty, App.Current.Resources["ToggleLockStyle"]);
             checkBox.Content = term.Exponent.ToString();
@@ -366,8 +390,17 @@ namespace TestMathEquationControls.Polynomials
             checkBox.Checked += lockTerm_Checked;
             checkBox.Unchecked += lockTerm_Unchecked;
             checkBox.Unloaded += lockTerm_Unloaded;
+            checkBox.Padding = new Thickness(5, 5, 5, 5);
+
             checkBox.Width = Math.Max(100, cbWidth);
-            checkBox.Margin = new Thickness(5);
+
+            termControl.SizeChanged += (s, a) =>
+            {
+                if (a.WidthChanged)
+                {
+                    checkBox.Width = a.NewSize.Width;
+                }
+            };
 
             return checkBox;
         }

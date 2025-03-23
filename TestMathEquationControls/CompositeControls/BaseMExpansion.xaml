@@ -1,9 +1,9 @@
-﻿<Window x:Class="TestMathEquationControls.Polynomials.BaseMExpansion"
+﻿<Window x:Class="TestMathEquationControls.CompositeControls.BaseMExpansion"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TestMathEquationControls.Polynomials"
+        xmlns:local="clr-namespace:TestMathEquationControls.CompositeControls"
 		xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls"
 		xmlns:converters="clr-namespace:MathEquationControls.ValueConverters;assembly=MathEquationControls"
         mc:Ignorable="d"
@@ -13,8 +13,8 @@
         Unloaded="Window_Unloaded"
 		>
     <Window.Resources>
-        <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
-        <converters:StringToAbsoluteValueBigIntegerConverter  x:Key="StringToAbsoluteValueBigIntegerConverter" />
+        <converters:BigIntegerToStringConverter x:Key="BigInteger2StringConverter" />
+        <converters:AbsoluteBigIntegerToStringConverter  x:Key="AbsoluteBigInteger2StringConverter" />
     </Window.Resources>
 
     <Grid>
@@ -46,7 +46,8 @@
                                              Height="Auto" Width="Auto" d:Text="X^3 - X^2 - 12*X + 35"
 											 />
                 <WrapPanel x:Name="wrappanelTermLocks" HorizontalAlignment="Center">
-                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" />
+                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" Width="90"
+                                HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
                 </WrapPanel>
             </StackPanel>
         </Border>

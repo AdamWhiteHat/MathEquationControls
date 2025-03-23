@@ -21,36 +21,6 @@ using ExtendedArithmetic;
 
 namespace MathEquationControls
 {
-    /// <summary>
-    /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-    ///
-    /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:MathEquationControl.CustomControls"
-    ///
-    ///
-    /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:MathEquationControl.CustomControls;assembly=MathEquationControl.CustomControls"
-    ///
-    /// You will also need to add a project reference from the project where the XAML file lives
-    /// to this project and Rebuild to avoid compilation errors:
-    ///
-    ///     Right click on the target project in the Solution Explorer and
-    ///     "Add Reference"->"Projects"->[Browse to and select this project]
-    ///
-    ///
-    /// Step 2)
-    /// Go ahead and use your control in the XAML file.
-    ///
-    ///     <MyNamespace:PolynomialControl/>
-    ///
-    /// </summary>
-
     [TemplatePart(Name = PolynomialControl.ElementBorder, Type = typeof(Border))]
     [TemplatePart(Name = PolynomialControl.ElementContentsPanel, Type = typeof(StackPanel))]
     public class PolynomialControl : Control
@@ -299,28 +269,29 @@ namespace MathEquationControls
             controlContentsPanel.Children.Clear();
 
             bool firstPass = true;
-            foreach (ExtendedArithmetic.Term term in poly.Terms.Reverse())
+            List<Term> termsToIterate = poly.Terms.Reverse().ToList();
+            //foreach (ExtendedArithmetic.Term term in termsToIterate)
+
+            int deg = poly.Degree;
+            int index = deg;
+
+            while (index >= 0)
             {
-                TextBlock additiveSymbol = GetTextBlockControl(term);
-                if (firstPass)
+                Term term = termsToIterate.Where(t => t.Exponent == index).FirstOrDefault();
+                if (term == null)
                 {
-                    if (term.CoEfficient.Sign == -1)
-                    {
-                        controlContentsPanel.Children.Add(additiveSymbol);
-                    }
-                }
-                else
-                {
-                    controlContentsPanel.Children.Add(additiveSymbol);
+                    term = new Term(0, index);
                 }
 
                 PolynomialTermControl termCtrl = GetTermControl(term);
-                controlContentsPanel.Children.Add(termCtrl);
-
                 if (firstPass)
                 {
                     firstPass = false;
+                    termCtrl.IsLeadingTerm = true;
                 }
+
+                controlContentsPanel.Children.Add(termCtrl);
+                index--;
             }
 
             SuppressUpdateEvents = false;
@@ -397,6 +368,11 @@ namespace MathEquationControls
         {
             var terms = controlContentsPanel.Children.OfType<PolynomialTermControl>().Select(ctrl => ctrl.Term).ToArray();
             Polynomial = new ExtendedArithmetic.Polynomial(terms);
+        }
+
+        public override string ToString()
+        {
+            return Polynomial.ToString();
         }
 
         #endregion

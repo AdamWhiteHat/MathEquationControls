@@ -9,12 +9,13 @@
     <Style TargetType="{x:Type local:PolynomialTermControl}">
 
         <Style.Resources>
-            <converters:StringToBigIntegerConverter x:Key="String2BigIntegerConverter" />
+            <converters:SignToTextConverter x:Key="Sign2TextConverter" />
+            <converters:BigIntegerToStringConverter x:Key="BigInteger2StringConverter" />
         </Style.Resources>
 
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:PolynomialTermControl}">                    
+                <ControlTemplate TargetType="{x:Type local:PolynomialTermControl}">
                     <Border x:Name="PART_Border"
 							Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -25,6 +26,11 @@
                             VerticalAlignment="Center"                           
                             >
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock  x:Name="OperatorSymbol" 
+                                DataContext="{Binding RelativeSource={RelativeSource  Mode=TemplatedParent}}"
+                                Style="{DynamicResource AdditiveOperatorStyle}" 
+                                Text="{Binding Path=Sign, Converter={StaticResource Sign2TextConverter}}"                                          
+                            />
                             <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}"></local:Coefficient>
                             <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}"></TextBlock>
                             <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}"></TextBlock>
@@ -35,13 +41,35 @@
 
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="Exponent" Value="0">
+
+                        <Trigger Property="IsLeadingTerm" Value="False" >
                             <Trigger.Setters>
-                                <Setter TargetName="PART_MultiplicationSymbol" Property="Visibility" Value="Hidden"/>
-                                <Setter TargetName="PART_Indeteminant" Property="Visibility" Value="Hidden"/>
-                                <Setter TargetName="exponentBlock" Property="Visibility" Value="Hidden"/>
+                                <Setter TargetName="OperatorSymbol" Property="Visibility" Value="Visible" />
                             </Trigger.Setters>
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsLeadingTerm" Value="True" />
+                                <Condition Property="Sign" Value="-1"  />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="OperatorSymbol" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsLeadingTerm" Value="True" />
+                                <Condition Property="Sign" Value="1"  />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="OperatorSymbol" Property="Visibility" Value="Collapsed"/>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsLeadingTerm" Value="True" />
+                                <Condition Property="Sign" Value="0"  />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="OperatorSymbol" Property="Visibility" Value="Collapsed"/>
+                        </MultiTrigger>
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

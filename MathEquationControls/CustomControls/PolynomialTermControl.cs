@@ -18,38 +18,10 @@ using Microsoft.Xaml.Behaviors;
 
 using ExtendedArithmetic;
 using MathEquationControls.Behaviors;
+using System.ComponentModel;
 
 namespace MathEquationControls
 {
-    /// <summary>
-    /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-    ///
-    /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:MathEquationControl"
-    ///
-    ///
-    /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-    /// to be used:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:MathEquationControl;assembly=MathEquationControl"
-    ///
-    /// You will also need to add a project reference from the project where the XAML file lives
-    /// to this project and Rebuild to avoid compilation errors:
-    ///
-    ///     Right click on the target project in the Solution Explorer and
-    ///     "Add Reference"->"Projects"->[Browse to and select this project]
-    ///
-    ///
-    /// Step 2)
-    /// Go ahead and use your control in the XAML file.
-    ///
-    ///     <MyNamespace:PolynomialTerm/>
-    ///
-    /// </summary>
     [TemplatePart(Name = PolynomialTermControl.ElementBorder, Type = typeof(Border))]
     [TemplatePart(Name = PolynomialTermControl.ElementWrapPanel, Type = typeof(WrapPanel))]
     [TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Coefficient))]
@@ -59,6 +31,14 @@ namespace MathEquationControls
     public class PolynomialTermControl : Control
     {
         #region Public Properties
+
+        [Bindable(true), Browsable(true), Category("Behavior")]
+        public int Sign
+        {
+            get { return (int)GetValue(SignProperty); }
+            set { SetValue(SignProperty, value); }
+        }
+
 
         public BigInteger Coefficient
         {
@@ -101,13 +81,20 @@ namespace MathEquationControls
             }
         }
 
-       //public string Text
-       //{
-       //    get
-       //    {
-       //        return GetStringRepresentation();
-       //    }
-       //}
+        [Browsable(true), Category("Behavior")]
+        public bool IsLeadingTerm
+        {
+            get { return (bool)GetValue(IsLeadingTermProperty); }
+            set { SetValue(IsLeadingTermProperty, value); }
+        }
+
+        //public string Text
+        //{
+        //    get
+        //    {
+        //        return GetStringRepresentation();
+        //    }
+        //}
 
         public Term GetPolynomialTerm()
         {
@@ -124,6 +111,14 @@ namespace MathEquationControls
         #endregion
 
         #region Dependency Properties
+
+        public static readonly DependencyProperty SignProperty = DependencyProperty.Register(
+                                                                                nameof(Sign),
+                                                                                typeof(int),
+                                                                                typeof(PolynomialTermControl),
+                                                                                new PropertyMetadata(
+                                                                                    0,
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.OnSignChanged)));
 
         public static readonly DependencyProperty CoefficientProperty = DependencyProperty.Register(
                                                                                 nameof(Coefficient),
@@ -145,11 +140,22 @@ namespace MathEquationControls
                                                                                 )
                                                                         );
 
+        public static readonly DependencyProperty IsLeadingTermProperty = DependencyProperty.Register(
+                                                                                      nameof(IsLeadingTerm),
+                                                                                      typeof(bool),
+                                                                                      typeof(PolynomialTermControl),
+                                                                                      new PropertyMetadata(false));
         #endregion
 
         #region Events
 
         public event TermUpdatedEventHandler TermUpdated;
+
+        public event RoutedPropertyChangedEventHandler<int> SignChanged
+        {
+            add { base.AddHandler(SignChangedEvent, value); }
+            remove { base.RemoveHandler(SignChangedEvent, value); }
+        }
 
         public event RoutedPropertyChangedEventHandler<BigInteger> CoefficientChanged
         {
@@ -164,6 +170,12 @@ namespace MathEquationControls
         }
 
         #region RoutedEvents
+
+        public static readonly RoutedEvent SignChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                                nameof(SignChanged),
+                                                                                RoutingStrategy.Bubble,
+                                                                                typeof(RoutedPropertyChangedEventHandler<int>),
+                                                                                typeof(PolynomialTermControl));
 
         public static readonly RoutedEvent CoefficientChangedEvent = EventManager.RegisterRoutedEvent(
                                                                             nameof(CoefficientChanged),
@@ -180,6 +192,19 @@ namespace MathEquationControls
         #endregion
 
         #region Raise Event Methods
+
+        protected virtual void OnSignChanged(int oldValue, int newValue)
+        {
+            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
+            e.RoutedEvent = SignChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void OnSignChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.OnSignChanged((int)e.OldValue, (int)e.NewValue);
+        }
 
         protected virtual void OnTermUpdated(TermUpdatedEventArgs e)
         {
@@ -258,6 +283,8 @@ namespace MathEquationControls
             this.DataContext = this;
             this.Loaded += PolynomialTermControl_Loaded;
             this.Unloaded += PolynomialTermControl_Unloaded;
+
+            SetBindings();
         }
 
         private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
@@ -270,6 +297,18 @@ namespace MathEquationControls
         {
             CoefficientChanged -= PolynomialTermControl_CoefficientChanged;
             ExponentChanged -= PolynomialTermControl_ExponentChanged;
+        }
+
+
+        private void SetBindings()
+        {
+            Binding signBinding = new Binding()
+            {
+                Mode = BindingMode.OneWay,
+                Source = this,
+                Path = new PropertyPath($"Term.CoEfficient.Sign")
+            };
+            BindingExpressionBase coEfficientSign_Sign_BindingExpressionBase = this.SetBinding(SignProperty, signBinding);
         }
 
         #endregion
@@ -329,6 +368,10 @@ namespace MathEquationControls
                 controlExponent.Text = term.Exponent.ToString();//ConvertToSuperScript(term.Exponent.ToString());
             }
 
+            if (Sign != term.CoEfficient.Sign)
+            {
+                Sign = term.CoEfficient.Sign;
+            }
 
             //string termString = GetStringRepresentation();
 
@@ -405,6 +448,11 @@ namespace MathEquationControls
         }
 
         private static string superscriptDigits = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+
+        public override string ToString()
+        {
+            return GetStringRepresentation();
+        }
 
         #endregion
 
