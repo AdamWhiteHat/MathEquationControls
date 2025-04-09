@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Automation;
+using MathEquationControls.Converters;
 
 namespace MathEquationControls.Primitives
 {
@@ -57,7 +58,8 @@ namespace MathEquationControls.Primitives
         #region Minimum Property
 
         /// <summary>  Minimum restricts the minimum value of the Value property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(BindableSupport.Yes), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger? Minimum
         {
             get { return (BigInteger?)GetValue(MinimumProperty); }
@@ -71,7 +73,7 @@ namespace MathEquationControls.Primitives
         /// </summary>
         public static readonly DependencyProperty MinimumProperty =
             DependencyProperty.Register(
-                "Minimum", typeof(BigInteger?), typeof(BigRangeBase),
+                nameof(Minimum), typeof(BigInteger?), typeof(BigRangeBase),
                 new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMinimumChanged)));
 
         /// <summary> Called when MinimumProperty is changed on "d." </summary>
@@ -102,7 +104,8 @@ namespace MathEquationControls.Primitives
         #region Maximum Property
 
         /// <summary> Maximum restricts the maximum value of the Value property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger? Maximum
         {
             get { return (BigInteger?)GetValue(MaximumProperty); }
@@ -116,7 +119,7 @@ namespace MathEquationControls.Primitives
         /// </summary>
         public static readonly DependencyProperty MaximumProperty =
             DependencyProperty.Register(
-                "Maximum", typeof(BigInteger?), typeof(BigRangeBase),
+                nameof(Maximum), typeof(BigInteger?), typeof(BigRangeBase),
                 new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnMaximumChanged), new CoerceValueCallback(CoerceMaximum)));
 
         /// <summary> Called when MaximumProperty is changed on "d." </summary>
@@ -146,7 +149,8 @@ namespace MathEquationControls.Primitives
         #region Value Property
 
         /// <summary>  Value property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger Value
         {
             get { return (BigInteger)GetValue(ValueProperty); }
@@ -158,7 +162,7 @@ namespace MathEquationControls.Primitives
         ///             Default Value:      0                        
         /// </summary>
         public static readonly DependencyProperty ValueProperty =
-                DependencyProperty.Register("Value", typeof(BigInteger), typeof(BigRangeBase),
+                DependencyProperty.Register(nameof(Value), typeof(BigInteger), typeof(BigRangeBase),
                         new FrameworkPropertyMetadata(BigInteger.Zero, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.Journal | FrameworkPropertyMetadataOptions.AffectsRender,
                         new PropertyChangedCallback(OnValueChanged), new CoerceValueCallback(ConstrainToRange)));
 
@@ -190,11 +194,12 @@ namespace MathEquationControls.Primitives
 
         /// <summary> The DependencyProperty for the UnitaryChange property. </summary>
         public static readonly DependencyProperty UnitaryChangeProperty =
-            DependencyProperty.Register("UnitaryChange", typeof(BigInteger), typeof(BigRangeBase),
+            DependencyProperty.Register(nameof(UnitaryChange), typeof(BigInteger), typeof(BigRangeBase),
                 new FrameworkPropertyMetadata(BigInteger.One), new ValidateValueCallback(IsValidChange));
 
         /// <summary> UnitaryChange property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger UnitaryChange
         {
             get { return (BigInteger)GetValue(UnitaryChangeProperty); }
@@ -207,11 +212,12 @@ namespace MathEquationControls.Primitives
 
         /// <summary> The DependencyProperty for the SmallChange property.</summary>
         public static readonly DependencyProperty SmallChangeProperty =
-            DependencyProperty.Register("SmallChange", typeof(BigInteger), typeof(BigRangeBase),
+            DependencyProperty.Register(nameof(SmallChange), typeof(BigInteger), typeof(BigRangeBase),
                 new FrameworkPropertyMetadata(new BigInteger(10)), new ValidateValueCallback(IsValidChange));
 
         /// <summary> SmallChange property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger SmallChange
         {
             get { return (BigInteger)GetValue(SmallChangeProperty); }
@@ -225,11 +231,12 @@ namespace MathEquationControls.Primitives
         /// <summary> The DependencyProperty for the MediumChange property. </summary>
         public static readonly DependencyProperty MediumChangeProperty =
             DependencyProperty.Register(
-                "MediumChange", typeof(BigInteger), typeof(BigRangeBase),
+                nameof(MediumChange), typeof(BigInteger), typeof(BigRangeBase),
                 new FrameworkPropertyMetadata(new BigInteger(100)), new ValidateValueCallback(IsValidChange));
 
         /// <summary> MediumChange property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger MediumChange
         {
             get { return (BigInteger)GetValue(MediumChangeProperty); }
@@ -242,11 +249,12 @@ namespace MathEquationControls.Primitives
 
         /// <summary> The DependencyProperty for the LargeChange property. </summary>
         public static readonly DependencyProperty LargeChangeProperty =
-            DependencyProperty.Register("LargeChange", typeof(BigInteger), typeof(BigRangeBase),
+            DependencyProperty.Register(nameof(LargeChange), typeof(BigInteger), typeof(BigRangeBase),
                 new FrameworkPropertyMetadata(new BigInteger(1000)), new ValidateValueCallback(IsValidChange));
 
         /// <summary> LargeChange property </summary>
-        [Bindable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger LargeChange
         {
             get { return (BigInteger)GetValue(LargeChangeProperty); }

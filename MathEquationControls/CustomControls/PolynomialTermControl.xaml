@@ -3,7 +3,7 @@
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					xmlns:local="clr-namespace:MathEquationControls"
-					xmlns:converters="clr-namespace:MathEquationControls.ValueConverters"
+					xmlns:converters="clr-namespace:MathEquationControls.Converters"
 					mc:Ignorable="d">
 
     <Style TargetType="{x:Type local:PolynomialTermControl}">
@@ -29,11 +29,11 @@
                             <TextBlock  x:Name="OperatorSymbol" 
                                 DataContext="{Binding RelativeSource={RelativeSource  Mode=TemplatedParent}}"
                                 Style="{DynamicResource AdditiveOperatorStyle}" 
-                                Text="{Binding Path=Sign, Converter={StaticResource Sign2TextConverter}}"                                          
+                                Text="{Binding Path=Sign, Converter={StaticResource Sign2TextConverter}}"
                             />
                             <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}"></local:Coefficient>
-                            <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}"></TextBlock>
-                            <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}"></TextBlock>
+                            <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}" d:Text="•"></TextBlock>
+                            <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}" d:Text="X"></TextBlock>
                             <TextBlock x:Name="exponentBlock">
                                 <Run x:Name="PART_Exponent" Style="{DynamicResource ExponentStyle}"></Run>
                             </TextBlock>

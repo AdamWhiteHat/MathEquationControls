@@ -20,7 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MathEquationControls.ValueConverters;
+using MathEquationControls.Converters;
 
 namespace MathEquationControls
 {
@@ -28,17 +28,47 @@ namespace MathEquationControls
     [TemplatePart(Name = NumberBox.ElementTextBox, Type = typeof(TextBox))]
     public class NumberBox : BigRangeBase, INotifyPropertyChanged
     {
+        [Bindable(true), Browsable(true), Category("Common")]
         public string Text
         {
-            get => controlTextBox.Text;
-            set
-            {
-                if (controlTextBox.Text != value)
-                {
-                    controlTextBox.Text = value;
-                    RaisePropertyChanged();
-                }
-            }
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+                                                                                    nameof(Text),
+                                                                                    typeof(string),
+                                                                                    typeof(NumberBox),
+                                                                                    new PropertyMetadata(
+                                                                                        default(string),
+                                                                                        new PropertyChangedCallback(
+                                                                                            NumberBox.RaiseTextChanged)
+                                                                                        )
+                                                                                    );
+
+        public event RoutedPropertyChangedEventHandler<string> TextChanged
+        {
+            add { base.AddHandler(TextChangedEvent, value); }
+            remove { base.RemoveHandler(TextChangedEvent, value); }
+        }
+
+        public static readonly RoutedEvent TextChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                                    nameof(TextChanged),
+                                                                                    RoutingStrategy.Bubble,
+                                                                                    typeof(RoutedPropertyChangedEventHandler<string>),
+                                                                                    typeof(NumberBox));
+
+        protected virtual void RaiseTextChanged(string oldValue, string newValue)
+        {
+            RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
+            e.RoutedEvent = TextChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaiseTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumberBox element = (NumberBox)d;
+            element.RaiseTextChanged((string)e.OldValue, (string)e.NewValue);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -61,23 +91,12 @@ namespace MathEquationControls
         public NumberBox()
         {
             this.Unloaded += Control_Unloaded;
-            this.Loaded += Control_Loaded;
             this.IsEnabledChanged += NumberBox_IsEnabledChanged;
-        }
-
-        private void Control_Loaded(object sender, RoutedEventArgs e)
-        {
-            // controlTextBox.TextChanged += ControlTextBox_TextChanged;
-            // controlTextBox.KeyUp += ControlTextBox_KeyUp;
-            ValueChanged += Control_ValueChanged;
         }
 
         private void Control_Unloaded(object sender, RoutedEventArgs e)
         {
-            // controlTextBox.TextChanged -= ControlTextBox_TextChanged;
-            // controlTextBox.KeyUp -= ControlTextBox_KeyUp;
-            ValueChanged -= Control_ValueChanged;
-            DetachInputBehaviors();
+            UnRegisterEvents();
         }
 
         public override void OnApplyTemplate()
@@ -88,9 +107,57 @@ namespace MathEquationControls
             controlTextBox = GetTemplateChild(ElementTextBox) as TextBox;
             controlTextBox.DataContext = this;
 
+            if (controlTextBox != null)
+            {
+                RegisterEvents();
+            }
+
             if (IsEnabled)
             {
                 AttachInputBehaviors();
+            }
+
+            if (controlTextBox != null)
+            {
+                if (!string.IsNullOrWhiteSpace(Text))
+                {
+                    controlTextBox.Text = Text;
+                }
+            }
+
+            if (DesignerProperties.GetIsInDesignMode(this))
+            {
+                //controlTextBox.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 255));
+            }
+        }
+
+        private bool EventsRegistered = false;
+        private void RegisterEvents()
+        {
+            if (!EventsRegistered)
+            {
+                EventsRegistered = true;
+
+                ValueChanged += Control_ValueChanged;
+                TextChanged += NumberBox_TextChanged;
+            }
+        }
+
+        private void UnRegisterEvents()
+        {
+            ValueChanged -= Control_ValueChanged;
+            TextChanged -= NumberBox_TextChanged;
+            DetachInputBehaviors();
+        }
+
+        private void NumberBox_TextChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
+        {
+            if (Value.ToString() != e.NewValue)
+            {
+                if (BigInteger.TryParse(e.NewValue, out BigInteger result))
+                {
+                    Value = result;
+                }
             }
         }
 
@@ -157,12 +224,17 @@ namespace MathEquationControls
             }
         }
 
-
         private void Control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
             string text = e.NewValue.ToString();
+
             Size measuredStringSize = WPFHelper.MeasureString($" {text} ", this, controlTextBox);
             controlTextBox.Width = measuredStringSize.Width;
+
+            if (text != Text)
+            {
+                Text = text;
+            }
         }
 
         private void ControlTextBox_KeyUp(object sender, KeyEventArgs e)
@@ -195,7 +267,6 @@ namespace MathEquationControls
                 {
                     this.SetValue(ValueProperty, temp);
                 }
-
             }
         }
 

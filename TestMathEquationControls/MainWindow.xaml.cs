@@ -17,29 +17,36 @@ using TestMathEquationControls.CompositeControls;
 
 namespace TestMathEquationControls
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
 
-		public MainWindow()
-		{
-			InitializeComponent();
-		}
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
 
-		private void link_Polynomial_QuotientField_Click(object sender, RoutedEventArgs e)
-		{
-			Window quotientField = new PolynomialQuotientField();
-			quotientField.Owner = this;
-			quotientField.Show();
-		}
+        private void link_Polynomial_QuotientField_Click(object sender, RoutedEventArgs e)
+        {
+            Window quotientField = new PolynomialQuotientField();
+            quotientField.Owner = this;
+            quotientField.Show();
+        }
 
-		private void link_Polynomial_BaseMExpansion_Click(object sender, RoutedEventArgs e)
-		{
-			Window basemExpansion = new BaseMExpansion();
-			basemExpansion.Owner = this;
-			basemExpansion.Show();
-		}
-	}
+        private void link_Polynomial_BaseMExpansion_Click(object sender, RoutedEventArgs e)
+        {
+            Window basemExpansion = new BaseMExpansion();
+            basemExpansion.Owner = this;
+            basemExpansion.Show();
+        }
+
+        private void link_Individual_Controls_Click(object sender, RoutedEventArgs e)
+        {
+            Window individualControl = new IndividualControls();
+            individualControl.Owner = this;
+            individualControl.Show();
+        }
+    }
 }

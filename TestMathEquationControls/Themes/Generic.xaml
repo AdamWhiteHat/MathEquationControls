@@ -3,11 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls">
 
-
-	
-	<ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Fraction.xaml"/>
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialTermControl.xaml"/>
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/PolynomialControl.xaml"/>
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/NumberBox.xaml" />
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Coefficient.xaml" />
+        <ResourceDictionary Source="/MathEquationControls;component/Styles/TextDecorationStyles.xaml" />
         <ResourceDictionary Source="/MathEquationControls;component/Styles/SharedStyles.xaml" />
-        <ResourceDictionary Source="/MathEquationControls;component/Themes/Generic.xaml" />
-	</ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

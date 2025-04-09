@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using static System.Net.Mime.MediaTypeNames;
 using ExtendedArithmetic;
+using MathEquationControls.Converters;
 
 namespace MathEquationControls
 {
@@ -27,44 +28,21 @@ namespace MathEquationControls
     {
 
         #region Public Properties
+
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(PolynomialConverter))]
         public ExtendedArithmetic.Polynomial Polynomial
         {
-            get
-            {
-                return _polynomial;
-            }
-            set
-            {
-                if (_polynomial == null || !_polynomial.Equals(value))
-                {
-                    _polynomial = value;
-                    if (_polynomial == null)
-                    {
-                        _polynomial = ExtendedArithmetic.Polynomial.Zero;
-                    }
-                    ConstructTermControlsFromPolynomial(_polynomial);
-                    RaisePolynomialChanged();
-                }
-            }
+            get { return (ExtendedArithmetic.Polynomial)GetValue(PolynomialProperty); }
+            set { SetValue(PolynomialProperty, value); }
         }
-        private ExtendedArithmetic.Polynomial _polynomial = null;
 
+        [Bindable(true), Browsable(true), Category("Common")]
         public string Text
         {
-            get
-            {
-                return _text;
-            }
-            set
-            {
-                if (_text != value)
-                {
-                    _text = value;
-                    RaiseTextChanged();
-                }
-            }
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
         }
-        private string _text = null;
 
         private bool SuppressUpdateEvents = false;
 
@@ -85,27 +63,41 @@ namespace MathEquationControls
         #endregion
 
         #region Dependency Properties
-        /*
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-                                                                                nameof(Text),
-                                                                                typeof(string),
-                                                                                typeof(PolynomialControl),
-                                                                                new PropertyMetadata(
-                                                                                    default(string),
-                                                                                    new PropertyChangedCallback(PolynomialControl.OnTextChanged)
-                                                                                )
-                                                                       );
-        */
+
         public static readonly DependencyProperty DockToParentProperty = DependencyProperty.Register(nameof(DockToParent), typeof(bool), typeof(PolynomialControl));
+
+        public static readonly DependencyProperty PolynomialProperty = DependencyProperty.Register(
+                                                                            nameof(Polynomial),
+                                                                            typeof(ExtendedArithmetic.Polynomial),
+                                                                            typeof(PolynomialControl),
+                                                                            new PropertyMetadata(
+                                                                                ExtendedArithmetic.Polynomial.Zero,
+                                                                                new PropertyChangedCallback(
+                                                                                    PolynomialControl.RaisePolynomialChanged)
+                                                                                )
+                                                                            );
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+                                                                            nameof(Text),
+                                                                            typeof(string),
+                                                                            typeof(PolynomialControl),
+                                                                            new PropertyMetadata(
+                                                                                "",
+                                                                                new PropertyChangedCallback(
+                                                                                    PolynomialControl.RaiseTextChanged)
+                                                                                )
+                                                                            );
 
         #endregion
 
         #region Events
 
-        public event EventHandler TextChanged;
-        public event EventHandler PolynomialChanged;
+        public event RoutedPropertyChangedEventHandler<ExtendedArithmetic.Polynomial> PolynomialChanged
+        {
+            add { base.AddHandler(PolynomialChangedEvent, value); }
+            remove { base.RemoveHandler(PolynomialChangedEvent, value); }
+        }
 
-        /*
         public event RoutedPropertyChangedEventHandler<string> TextChanged
         {
             add { base.AddHandler(TextChangedEvent, value); }
@@ -115,44 +107,45 @@ namespace MathEquationControls
         #region RoutedEvents
 
         public static readonly RoutedEvent TextChangedEvent = EventManager.RegisterRoutedEvent(
-                                                                        nameof(TextChanged),
-                                                                        RoutingStrategy.Bubble,
-                                                                        typeof(RoutedPropertyChangedEventHandler<string>),
-                                                                        typeof(PolynomialControl));
+                                                                                    nameof(TextChanged),
+                                                                                    RoutingStrategy.Bubble,
+                                                                                    typeof(RoutedPropertyChangedEventHandler<string>),
+                                                                                    typeof(PolynomialControl));
+
+        public static readonly RoutedEvent PolynomialChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                            nameof(PolynomialChanged),
+                                                                            RoutingStrategy.Bubble,
+                                                                            typeof(RoutedPropertyChangedEventHandler<ExtendedArithmetic.Polynomial>),
+                                                                            typeof(PolynomialControl));
 
         #endregion
-        */
+
         #region Raise Event Methods
 
-        /*
-        protected virtual void OnTextChanged(string oldValue, string newValue)
+        protected virtual void RaisePolynomialChanged(ExtendedArithmetic.Polynomial oldValue, ExtendedArithmetic.Polynomial newValue)
+        {
+            RoutedPropertyChangedEventArgs<ExtendedArithmetic.Polynomial> e = new RoutedPropertyChangedEventArgs<ExtendedArithmetic.Polynomial>(oldValue, newValue);
+            e.RoutedEvent = PolynomialChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaisePolynomialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialControl element = (PolynomialControl)d;
+            element.RaisePolynomialChanged((ExtendedArithmetic.Polynomial)e.OldValue, (ExtendedArithmetic.Polynomial)e.NewValue);
+        }
+
+        protected virtual void RaiseTextChanged(string oldValue, string newValue)
         {
             RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
             e.RoutedEvent = TextChangedEvent;
             base.RaiseEvent(e);
         }
 
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RaiseTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PolynomialControl element = (PolynomialControl)d;
-            element.OnTextChanged((string)e.OldValue, (string)e.NewValue);
-        }
-        */
-
-        private void RaisePolynomialChanged()
-        {
-            if (!SuppressUpdateEvents)
-            {
-                PolynomialChanged?.Invoke(this, new EventArgs());
-            }
-        }
-
-        private void RaiseTextChanged()
-        {
-            if (!SuppressUpdateEvents)
-            {
-                TextChanged?.Invoke(this, new EventArgs());
-            }
+            element.RaiseTextChanged((string)e.OldValue, (string)e.NewValue);
         }
 
         #endregion
@@ -182,14 +175,70 @@ namespace MathEquationControls
         public PolynomialControl()
         {
             this.IsHitTestVisible = true;
-            this.Loaded += PolynomialControl_Loaded;
             this.Unloaded += PolynomialControl_Unloaded;
             _controlCache_Terms = new Dictionary<int, PolynomialTermControl>();
             _controlCache_TextBlock = new Dictionary<int, TextBlock>();
             SuppressUpdateEvents = false;
+
+            //if (DesignerProperties.GetIsInDesignMode(this))
+            //{
+            //    Term trm = new Term(42, 0);
+            //    PolynomialTermControl termCtrl = new PolynomialTermControl(trm);
+            //    termCtrl.Style = (Style)FindResource("PolynomialTermStyle");
+
+            //    if (controlContentsPanel == null)
+            //    {
+            //        controlContentsPanel = GetTemplateChild(ElementContentsPanel) as StackPanel;
+            //        //new StackPanel()
+            //        //{
+            //        //    Name = "PART_ContentsPanel",
+            //        //    Orientation = Orientation.Horizontal,
+            //        //    HorizontalAlignment = HorizontalAlignment.Center,
+            //        //    VerticalAlignment = VerticalAlignment.Center
+            //        //};
+            //    }
+            //    controlContentsPanel.Children.Add(termCtrl);
+            //}
         }
 
-        private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
+        private void PolynomialControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.PolynomialChanged -= PolynomialControl_PolynomialChanged;
+            this.TextChanged -= PolynomialControl_TextChanged;
+        }
+
+        #endregion
+
+        #region Set Controls
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            controlBorder = GetTemplateChild(ElementBorder) as Border;
+            controlContentsPanel = GetTemplateChild(ElementContentsPanel) as StackPanel;
+
+
+            if (controlBorder != null && controlContentsPanel != null)
+            {
+                RegisterEvents();
+
+                if (!string.IsNullOrWhiteSpace(Text))
+                {
+                    TextToPolynomial();
+                }
+            }
+
+            //if(DesignerProperties.GetIsInDesignMode(this))
+            //{
+            //    if (controlBorder != null && controlContentsPanel != null)
+            //    {
+            //        this.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 255));
+            //    }
+            //}
+        }
+
+        private void RegisterEvents()
         {
             if (DockToParent)
             {
@@ -199,17 +248,43 @@ namespace MathEquationControls
                 this.Height = parentActualHeight;
             }
 
-            this.PolynomialChanged += PolynomialControl_PolynomialChanged;
             this.TextChanged += PolynomialControl_TextChanged;
+            this.PolynomialChanged += PolynomialControl_PolynomialChanged;
         }
 
-        private void PolynomialControl_Unloaded(object sender, RoutedEventArgs e)
+        private void PolynomialControl_TextChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
         {
-            this.PolynomialChanged -= PolynomialControl_PolynomialChanged;
-            this.TextChanged -= PolynomialControl_TextChanged;
+            if (e.OldValue == e.NewValue)
+            {
+                return;
+            }
+
+            TextToPolynomial();
         }
 
-        private void PolynomialControl_TextChanged(object? sender, EventArgs e)
+        private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<Polynomial> e)
+        {
+            if (e.OldValue.ToString().Equals(e.NewValue.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            if (Polynomial == null)
+            {
+                Polynomial = ExtendedArithmetic.Polynomial.Zero;
+                return;
+            }
+
+            string temp = Polynomial.ToString();
+            if (!temp.Equals(Text, StringComparison.OrdinalIgnoreCase))
+            {
+                Text = temp;
+            }
+
+            ConstructTermControlsFromPolynomial(Polynomial);
+        }
+
+        private void TextToPolynomial()
         {
             if (Polynomial != null)
             {
@@ -234,32 +309,6 @@ namespace MathEquationControls
             {
                 Polynomial = tempP;
             }
-        }
-
-        private void PolynomialControl_PolynomialChanged(object? sender, EventArgs e)
-        {
-            if (Polynomial == null)
-            {
-                Text = string.Empty;
-                return;
-            }
-            string temp = Polynomial.ToString();
-            if (!temp.Equals(Text, StringComparison.OrdinalIgnoreCase))
-            {
-                Text = temp;
-            }
-        }
-
-        #endregion
-
-        #region Set Controls
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            controlBorder = GetTemplateChild(ElementBorder) as Border;
-            controlContentsPanel = GetTemplateChild(ElementContentsPanel) as StackPanel;
         }
 
         private void ConstructTermControlsFromPolynomial(ExtendedArithmetic.Polynomial poly)
@@ -289,6 +338,10 @@ namespace MathEquationControls
                     firstPass = false;
                     termCtrl.IsLeadingTerm = true;
                 }
+                else
+                {
+                    termCtrl.IsLeadingTerm = false;
+                }
 
                 controlContentsPanel.Children.Add(termCtrl);
                 index--;
@@ -316,46 +369,6 @@ namespace MathEquationControls
             return result;
         }
 
-        private TextBlock GetTextBlockControl(Term term)
-        {
-            TextBlock result = null;
-            if (_controlCache_TextBlock.ContainsKey(term.Exponent))
-            {
-                result = _controlCache_TextBlock[term.Exponent];
-            }
-            else
-            {
-                result = new TextBlock();
-                result.Style = (Style)FindResource("TextBlockStyle");
-                _controlCache_TextBlock[term.Exponent] = result;
-            }
-
-            bool skip = false;
-            if (term.CoEfficient.Sign == -1)
-            {
-                result.Text = " - ";
-            }
-            else if (term.CoEfficient.Sign == 1)
-            {
-                result.Text = " + ";
-            }
-            else if (term.CoEfficient.Sign == 0)
-            {
-                skip = true;
-            }
-
-            if (skip)
-            {
-                result.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                result.Visibility = Visibility.Visible;
-            }
-
-            return result;
-        }
-
         private void TermCtrl_TermUpdated(object sender, TermUpdatedEventArgs e)
         {
             if (!SuppressUpdateEvents)
@@ -372,7 +385,7 @@ namespace MathEquationControls
 
         public override string ToString()
         {
-            return Polynomial.ToString();
+            return Text;
         }
 
         #endregion

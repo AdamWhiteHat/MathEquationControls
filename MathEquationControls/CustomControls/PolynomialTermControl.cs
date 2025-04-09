@@ -19,6 +19,7 @@ using Microsoft.Xaml.Behaviors;
 using ExtendedArithmetic;
 using MathEquationControls.Behaviors;
 using System.ComponentModel;
+using MathEquationControls.Converters;
 
 namespace MathEquationControls
 {
@@ -32,26 +33,30 @@ namespace MathEquationControls
     {
         #region Public Properties
 
-        [Bindable(true), Browsable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
         public int Sign
         {
             get { return (int)GetValue(SignProperty); }
             set { SetValue(SignProperty, value); }
         }
 
-
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(BigIntegerConverter))]
         public BigInteger Coefficient
         {
             get => (BigInteger)GetValue(CoefficientProperty);
             set => SetValue(CoefficientProperty, value);
         }
 
+        [Bindable(true), Browsable(true), Category("Common")]
         public int Exponent
         {
             get => (int)GetValue(ExponentProperty);
             set => SetValue(ExponentProperty, value);
         }
 
+        [Bindable(true), Browsable(true), Category("Common")]
+        [TypeConverter(typeof(PolynomialTermConverter))]
         public Term Term
         {
             get
@@ -75,26 +80,25 @@ namespace MathEquationControls
                 SuppressTermUpdateEvent = false;
                 if (termUpdated)
                 {
-                    SetControls();
-                    OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
+                    SetExponentControlText();
+                    RaiseTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
                 }
             }
         }
 
-        [Browsable(true), Category("Behavior")]
+        [Bindable(true), Browsable(true), Category("Common")]
         public bool IsLeadingTerm
         {
             get { return (bool)GetValue(IsLeadingTermProperty); }
             set { SetValue(IsLeadingTermProperty, value); }
         }
 
-        //public string Text
-        //{
-        //    get
-        //    {
-        //        return GetStringRepresentation();
-        //    }
-        //}
+        [Bindable(true), Browsable(true), Category("Common")]
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
 
         public Term GetPolynomialTerm()
         {
@@ -118,7 +122,7 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     0,
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.OnSignChanged)));
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseSignChanged)));
 
         public static readonly DependencyProperty CoefficientProperty = DependencyProperty.Register(
                                                                                 nameof(Coefficient),
@@ -126,7 +130,7 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     default(BigInteger),
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.OnCoefficientChanged)
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseCoefficientChanged)
                                                                                 )
                                                                        );
 
@@ -136,18 +140,36 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     default(int),
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.OnExponentChanged)
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseExponentChanged)
                                                                                 )
                                                                         );
 
         public static readonly DependencyProperty IsLeadingTermProperty = DependencyProperty.Register(
-                                                                                      nameof(IsLeadingTerm),
-                                                                                      typeof(bool),
-                                                                                      typeof(PolynomialTermControl),
-                                                                                      new PropertyMetadata(false));
+                                                                                nameof(IsLeadingTerm),
+                                                                                typeof(bool),
+                                                                                typeof(PolynomialTermControl),
+                                                                                new PropertyMetadata(
+                                                                                    false,
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseIsLeadingTermChanged)
+                                                                                )
+                                                                        );
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+                                                                            nameof(Text),
+                                                                            typeof(string),
+                                                                            typeof(PolynomialTermControl),
+                                                                            new PropertyMetadata(
+                                                                                default(string),
+                                                                                new PropertyChangedCallback(PolynomialTermControl.RaiseTextChanged)
+                                                                            )
+                                                                    );
+
+
         #endregion
 
         #region Events
+
+        #region Event Member Definition
 
         public event TermUpdatedEventHandler TermUpdated;
 
@@ -169,6 +191,20 @@ namespace MathEquationControls
             remove { base.RemoveHandler(ExponentChangedEvent, value); }
         }
 
+        public event RoutedPropertyChangedEventHandler<bool> IsLeadingTermChanged
+        {
+            add { base.AddHandler(IsLeadingTermChangedEvent, value); }
+            remove { base.RemoveHandler(IsLeadingTermChangedEvent, value); }
+        }
+
+        public event RoutedPropertyChangedEventHandler<string> TextChanged
+        {
+            add { base.AddHandler(TextChangedEvent, value); }
+            remove { base.RemoveHandler(TextChangedEvent, value); }
+        }
+
+        #endregion
+
         #region RoutedEvents
 
         public static readonly RoutedEvent SignChangedEvent = EventManager.RegisterRoutedEvent(
@@ -189,24 +225,75 @@ namespace MathEquationControls
                                                                         typeof(RoutedPropertyChangedEventHandler<int>),
                                                                         typeof(PolynomialTermControl));
 
+        public static readonly RoutedEvent IsLeadingTermChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                            nameof(IsLeadingTermChanged),
+                                                                            RoutingStrategy.Bubble,
+                                                                            typeof(RoutedPropertyChangedEventHandler<bool>),
+                                                                            typeof(PolynomialTermControl));
+
+        public static readonly RoutedEvent TextChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                            nameof(TextChanged),
+                                                                            RoutingStrategy.Bubble,
+                                                                            typeof(RoutedPropertyChangedEventHandler<string>),
+                                                                            typeof(PolynomialTermControl));
+
         #endregion
 
         #region Raise Event Methods
 
-        protected virtual void OnSignChanged(int oldValue, int newValue)
+        protected virtual void RaiseSignChanged(int oldValue, int newValue)
         {
             RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
             e.RoutedEvent = SignChangedEvent;
             base.RaiseEvent(e);
         }
 
-        private static void OnSignChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RaiseSignChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PolynomialTermControl element = (PolynomialTermControl)d;
-            element.OnSignChanged((int)e.OldValue, (int)e.NewValue);
+            element.RaiseSignChanged((int)e.OldValue, (int)e.NewValue);
         }
 
-        protected virtual void OnTermUpdated(TermUpdatedEventArgs e)
+        protected virtual void RaiseCoefficientChanged(BigInteger oldValue, BigInteger newValue)
+        {
+            RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
+            e.RoutedEvent = CoefficientChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaiseCoefficientChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.RaiseCoefficientChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
+        }
+
+        protected virtual void RaiseExponentChanged(int oldValue, int newValue)
+        {
+            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
+            e.RoutedEvent = ExponentChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaiseExponentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.RaiseExponentChanged((int)e.OldValue, (int)e.NewValue);
+        }
+
+        protected virtual void RaiseIsLeadingTermChanged(bool oldValue, bool newValue)
+        {
+            RoutedPropertyChangedEventArgs<bool> e = new RoutedPropertyChangedEventArgs<bool>(oldValue, newValue);
+            e.RoutedEvent = IsLeadingTermChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaiseIsLeadingTermChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.RaiseIsLeadingTermChanged((bool)e.OldValue, (bool)e.NewValue);
+        }
+
+        protected virtual void RaiseTermUpdated(TermUpdatedEventArgs e)
         {
             if (SuppressTermUpdateEvent == false)
             {
@@ -215,30 +302,17 @@ namespace MathEquationControls
             }
         }
 
-        protected virtual void OnCoefficientChanged(BigInteger oldValue, BigInteger newValue)
+        protected virtual void RaiseTextChanged(string oldValue, string newValue)
         {
-            RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
-            e.RoutedEvent = CoefficientChangedEvent;
+            RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
+            e.RoutedEvent = TextChangedEvent;
             base.RaiseEvent(e);
         }
 
-        private static void OnCoefficientChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RaiseTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PolynomialTermControl element = (PolynomialTermControl)d;
-            element.OnCoefficientChanged((BigInteger)e.OldValue, (BigInteger)e.NewValue);
-        }
-
-        protected virtual void OnExponentChanged(int oldValue, int newValue)
-        {
-            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
-            e.RoutedEvent = ExponentChangedEvent;
-            base.RaiseEvent(e);
-        }
-
-        private static void OnExponentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            PolynomialTermControl element = (PolynomialTermControl)d;
-            element.OnExponentChanged((int)e.OldValue, (int)e.NewValue);
+            element.RaiseTextChanged((string)e.OldValue, (string)e.NewValue);
         }
 
         #endregion
@@ -275,40 +349,41 @@ namespace MathEquationControls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PolynomialTermControl), new FrameworkPropertyMetadata(typeof(PolynomialTermControl)));
         }
 
-        public PolynomialTermControl(Term polynomalTerm)
+        public PolynomialTermControl()
         {
             SuppressTermUpdateEvent = false;
-            this.Coefficient = polynomalTerm.CoEfficient;
-            this.Exponent = polynomalTerm.Exponent;
             this.DataContext = this;
-            this.Loaded += PolynomialTermControl_Loaded;
             this.Unloaded += PolynomialTermControl_Unloaded;
-
-            SetBindings();
         }
 
-        private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
+        public PolynomialTermControl(Term polynomialTerm)
         {
-            CoefficientChanged += PolynomialTermControl_CoefficientChanged;
-            ExponentChanged += PolynomialTermControl_ExponentChanged;
+            SuppressTermUpdateEvent = false;
+            this.Coefficient = polynomialTerm.CoEfficient;
+            this.Exponent = polynomialTerm.Exponent;
+            this.DataContext = this;
+            this.Unloaded += PolynomialTermControl_Unloaded;
         }
 
         private void PolynomialTermControl_Unloaded(object sender, RoutedEventArgs e)
         {
             CoefficientChanged -= PolynomialTermControl_CoefficientChanged;
             ExponentChanged -= PolynomialTermControl_ExponentChanged;
+            TextChanged -= PolynomialTermControl_TextChanged;
+            Unloaded -= PolynomialTermControl_Unloaded;
         }
 
-
-        private void SetBindings()
+        private bool EventsRegistered = false;
+        private void RegisterEvents()
         {
-            Binding signBinding = new Binding()
+            if (!EventsRegistered)
             {
-                Mode = BindingMode.OneWay,
-                Source = this,
-                Path = new PropertyPath($"Term.CoEfficient.Sign")
-            };
-            BindingExpressionBase coEfficientSign_Sign_BindingExpressionBase = this.SetBinding(SignProperty, signBinding);
+                EventsRegistered = true;
+
+                CoefficientChanged += PolynomialTermControl_CoefficientChanged;
+                ExponentChanged += PolynomialTermControl_ExponentChanged;
+                TextChanged += PolynomialTermControl_TextChanged;
+            }
         }
 
         #endregion
@@ -322,10 +397,6 @@ namespace MathEquationControls
             controlBorder = GetTemplateChild(ElementBorder) as Border;
 
             controlCoefficient = GetTemplateChild(ElementCoefficient) as Coefficient;
-            if (controlCoefficient != null)
-            {
-                controlCoefficient.ValueChanged += PolynomialTermControl_CoefficientChanged;
-            }
 
             controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as TextBlock;
             controlMultiplicationSymbol.Text = MultiplicationSymbolValue;
@@ -339,38 +410,57 @@ namespace MathEquationControls
             // new DragUpDownAdjustValueBehavior(
             //Interaction.GetBehaviors(this).Add(mouseBehavior);
 
-            SetControls();
+            SetExponentControlText();
+
+            if (controlCoefficient != null && controlExponent != null)
+            {
+                RegisterEvents();
+
+                if (!string.IsNullOrWhiteSpace(Text))
+                {
+                    Term temp = null;
+                    try
+                    {
+                        temp = Term.Parse(Text);
+                    }
+                    catch
+                    {
+                        return;
+                    }
+
+                    //this.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 255));
+
+                    if (temp != null)
+                    {
+                        //this.Term = temp;
+
+                        controlCoefficient.Value = temp.CoEfficient;
+                        controlExponent.Text = temp.Exponent.ToString();
+                    }
+                }
+            }
         }
 
         private void PolynomialTermControl_CoefficientChanged(object sender, RoutedPropertyChangedEventArgs<BigInteger> e)
         {
-            SetControls();
-            OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
+            if (e.OldValue.Sign != e.NewValue.Sign)
+            {
+                this.Sign = e.NewValue.Sign;
+            }
+            RaiseTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
         }
 
         private void PolynomialTermControl_ExponentChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
         {
-            SetControls();
-            OnTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
+            SetExponentControlText();
+            RaiseTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
         }
 
-        private void SetControls()
+        private void SetExponentControlText()
         {
-            Term term = GetPolynomialTerm();
-
-            if (term.CoEfficient != controlCoefficient.Value)
+            if (this.Exponent.ToString() != controlExponent.Text)
             {
-                controlCoefficient.Value = term.CoEfficient;
-            }
-
-            if (term.Exponent.ToString() != controlExponent.Text)
-            {
-                controlExponent.Text = term.Exponent.ToString();//ConvertToSuperScript(term.Exponent.ToString());
-            }
-
-            if (Sign != term.CoEfficient.Sign)
-            {
-                Sign = term.CoEfficient.Sign;
+                controlExponent.Text = this.Exponent.ToString();//ConvertToSuperScript(term.Exponent.ToString());
             }
 
             //string termString = GetStringRepresentation();
@@ -384,6 +474,27 @@ namespace MathEquationControls
 
             //Size measuredStringSize = WPFHelper.MeasureString(measureString, this, controlRichTextBox);
             //controlRichTextBox.Width = measuredStringSize.Width;
+        }
+
+        private void PolynomialTermControl_TextChanged(object sender, RoutedPropertyChangedEventArgs<string> e)
+        {
+            if (e.OldValue != e.NewValue)
+            {
+                Term temp = null;
+                try
+                {
+                    temp = Term.Parse(e.NewValue);
+                }
+                catch
+                {
+                    return;
+                }
+
+                if (temp != null)
+                {
+                    Term = temp;
+                }
+            }
         }
 
         #endregion

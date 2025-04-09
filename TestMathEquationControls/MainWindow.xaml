@@ -7,47 +7,52 @@
         mc:Ignorable="d"
         Title="MainWindow" 
 		MinHeight="400" MinWidth="200"
-		Height="Auto" Width="Auto"
+		Height="Auto" Width="300"
 		>
 
-	<Window.Resources>
-		<Style TargetType="GroupBox">
-			<Setter Property="Padding" Value="30,0,0,0" />
-			<Setter Property="Margin" Value="0,10" />
-		</Style>
-	</Window.Resources>
+    <Window.Resources>
+        <Style TargetType="GroupBox">
+            <Setter Property="Padding" Value="30,0,0,0" />
+            <Setter Property="Margin" Value="0,10" />
+        </Style>
+    </Window.Resources>
 
-	<Grid Margin="10">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="100" />
-		</Grid.RowDefinitions>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
 
-		<StackPanel Grid.Row="0">
-			
-			<GroupBox Header="Polynomial examples:">
-				<StackPanel>
-					<TextBlock>
+        <StackPanel Grid.Row="0">
+
+            <GroupBox Header="Polynomial examples:">
+                <StackPanel>
+                    <TextBlock>
 				<Hyperlink x:Name="link_Polynomial_QuotientField" Click="link_Polynomial_QuotientField_Click" >
 					View: Quotient Field 
 				</Hyperlink>
-					</TextBlock>
-					<TextBlock>
+                    </TextBlock>
+                    <TextBlock>
 				<Hyperlink x:Name="link_Polynomial_BaseMExpansion" Click="link_Polynomial_BaseMExpansion_Click" >
 					View: Base-m Expansion
 				</Hyperlink>
-					</TextBlock>
-				</StackPanel>
-			</GroupBox>
+                    </TextBlock>
+                    <TextBlock>
+                <Hyperlink x:Name="link_Individual_Controls" Click ="link_Individual_Controls_Click" >
+					View: Individual Controls Example
+				</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </GroupBox>
 
-			<GroupBox Header="Fraction examples:">
-				
-			</GroupBox>
+            <GroupBox Header="Fraction examples:">
 
-			<GroupBox Header="Misc examples:">
+            </GroupBox>
 
-			</GroupBox>
-			
-		</StackPanel>
-	</Grid>
+            <GroupBox Header="Misc examples:">
+
+            </GroupBox>
+
+        </StackPanel>
+    </Grid>
 </Window>

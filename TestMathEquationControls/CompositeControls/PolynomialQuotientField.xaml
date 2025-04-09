@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TestMathEquationControls.CompositeControls"
         Title="PolynomialQuotientField"
 		xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls"
-		xmlns:converters="clr-namespace:MathEquationControls.ValueConverters;assembly=MathEquationControls"
+		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
 		ContentRendered="Window_ContentRendered"
 		Height="594" Width="800">
@@ -34,7 +34,7 @@
 
         <WrapPanel Grid.Row="1" Style="{DynamicResource WrapPanelStyle}">
             <Label Content="X =" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:Coefficient x:Name="xIntegerValue" d:Text="1"
+            <mathctrls:Coefficient x:Name="xIntegerValue"
 								 Value="{Binding Path=BaseValue, Mode=TwoWay}"
 								 Style="{DynamicResource TextControlStyle}" 
 								 ValueChanged="numberboxControl_ValueChanged"

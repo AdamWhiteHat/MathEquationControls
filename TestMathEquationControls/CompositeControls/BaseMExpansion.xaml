@@ -5,67 +5,101 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestMathEquationControls.CompositeControls"
 		xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls"
-		xmlns:converters="clr-namespace:MathEquationControls.ValueConverters;assembly=MathEquationControls"
+		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
-        Title="BaseMExpansion"
+        Title="Base M Expansion"
 		Height="450" Width="800"
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded"
 		>
-    <Window.Resources>
-        <converters:BigIntegerToStringConverter x:Key="BigInteger2StringConverter" />
-        <converters:AbsoluteBigIntegerToStringConverter  x:Key="AbsoluteBigInteger2StringConverter" />
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" MinHeight="150" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+        <Border Grid.Row="0" BorderThickness="1">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="Black"/>
+            </Border.BorderBrush>
             <Grid>
-                <WrapPanel HorizontalAlignment="Center" >
-                    <Label Content="m =" Style="{DynamicResource TextControlStyle}" />
-                    <mathctrls:NumberBox x:Name="ctrlPolynomialBaseM" d:DataContext="-2" Value="{Binding Path=PolynomialBaseM}" MinWidth="30" MinHeight="60" />
+                <TextBlock Margin="10" Style="{DynamicResource TextBlockStyle}" FontSize="16" TextWrapping="Wrap" TextAlignment="Left" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Run FontWeight="Bold">Description:</Run>
+                    Generates a <Run Style="{DynamicResource GreenUnderline}">given-degree</Run> polynomial that evaluates to the <Run Style="{DynamicResource BlueUnderline}">target value</Run> when the indeterminate is the <Run  Style="{DynamicResource OrangeUnderline}">specified value</Run>
+                </TextBlock>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+            <Grid>
+                <WrapPanel HorizontalAlignment="Center" Style="{DynamicResource WrapPanelStyle}">
+
+
+                    <!--TextBlock Style="{StaticResource TextBlockStyle}">
+                        <Run Style="{StaticResource OrangeUnderline}">X</Run> =
+                    </TextBlock-->
+
+                    <Label Style="{DynamicResource TextControlStyle}" >
+                        <Label.Content>
+                            <TextBlock>
+                                <Run Style="{DynamicResource OrangeUnderline}">X</Run> =
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
+
+                    <mathctrls:NumberBox x:Name="ctrlPolynomialBaseM" Value="{Binding Path=PolynomialBaseM}" />
                 </WrapPanel>
-                <WrapPanel HorizontalAlignment="Right">
-                    <Label Content="degree:" Style="{DynamicResource TextControlStyle}" />
-                    <mathctrls:NumberBox x:Name="ctrlDegree" Value="{Binding Path=PolynomialDegree, Mode=TwoWay}" />
+                <WrapPanel HorizontalAlignment="Right"  Style="{DynamicResource WrapPanelStyle}">
+                    <Label Style="{DynamicResource TextControlStyle}" >
+                        <Label.Content>
+                            <TextBlock>
+                                <Run Style="{DynamicResource GreenUnderline}">degree</Run> =
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
+                    <mathctrls:NumberBox x:Name="ctrlDegree" Value="{Binding Path=PolynomialDegree, Mode=TwoWay}" Margin="0,0,30,0"
+                                         Minimum="0" Maximum="10"  SmallChange="1" MediumChange="1" LargeChange="1" />
                 </WrapPanel>
             </Grid>
         </Border>
 
 
-        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <mathctrls:PolynomialControl x:Name="polyControl" 
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource StackPanelStyle}">
+                    <mathctrls:PolynomialControl x:Name="polyControl" 
 											 DockToParent="False"
 											 Style="{DynamicResource PolynomialControlStyle}"
-                                             Height="Auto" Width="Auto" d:Text="X^3 - X^2 - 12*X + 35"
+                                             d:Text="X^3 - X^2 - 12*X + 35"
 											 />
-                <WrapPanel x:Name="wrappanelTermLocks" HorizontalAlignment="Center">
-                    <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" Width="90"
+                    <WrapPanel x:Name="wrappanelTermLocks" HorizontalAlignment="Center">
+                        <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" Width="90"
                                 HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
-                </WrapPanel>
-            </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+                <CheckBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="15,7"
+						  FontFamily="Libertinus Math Regular" FontSize="17" IsChecked="True"
+						  x:Name="checkboxSmallCoefficients" Content="Reduce coefficient size" />
+            </Grid>
         </Border>
 
 
 
-        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+        <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1">
             <Grid>
-                <StackPanel HorizontalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center"  Style="{DynamicResource StackPanelStyle}">
                     <WrapPanel HorizontalAlignment="Center">
                         <Label Content="=" Style="{DynamicResource TextControlStyle}" />
                         <mathctrls:NumberBox x:Name="ctrlTargetValue" Value="{Binding Path=TargetValue, Mode=TwoWay}" />
                     </WrapPanel>
-                    <Label Content="(target value)" Style="{DynamicResource TextControlStyle}" />
+                    <TextBlock Style="{DynamicResource TextBlockStyle}" >
+                        <Run Style="{StaticResource BlueUnderline}">(target value)</Run>
+                    </TextBlock>
                 </StackPanel>
-                <CheckBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,5"
-						  FontFamily="Libertinus Math Regular" FontSize="17" IsChecked="True"
-						  x:Name="checkboxSmallCoefficients" Content="Reduce coefficient size" />
+
             </Grid>
         </Border>
 

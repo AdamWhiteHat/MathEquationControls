@@ -1,0 +1,67 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:MathEquationControls.Converters"
+					xmlns:local="clr-namespace:MathEquationControls"
+					>
+
+    <Style x:Key="GreenUnderline" TargetType="Run">
+        <Style.Setters>
+            <Setter Property="TextDecorations">
+                <Setter.Value>
+                    <TextDecorationCollection>
+                        <TextDecoration Location="Underline">
+                            <TextDecoration.Pen>
+                                <Pen Thickness="1.5">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="Green" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </TextDecoration.Pen>
+                        </TextDecoration>
+                    </TextDecorationCollection>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="BlueUnderline" TargetType="Run">
+        <Style.Setters>
+            <Setter Property="TextDecorations">
+                <Setter.Value>
+                    <TextDecorationCollection>
+                        <TextDecoration Location="Underline">
+                            <TextDecoration.Pen>
+                                <Pen Thickness="1.5">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="Blue" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </TextDecoration.Pen>
+                        </TextDecoration>
+                    </TextDecorationCollection>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="OrangeUnderline" TargetType="Run">
+        <Style.Setters>
+            <Setter Property="TextDecorations">
+                <Setter.Value>
+                    <TextDecorationCollection>
+                        <TextDecoration Location="Underline">
+                            <TextDecoration.Pen>
+                                <Pen Thickness="1.5">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="Orange" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </TextDecoration.Pen>
+                        </TextDecoration>
+                    </TextDecorationCollection>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+</ResourceDictionary>

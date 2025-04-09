@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace MathEquationControls.ValueConverters
+namespace MathEquationControls.Converters
 {
     public class SignToTextConverter : IValueConverter
     {

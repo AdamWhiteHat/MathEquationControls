@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MathEquationControls.ValueConverters
+namespace MathEquationControls.Converters
 {
 	public class BigIntegerToStringConverter : IValueConverter
 	{

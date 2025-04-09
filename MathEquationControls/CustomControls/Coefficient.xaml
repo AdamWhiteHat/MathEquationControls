@@ -3,7 +3,7 @@
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					xmlns:local="clr-namespace:MathEquationControls"
-					xmlns:converters="clr-namespace:MathEquationControls.ValueConverters"
+					xmlns:converters="clr-namespace:MathEquationControls.Converters"
 					mc:Ignorable="d">
 
     <Style TargetType="{x:Type local:Coefficient}">
@@ -15,8 +15,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Coefficient}">
                     <Border x:Name="PART_Border" Style="{DynamicResource NumberBox_Default_BorderStyle}" >
-                        <WrapPanel Orientation="Horizontal">
-                            <TextBox x:Name="PART_TextBox" d:Text="1" Style="{DynamicResource Coefficient_TextBoxStyle}" />
+                        <WrapPanel Orientation="Horizontal" Style="{DynamicResource WrapPanelStyle}">
+                            <TextBox x:Name="PART_TextBox" Style="{DynamicResource Coefficient_TextBoxStyle}" />
                         </WrapPanel>
                     </Border>
                 </ControlTemplate>
