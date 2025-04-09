@@ -90,8 +90,17 @@ namespace MathEquationControls
 
         public NumberBox()
         {
+            this.Loaded += NumberBox_Loaded;
             this.Unloaded += Control_Unloaded;
             this.IsEnabledChanged += NumberBox_IsEnabledChanged;
+        }
+
+        private void NumberBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (controlTextBox != null)
+            {
+                RegisterEvents();
+            }
         }
 
         private void Control_Unloaded(object sender, RoutedEventArgs e)
@@ -110,11 +119,6 @@ namespace MathEquationControls
             if (controlTextBox != null)
             {
                 RegisterEvents();
-            }
-
-            if (IsEnabled)
-            {
-                AttachInputBehaviors();
             }
 
             if (controlTextBox != null)
@@ -141,13 +145,23 @@ namespace MathEquationControls
                 ValueChanged += Control_ValueChanged;
                 TextChanged += NumberBox_TextChanged;
             }
+
+            if (IsEnabled)
+            {
+                AttachInputBehaviors();
+            }
         }
 
         private void UnRegisterEvents()
         {
-            ValueChanged -= Control_ValueChanged;
-            TextChanged -= NumberBox_TextChanged;
-            DetachInputBehaviors();
+            if (EventsRegistered)
+            {
+                ValueChanged -= Control_ValueChanged;
+                TextChanged -= NumberBox_TextChanged;
+                DetachInputBehaviors();
+
+                EventsRegistered = false;
+            }
         }
 
         private void NumberBox_TextChanged(object sender, RoutedPropertyChangedEventArgs<string> e)

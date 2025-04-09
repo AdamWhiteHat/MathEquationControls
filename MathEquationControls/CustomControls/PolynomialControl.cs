@@ -161,7 +161,6 @@ namespace MathEquationControls
         private StackPanel controlContentsPanel;
 
         private Dictionary<int, PolynomialTermControl> _controlCache_Terms;
-        private Dictionary<int, TextBlock> _controlCache_TextBlock;
 
         #endregion
 
@@ -175,9 +174,9 @@ namespace MathEquationControls
         public PolynomialControl()
         {
             this.IsHitTestVisible = true;
+            this.Loaded += PolynomialControl_Loaded;
             this.Unloaded += PolynomialControl_Unloaded;
             _controlCache_Terms = new Dictionary<int, PolynomialTermControl>();
-            _controlCache_TextBlock = new Dictionary<int, TextBlock>();
             SuppressUpdateEvents = false;
 
             //if (DesignerProperties.GetIsInDesignMode(this))
@@ -201,10 +200,22 @@ namespace MathEquationControls
             //}
         }
 
+        private void PolynomialControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (controlContentsPanel != null)
+            {
+                RegisterEvents();
+            }
+        }
+
         private void PolynomialControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.PolynomialChanged -= PolynomialControl_PolynomialChanged;
-            this.TextChanged -= PolynomialControl_TextChanged;
+            if (EventsRegistered)
+            {
+                this.PolynomialChanged -= PolynomialControl_PolynomialChanged;
+                this.TextChanged -= PolynomialControl_TextChanged;
+                EventsRegistered = false;
+            }
         }
 
         #endregion
@@ -238,18 +249,23 @@ namespace MathEquationControls
             //}
         }
 
+        private bool EventsRegistered = false;
         private void RegisterEvents()
         {
-            if (DockToParent)
+            if (!EventsRegistered)
             {
-                FrameworkElement parent = (FrameworkElement)WPFHelper.GetParent(this);
+                EventsRegistered = true;
+                if (DockToParent)
+                {
+                    FrameworkElement parent = (FrameworkElement)WPFHelper.GetParent(this);
 
-                double parentActualHeight = parent.ActualHeight;
-                this.Height = parentActualHeight;
+                    double parentActualHeight = parent.ActualHeight;
+                    this.Height = parentActualHeight;
+                }
+
+                this.TextChanged += PolynomialControl_TextChanged;
+                this.PolynomialChanged += PolynomialControl_PolynomialChanged;
             }
-
-            this.TextChanged += PolynomialControl_TextChanged;
-            this.PolynomialChanged += PolynomialControl_PolynomialChanged;
         }
 
         private void PolynomialControl_TextChanged(object sender, RoutedPropertyChangedEventArgs<string> e)

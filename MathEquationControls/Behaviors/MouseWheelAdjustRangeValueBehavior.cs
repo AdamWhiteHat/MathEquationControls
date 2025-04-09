@@ -24,6 +24,7 @@ namespace MathEquationControls.Behaviors
         protected override void OnAttached()
         {
             AssociatedObject.PreviewMouseWheel += AssociatedObject_PreviewMouseWheel;
+
             base.OnAttached();
         }
 
@@ -49,6 +50,8 @@ namespace MathEquationControls.Behaviors
 
         private void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.ScrollNS;
+
             BigInteger multiplier = 1;
 
             if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
@@ -69,6 +72,8 @@ namespace MathEquationControls.Behaviors
             UIElement dependencyObject = (UIElement)sender;
             DependencyObject focusScope = FocusManager.GetFocusScope(AssociatedObject);
             FocusManager.SetFocusedElement(focusScope, dependencyObject);
+
+         
         }
     }
 }

@@ -21,7 +21,8 @@
 
                             <StackPanel x:Name="PART_ContentsPanel"
 										Orientation="Horizontal"
-										HorizontalAlignment="Center" VerticalAlignment="Center" />
+										HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                        FocusManager.IsFocusScope="True" />
 
                         </Viewbox>
 

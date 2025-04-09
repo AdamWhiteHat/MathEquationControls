@@ -353,36 +353,35 @@ namespace MathEquationControls
         {
             SuppressTermUpdateEvent = false;
             this.DataContext = this;
+            this.Loaded += PolynomialTermControl_Loaded;
             this.Unloaded += PolynomialTermControl_Unloaded;
         }
-
         public PolynomialTermControl(Term polynomialTerm)
         {
             SuppressTermUpdateEvent = false;
             this.Coefficient = polynomialTerm.CoEfficient;
             this.Exponent = polynomialTerm.Exponent;
             this.DataContext = this;
+            this.Loaded += PolynomialTermControl_Loaded;
             this.Unloaded += PolynomialTermControl_Unloaded;
+        }
+
+        private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (controlCoefficient != null)
+            {
+                RegisterEvents();
+            }
         }
 
         private void PolynomialTermControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            CoefficientChanged -= PolynomialTermControl_CoefficientChanged;
-            ExponentChanged -= PolynomialTermControl_ExponentChanged;
-            TextChanged -= PolynomialTermControl_TextChanged;
-            Unloaded -= PolynomialTermControl_Unloaded;
-        }
-
-        private bool EventsRegistered = false;
-        private void RegisterEvents()
-        {
-            if (!EventsRegistered)
+            if (EventsRegistered)
             {
-                EventsRegistered = true;
-
-                CoefficientChanged += PolynomialTermControl_CoefficientChanged;
-                ExponentChanged += PolynomialTermControl_ExponentChanged;
-                TextChanged += PolynomialTermControl_TextChanged;
+                CoefficientChanged -= PolynomialTermControl_CoefficientChanged;
+                ExponentChanged -= PolynomialTermControl_ExponentChanged;
+                TextChanged -= PolynomialTermControl_TextChanged;
+                EventsRegistered = false;
             }
         }
 
@@ -438,6 +437,19 @@ namespace MathEquationControls
                         controlExponent.Text = temp.Exponent.ToString();
                     }
                 }
+            }
+        }
+
+        private bool EventsRegistered = false;
+        private void RegisterEvents()
+        {
+            if (!EventsRegistered)
+            {
+                EventsRegistered = true;
+
+                CoefficientChanged += PolynomialTermControl_CoefficientChanged;
+                ExponentChanged += PolynomialTermControl_ExponentChanged;
+                TextChanged += PolynomialTermControl_TextChanged;
             }
         }
 

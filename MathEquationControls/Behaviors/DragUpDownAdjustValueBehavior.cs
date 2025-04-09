@@ -27,6 +27,7 @@ namespace MathEquationControls.Behaviors
         }
 
         public DragUpDownAdjustValueBehavior(DependencyProperty valueProperty)
+            : base()
         {
             _valueProperty = valueProperty;
         }
@@ -54,10 +55,14 @@ namespace MathEquationControls.Behaviors
 
         protected override void OnAttached()
         {
-            AssociatedObject.PreviewMouseLeftButtonDown += AssociatedObject_PreviewMouseLeftButtonDown;
-            AssociatedObject.PreviewMouseLeftButtonUp += AssociatedObject_PreviewMouseLeftButtonUp;
+            AssociatedObject.PreviewMouseDown += AssociatedObject_PreviewMouseDown;
+            AssociatedObject.PreviewMouseUp += AssociatedObject_PreviewMouseUp;
+
             AssociatedObject.MouseEnter += AssociatedObject_MouseEnter;
             AssociatedObject.MouseLeave += AssociatedObject_MouseLeave;
+
+            AssociatedObject.GotKeyboardFocus += AssociatedObject_GotKeyboardFocus;
+            AssociatedObject.LostKeyboardFocus += AssociatedObject_LostKeyboardFocus;
 
             // AssociatedObject.PreviewMouseMove += AssociatedObject_PreviewMouseMove;
 
@@ -72,9 +77,15 @@ namespace MathEquationControls.Behaviors
         {
             if (AssociatedObject != null)
             {
-                AssociatedObject.PreviewMouseLeftButtonDown -= AssociatedObject_PreviewMouseLeftButtonDown;
-                AssociatedObject.PreviewMouseLeftButtonUp -= AssociatedObject_PreviewMouseLeftButtonUp;
+                AssociatedObject.PreviewMouseDown -= AssociatedObject_PreviewMouseDown;
+                AssociatedObject.PreviewMouseUp -= AssociatedObject_PreviewMouseUp;
+
                 AssociatedObject.MouseEnter -= AssociatedObject_MouseEnter;
+                AssociatedObject.MouseLeave -= AssociatedObject_MouseLeave;
+
+                AssociatedObject.GotKeyboardFocus -= AssociatedObject_GotKeyboardFocus;
+                AssociatedObject.LostKeyboardFocus -= AssociatedObject_LostKeyboardFocus;
+
                 //AssociatedObject.PreviewMouseMove -= AssociatedObject_PreviewMouseMove;
             }
 
@@ -90,22 +101,39 @@ namespace MathEquationControls.Behaviors
 
         #region Click and Drag
 
-        private void AssociatedObject_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AssociatedObject_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            StartDragging();
-            e.Handled = true;
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.ScrollNS;
+                StartDragging();
+                e.Handled = true;
+            }
+            else if (e.ChangedButton == MouseButton.Left)
+            {
+                InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.IBeam;
+            }
         }
-
-        private void AssociatedObject_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void AssociatedObject_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            StopDragging(e);
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                StopDragging(e);
+            }
         }
 
         private void AssociatedObject_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!_isDragging)
             {
-                InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.ScrollNS;
+                if (AssociatedObject.IsKeyboardFocusWithin)
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.IBeam;
+                }
+                else
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.ScrollNS;
+                }
             }
         }
 
@@ -113,7 +141,40 @@ namespace MathEquationControls.Behaviors
         {
             if (!_isDragging)
             {
-                InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.Arrow;
+                if (AssociatedObject.IsKeyboardFocusWithin)
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.IBeam;
+                }
+                else
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.Arrow;
+                }
+            }
+        }
+
+        private void AssociatedObject_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (!_isDragging)
+            {
+                if (AssociatedObject.IsMouseOver)
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.IBeam;
+                }
+            }
+        }
+
+        private void AssociatedObject_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (!_isDragging)
+            {
+                if (AssociatedObject.IsMouseOver)
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.ScrollNS;
+                }
+                else
+                {
+                    InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.Arrow;
+                }
             }
         }
 
