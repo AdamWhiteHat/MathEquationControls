@@ -9,7 +9,7 @@
 		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
 		ContentRendered="Window_ContentRendered"
-		Height="594" Width="800">
+		Height="420" Width="800">
     <Window.Resources>
         <converters:BigIntegerToStringConverter x:Key="BigInteger2StringConverter" />
 
@@ -22,14 +22,14 @@
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
 
         <WrapPanel Grid.Row="1" Style="{DynamicResource WrapPanelStyle}">
@@ -43,37 +43,67 @@
         </WrapPanel>
 
         <WrapPanel Grid.Row="2" Style="{DynamicResource WrapPanelStyle}">
+            <TextBlock Text="ƒ" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <mathctrls:PolynomialControl x:Name="dividendPolynomialCtrl"
-                                         Width="Auto" Height="Auto" MinHeight="30"
-										 
+                                         Width="Auto" Height="Auto" MinHeight="30"										 
 										 Style="{DynamicResource PolynomialControlStyle}" />
         </WrapPanel>
 
         <WrapPanel Grid.Row="3" Style="{DynamicResource WrapPanelStyle}">
+            <TextBlock Text="ƒ" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text="(" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text="X" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text=")" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <TextBox x:Name="integerTotal_Dividend" Text="0" Style="{DynamicResource TextBoxStyle}" />
         </WrapPanel>
 
-        <WrapPanel Grid.Row="4" Style="{DynamicResource WrapPanelStyle}">
-            <Label Content="MOD" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:PolynomialControl x:Name="modulusPolynomialCtrl"
-									 DockToParent="True"
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="13" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="13" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="13" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="13" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="13" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" />
+            <TextBlock Grid.Column="1" Text="ƒ" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Grid.Column="2" Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
+            <TextBlock Grid.Column="3" Text="≡" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Grid.Column="4" Text=" " Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Grid.Column="5" x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" d:Width="24" />
+            <TextBlock Grid.Column="6" Text=" " Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Grid.Column="7" Text="(" Style="{DynamicResource TextBlockStyle}" />
+            <Label Grid.Column="8" Content="mod" Style="{DynamicResource TextControlStyle}" />
+            <TextBlock Grid.Column="9" Text=" " Style="{DynamicResource TextBlockStyle}" />
+            <mathctrls:PolynomialControl  Grid.Column="10" x:Name="modulusPolynomialCtrl"
+                                     Width="Auto" Height="Auto" MinHeight="30"
 									 Style="{DynamicResource PolynomialControlStyle}" />
-            <Label Width="30" />
-
-
-        </WrapPanel>
+            <TextBlock Grid.Column="11" Text=" " Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Grid.Column="12" Text=")" Style="{DynamicResource TextBlockStyle}" />
+            <TextBlock Grid.Column="13" />
+        </Grid>
 
         <WrapPanel Grid.Row="5" Style="{DynamicResource WrapPanelStyle}" >
             <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
             <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
-            <TextBlock x:Name="quotient" Text="" Style="{DynamicResource TextBlockStyle}" d:Width="24" />
+            <TextBox x:Name="integerTotal_Quotient" Text="0" Style="{DynamicResource TextBoxStyle}" />
         </WrapPanel>
 
         <WrapPanel Grid.Row="6" Style="{DynamicResource WrapPanelStyle}">
-            <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" Visibility="Collapsed" />
-            <TextBox x:Name="integerTotal_Quotient" Text="0" Style="{DynamicResource TextBoxStyle}" Visibility="Collapsed" />
-            <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <TextBlock Text="≡" Style="{DynamicResource TextBlockStyle}" />
             <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <TextBox x:Name="integerTotal_QuotientMod" Text="0" Style="{DynamicResource TextBoxStyle}" />

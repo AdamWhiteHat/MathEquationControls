@@ -198,7 +198,13 @@ namespace TestMathEquationControls.CompositeControls
                     BigInteger integerValue_quotient = quotientPoly.Evaluate(x);
                     integerTotal_Quotient.Text = integerValue_quotient.ToString();
 
-                    BigInteger integerValue_quotientMod = integerValue_quotient.Mod(modulusInteger.Value);
+                    int sign = integerValue_quotient.Sign;
+
+                    BigInteger integerValue_quotientMod = BigInteger.Abs(integerValue_quotient).Mod(modulusInteger.Value);
+                    if (sign == -1)
+                    {
+                        integerValue_quotientMod = integerValue_quotientMod * sign;
+                    }
                     integerTotal_QuotientMod.Text = integerValue_quotientMod.ToString();
                 }
             }
