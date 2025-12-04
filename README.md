@@ -1,6 +1,6 @@
 # MathEquationControls
 
-WPF controls for Numbers, Polynomials, Fractions and more.
+WPF controls for displaying Polynomials or Equations, editing the value of their variables, and seeing  the results in real-time.
 
 
 
