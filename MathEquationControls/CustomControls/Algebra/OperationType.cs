@@ -17,7 +17,7 @@ namespace MathEquationControls.CustomControls.Algebra
 
     public static class OperationTypeHelper
     {
-        public static Dictionary<char, OperationType> Symbol2OperationTypeDictionary = new Dictionary<char, OperationType>()
+        public static Dictionary<char, OperationType> SymbolKey_OperationTypeValue_Dictionary = new Dictionary<char, OperationType>()
         {
             { '+', OperationType.Add },
             { '-', OperationType.Subtract },
@@ -25,7 +25,7 @@ namespace MathEquationControls.CustomControls.Algebra
             { '/', OperationType.Divide }
         };
 
-        public static Dictionary<OperationType, string> OperationType2SymbolDictionary = new Dictionary<OperationType, string>()
+        public static Dictionary<OperationType, string> OperationTypeKey_SymbolValue_Dictionary = new Dictionary<OperationType, string>()
         {
             { OperationType.Add      ,"+"    },
             { OperationType.Subtract ,"-"    },

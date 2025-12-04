@@ -26,7 +26,7 @@ namespace MathEquationControls.Converters
             }
 
             OperationType operationType = (OperationType)value;
-            return OperationTypeHelper.OperationType2SymbolDictionary[operationType];
+            return OperationTypeHelper.OperationTypeKey_SymbolValue_Dictionary[operationType];
         }
 
         // This converts the string into an OperationType object to store.

@@ -31,6 +31,25 @@ namespace MathEquationControls.CustomControls.Algebra
             set { SetValue(LHSProperty, value); }
         }
 
+        public IExpression RHS
+        {
+            get { return (IExpression)GetValue(RHSProperty); }
+            set { SetValue(RHSProperty, value); }
+        }
+
+        public OperationType Operation
+        {
+            get { return (OperationType)GetValue(OperationProperty); }
+            set { SetValue(OperationProperty, value); }
+        }
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        #region Register Dependency Properties and Routed Events
+
         #region LHS
 
         public static readonly DependencyProperty LHSProperty = DependencyProperty.Register(
@@ -71,12 +90,6 @@ namespace MathEquationControls.CustomControls.Algebra
         }
 
         #endregion
-
-        public IExpression RHS
-        {
-            get { return (IExpression)GetValue(RHSProperty); }
-            set { SetValue(RHSProperty, value); }
-        }
 
         #region RHS
 
@@ -122,12 +135,6 @@ namespace MathEquationControls.CustomControls.Algebra
 
         #region Operation
 
-        public OperationType Operation
-        {
-            get { return (OperationType)GetValue(OperationProperty); }
-            set { SetValue(OperationProperty, value); }
-        }
-
         public static readonly DependencyProperty OperationProperty = DependencyProperty.Register(
                                                                             nameof(Operation),
                                                                             typeof(OperationType),
@@ -170,12 +177,6 @@ namespace MathEquationControls.CustomControls.Algebra
 
         #region Text
 
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
                                                                             nameof(Text),
                                                                             typeof(string),
@@ -216,6 +217,8 @@ namespace MathEquationControls.CustomControls.Algebra
 
         #endregion
 
+        #endregion
+
         public BinaryOperation()
         {
             InitializeComponent();
@@ -224,6 +227,10 @@ namespace MathEquationControls.CustomControls.Algebra
             this.Unloaded += Control_Unloaded;
             RegisterEvents();
         }
+
+        #region Events
+
+        #region Register/UnRegister Events
 
         private void Control_Loaded(object sender, RoutedEventArgs e)
         {
@@ -261,6 +268,8 @@ namespace MathEquationControls.CustomControls.Algebra
             }
         }
 
+        #endregion
+
         private void Control_RHSChanged(object sender, RoutedPropertyChangedEventArgs<IExpression> e)
         {
             if (e.OldValue == e.NewValue)
@@ -285,23 +294,15 @@ namespace MathEquationControls.CustomControls.Algebra
             {
                 return;
             }
-
             SetText();
         }
 
         private void SetText()
         {
-            if (LHS == null || RHS == null || Operation == OperationType.None)
-            {
-                return;
-            }
+            if (LHS == null || RHS == null || Operation == OperationType.None) { return; }
+            if (string.IsNullOrWhiteSpace(LHS.Text) || string.IsNullOrWhiteSpace(RHS.Text)) { return; }
 
-            if (string.IsNullOrWhiteSpace(LHS.Text) || string.IsNullOrWhiteSpace(RHS.Text))
-            {
-                return;
-            }
-
-            string newText = $"{LHS.Text} {OperationTypeHelper.OperationType2SymbolDictionary[Operation]} {RHS.Text}";
+            string newText = $"{LHS.Text} {OperationTypeHelper.OperationTypeKey_SymbolValue_Dictionary[Operation]} {RHS.Text}";
             string oldText = (string)GetValue(TextProperty);
             if (oldText != newText)
             {
@@ -328,12 +329,14 @@ namespace MathEquationControls.CustomControls.Algebra
             Parse(newExpression);
         }
 
+        #endregion
+
         private static char[] AdditiveSymbols = new char[] { '+','-' };
         private static char[] MultiplicativeSymbols = new char[] { '*','/' };
         private static char[] OperationSymbols = new char[] { '+', '-', '*', '/' };
-        private void Parse(string expresssion)
+        private void Parse(string expression)
         {
-            string sanitized = new string(expresssion.Where(c => !char.IsWhiteSpace(c)).ToArray());
+            string sanitized = new string(expression.Where(c => !char.IsWhiteSpace(c)).ToArray());
 
             int index = sanitized.IndexOfAny(OperationSymbols);
             if (index == -1)
@@ -369,7 +372,7 @@ namespace MathEquationControls.CustomControls.Algebra
 
         private void SetOperation(char opSymbol)
         {
-            OperationType newOperation = OperationTypeHelper.Symbol2OperationTypeDictionary[opSymbol];
+            OperationType newOperation = OperationTypeHelper.SymbolKey_OperationTypeValue_Dictionary[opSymbol];
             OperationType oldOperation = (OperationType)GetValue(OperationProperty);
             if (oldOperation != newOperation)
             {

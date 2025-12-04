@@ -161,7 +161,7 @@ namespace MathEquationControls.CustomControls.Polynomial
         private Border controlBorder;
         private StackPanel controlContentsPanel;
 
-        private Dictionary<int, PolynomialTermControl> _controlCache_Terms;
+        private Dictionary<int, PolynomialTermControl> _exponentKey_TermControl_Dictionary;
 
         #endregion
 
@@ -177,7 +177,7 @@ namespace MathEquationControls.CustomControls.Polynomial
             IsHitTestVisible = true;
             Loaded += PolynomialControl_Loaded;
             Unloaded += PolynomialControl_Unloaded;
-            _controlCache_Terms = new Dictionary<int, PolynomialTermControl>();
+            _exponentKey_TermControl_Dictionary = new Dictionary<int, PolynomialTermControl>();
             SuppressUpdateEvents = false;
 
             //if (DesignerProperties.GetIsInDesignMode(this))
@@ -370,9 +370,9 @@ namespace MathEquationControls.CustomControls.Polynomial
         private PolynomialTermControl GetTermControl(Term term)
         {
             PolynomialTermControl result = null;
-            if (_controlCache_Terms.ContainsKey(term.Exponent))
+            if (_exponentKey_TermControl_Dictionary.ContainsKey(term.Exponent))
             {
-                result = _controlCache_Terms[term.Exponent];
+                result = _exponentKey_TermControl_Dictionary[term.Exponent];
                 result.Term = term;
             }
             else
@@ -381,7 +381,7 @@ namespace MathEquationControls.CustomControls.Polynomial
                 result.Style = (Style)FindResource("PolynomialTermStyle");
                 result.Height = Height;
                 result.TermUpdated += TermCtrl_TermUpdated;
-                _controlCache_Terms[term.Exponent] = result;
+                _exponentKey_TermControl_Dictionary[term.Exponent] = result;
             }
             return result;
         }

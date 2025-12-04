@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MathEquationControls.CustomControls;
+using System.Windows.Markup;
 
 namespace TestMathEquationControls.CompositeControls
 {
@@ -103,13 +104,13 @@ namespace TestMathEquationControls.CompositeControls
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Polynomial _polynomial = null;
-        private Dictionary<int, bool> _indexIsTermLockedDictionary;
+        private Dictionary<int, bool> _indexKey_IsTermLockedValue_Dictionary;
 
         public BaseMExpansion()
         {
             InitializeComponent();
             wrappanelTermLocks.Children.Clear();
-            _indexIsTermLockedDictionary = new Dictionary<int, bool>();
+            _indexKey_IsTermLockedValue_Dictionary = new Dictionary<int, bool>();
             _polynomial = new Polynomial();
         }
 
@@ -167,7 +168,7 @@ namespace TestMathEquationControls.CompositeControls
         /// </summary>
         private bool IsLockInEffect()
         {
-            return _indexIsTermLockedDictionary.Values.Any(v => v == true);
+            return _indexKey_IsTermLockedValue_Dictionary.Values.Any(v => v == true);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace TestMathEquationControls.CompositeControls
             }
             else
             {
-                List<KeyValuePair<int, bool>> lockedKVPs = _indexIsTermLockedDictionary.Where(kvp => kvp.Value == true).ToList();
+                List<KeyValuePair<int, bool>> lockedKVPs = _indexKey_IsTermLockedValue_Dictionary.Where(kvp => kvp.Value == true).ToList();
                 List<int> lockedIndices = lockedKVPs.Select(kvp => kvp.Key).ToList();
 
                 List<Term> lockedTerms = _polynomial.Terms.Where(term => lockedIndices.Contains(term.Exponent)).ToList();
@@ -279,7 +280,7 @@ namespace TestMathEquationControls.CompositeControls
                 polyControl.Text = _polynomial.ToString();
             }
 
-            PopulateTermLockCheckboxes();
+            PopulateTermLockCheckboxes(polyControl, _indexKey_IsTermLockedValue_Dictionary, wrappanelTermLocks);
         }
 
         /// <summary>
@@ -345,38 +346,40 @@ namespace TestMathEquationControls.CompositeControls
         /// <summary>
         /// Creates or adjusts the "Lock Term" checkboxes to match the number of polynomial terms
         /// </summary>
-        private void PopulateTermLockCheckboxes()
+        private void PopulateTermLockCheckboxes(PolynomialControl polynomialControl, Dictionary<int, bool> termIndexKey_IsLockedValue_Dictionary, Panel lockContainingPanel )
         {
-            int lockedTerms_Degree = Math.Max(0, _indexIsTermLockedDictionary.Count - 1);
-            if (_polynomial.Degree < lockedTerms_Degree)
+            Polynomial polynomial = polynomialControl.Polynomial;
+
+            int lockedTerms_Degree = Math.Max(0, termIndexKey_IsLockedValue_Dictionary.Count - 1);
+            if (polynomial.Degree < lockedTerms_Degree)
             {
-                while (_polynomial.Degree < lockedTerms_Degree)
+                while (polynomial.Degree < lockedTerms_Degree)
                 {
-                    _indexIsTermLockedDictionary.Remove(lockedTerms_Degree);
+                    termIndexKey_IsLockedValue_Dictionary.Remove(lockedTerms_Degree);
 
-                    CheckBox toRemove = wrappanelTermLocks.Children.Cast<CheckBox>().Where(cb => ((int)cb.Tag) == lockedTerms_Degree).Single();
-                    wrappanelTermLocks.Children.Remove(toRemove);
+                    CheckBox toRemove = lockContainingPanel.Children.Cast<CheckBox>().Where(cb => ((int)cb.Tag) == lockedTerms_Degree).Single();
+                    lockContainingPanel.Children.Remove(toRemove);
 
-                    lockedTerms_Degree = Math.Max(0, _indexIsTermLockedDictionary.Count - 1);
+                    lockedTerms_Degree = Math.Max(0, termIndexKey_IsLockedValue_Dictionary.Count - 1);
                 }
             }
-            else if (_polynomial.Degree > lockedTerms_Degree)
+            else if (polynomial.Degree > lockedTerms_Degree)
             {
-                if (_polynomial.Degree > 0)
+                if (polynomial.Degree > 0)
                 {
-                    foreach (Term term in _polynomial.Terms.Reverse())
+                    foreach (Term term in polynomial.Terms.Reverse())
                     {
-                        if (!_indexIsTermLockedDictionary.ContainsKey(term.Exponent))
+                        if (!termIndexKey_IsLockedValue_Dictionary.ContainsKey(term.Exponent))
                         {
-                            PolynomialTermControl termControl = polyControl.Children.Where(ptc => ptc.Exponent == term.Exponent).Single();
-                            double cbWidth = polyControl.ActualWidth / polyControl.Polynomial.Terms.Length;
+                            PolynomialTermControl termControl = polynomialControl.Children.Where(ptc => ptc.Exponent == term.Exponent).Single();
+                            double cbWidth = polynomialControl.ActualWidth / polynomialControl.Polynomial.Terms.Length;
 
                             CheckBox checkBox = CreateLockTermCheckbox(termControl, cbWidth);
 
-                            int index = _polynomial.Degree - term.Exponent;
+                            int index = polynomial.Degree - term.Exponent;
 
-                            wrappanelTermLocks.Children.Insert(index, checkBox);
-                            _indexIsTermLockedDictionary.Add(term.Exponent, false);
+                            lockContainingPanel.Children.Insert(index, checkBox);
+                            termIndexKey_IsLockedValue_Dictionary.Add(term.Exponent, false);
                         }
                     }
                 }
@@ -421,7 +424,7 @@ namespace TestMathEquationControls.CompositeControls
                 if (checkBox.IsChecked.HasValue && checkBox.IsChecked.Value == true)
                 {
                     int key = (int)checkBox.Tag;
-                    _indexIsTermLockedDictionary[key] = false;
+                    _indexKey_IsTermLockedValue_Dictionary[key] = false;
                 }
             }
         }
@@ -431,11 +434,10 @@ namespace TestMathEquationControls.CompositeControls
             CheckBox checkBox = sender as CheckBox;
             if (checkBox != null)
             {
-
                 int key = (int)checkBox.Tag;
-                _indexIsTermLockedDictionary[key] = true;
+                _indexKey_IsTermLockedValue_Dictionary[key] = true;
 
-                //ClampPolynomial();
+                //ClampPolynomial(); // Not needed, actually, as this doesnt change the value, just constrains further updates.
             }
         }
 
@@ -445,7 +447,7 @@ namespace TestMathEquationControls.CompositeControls
             if (checkBox != null)
             {
                 int key = (int)checkBox.Tag;
-                _indexIsTermLockedDictionary[key] = false;
+                _indexKey_IsTermLockedValue_Dictionary[key] = false;
 
                 ClampPolynomial();
             }

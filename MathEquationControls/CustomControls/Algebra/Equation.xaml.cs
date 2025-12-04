@@ -27,6 +27,18 @@ namespace MathEquationControls.CustomControls.Algebra
             get { return (IExpression)GetValue(LHSProperty); }
             set { SetValue(LHSProperty, value); }
         }
+        public IExpression RHS
+        {
+            get { return (IExpression)GetValue(RHSProperty); }
+            set { SetValue(RHSProperty, value); }
+        }
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        #region Register Dependency Properties and Routed Events
 
         #region LHS
 
@@ -68,12 +80,6 @@ namespace MathEquationControls.CustomControls.Algebra
         }
 
         #endregion
-
-        public IExpression RHS
-        {
-            get { return (IExpression)GetValue(RHSProperty); }
-            set { SetValue(RHSProperty, value); }
-        }
 
         #region RHS
 
@@ -119,12 +125,6 @@ namespace MathEquationControls.CustomControls.Algebra
 
         #region Text
 
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
                                                                             nameof(Text),
                                                                             typeof(string),
@@ -165,6 +165,8 @@ namespace MathEquationControls.CustomControls.Algebra
 
         #endregion
 
+        #endregion
+
         public Equation()
         {
             InitializeComponent();
@@ -172,6 +174,10 @@ namespace MathEquationControls.CustomControls.Algebra
             this.Unloaded += Control_Unloaded;
             RegisterEvents();
         }
+
+        #region Events
+
+        #region Register/UnRegister Events
 
         private void Control_Loaded(object sender, RoutedEventArgs e)
         {
@@ -207,6 +213,8 @@ namespace MathEquationControls.CustomControls.Algebra
                 EventsRegistered = false;
             }
         }
+
+        #endregion
 
         private void Control_RHSChanged(object sender, RoutedPropertyChangedEventArgs<IExpression> e)
         {
@@ -273,6 +281,8 @@ namespace MathEquationControls.CustomControls.Algebra
 
             Parse(newExpression);
         }
+
+        #endregion
 
         private static char[] EqualitySymbols = new char[] { '=' };
         private static char[] OperationSymbols = new char[] { '+','-','*','/' };
