@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MathEquationControls
+namespace MathEquationControls.CustomControls.Polynomial
 {
 	public delegate void TermUpdatedEventHandler(object sender, TermUpdatedEventArgs e);
 

@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-					xmlns:local="clr-namespace:MathEquationControls"
+					xmlns:local="clr-namespace:MathEquationControls.CustomControls.Polynomial"
 					xmlns:converters="clr-namespace:MathEquationControls.Converters"
 					mc:Ignorable="d">
 
@@ -16,12 +16,13 @@
                 <ControlTemplate TargetType="{x:Type local:Coefficient}">
                     <Border x:Name="PART_Border" Style="{DynamicResource NumberBox_Default_BorderStyle}" >
                         <WrapPanel Orientation="Horizontal" Style="{DynamicResource WrapPanelStyle}">
-                            <TextBox x:Name="PART_TextBox" Style="{DynamicResource Coefficient_TextBoxStyle}" />
+                            <TextBox x:Name="PART_TextBox" IsTabStop="True" Style="{DynamicResource Coefficient_TextBoxStyle}" />
                         </WrapPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="IsTabStop" Value="False" />
     </Style>
 
 </ResourceDictionary>

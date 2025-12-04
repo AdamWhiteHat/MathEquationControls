@@ -22,7 +22,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MathEquationControls.Converters;
 
-namespace MathEquationControls
+namespace MathEquationControls.CustomControls.Polynomial
 {
     public class Coefficient : NumberBox
     {

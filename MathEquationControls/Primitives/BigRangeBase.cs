@@ -329,7 +329,6 @@ namespace MathEquationControls.Primitives
             string min = "(none)";
             string max = "(none)"; ;
             BigInteger val = 0;
-            bool valuesDefined = false;
 
             // Accessing BigRangeBase properties may be thread sensitive
             if (CheckAccess())
@@ -343,7 +342,6 @@ namespace MathEquationControls.Primitives
                     max = Maximum.Value.ToString();
                 }
                 val = Value;
-                valuesDefined = true;
             }
             else
             {
@@ -359,7 +357,6 @@ namespace MathEquationControls.Primitives
                         max = Maximum.Value.ToString();
                     }
                     val = Value;
-                    valuesDefined = true;
                     return null;
                 }), null);
             }

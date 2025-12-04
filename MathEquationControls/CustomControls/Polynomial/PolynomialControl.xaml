@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:local="clr-namespace:MathEquationControls">
+					xmlns:local="clr-namespace:MathEquationControls.CustomControls.Polynomial">
 
     <Style TargetType="{x:Type local:PolynomialControl}">
         <Setter Property="Template">
@@ -30,6 +30,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="IsTabStop" Value="False" />
     </Style>
 
 </ResourceDictionary>

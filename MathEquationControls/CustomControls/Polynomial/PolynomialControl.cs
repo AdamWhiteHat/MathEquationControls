@@ -19,11 +19,12 @@ using System.Runtime.CompilerServices;
 using static System.Net.Mime.MediaTypeNames;
 using ExtendedArithmetic;
 using MathEquationControls.Converters;
+using Polynomial = ExtendedArithmetic.Polynomial;
 
-namespace MathEquationControls
+namespace MathEquationControls.CustomControls.Polynomial
 {
-    [TemplatePart(Name = PolynomialControl.ElementBorder, Type = typeof(Border))]
-    [TemplatePart(Name = PolynomialControl.ElementContentsPanel, Type = typeof(StackPanel))]
+    [TemplatePart(Name = ElementBorder, Type = typeof(Border))]
+    [TemplatePart(Name = ElementContentsPanel, Type = typeof(StackPanel))]
     public class PolynomialControl : Control
     {
 
@@ -73,7 +74,7 @@ namespace MathEquationControls
                                                                             new PropertyMetadata(
                                                                                 ExtendedArithmetic.Polynomial.Zero,
                                                                                 new PropertyChangedCallback(
-                                                                                    PolynomialControl.RaisePolynomialChanged)
+                                                                                    RaisePolynomialChanged)
                                                                                 )
                                                                             );
 
@@ -84,7 +85,7 @@ namespace MathEquationControls
                                                                             new PropertyMetadata(
                                                                                 "",
                                                                                 new PropertyChangedCallback(
-                                                                                    PolynomialControl.RaiseTextChanged)
+                                                                                    RaiseTextChanged)
                                                                                 )
                                                                             );
 
@@ -94,14 +95,14 @@ namespace MathEquationControls
 
         public event RoutedPropertyChangedEventHandler<ExtendedArithmetic.Polynomial> PolynomialChanged
         {
-            add { base.AddHandler(PolynomialChangedEvent, value); }
-            remove { base.RemoveHandler(PolynomialChangedEvent, value); }
+            add { AddHandler(PolynomialChangedEvent, value); }
+            remove { RemoveHandler(PolynomialChangedEvent, value); }
         }
 
         public event RoutedPropertyChangedEventHandler<string> TextChanged
         {
-            add { base.AddHandler(TextChangedEvent, value); }
-            remove { base.RemoveHandler(TextChangedEvent, value); }
+            add { AddHandler(TextChangedEvent, value); }
+            remove { RemoveHandler(TextChangedEvent, value); }
         }
 
         #region RoutedEvents
@@ -126,7 +127,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<ExtendedArithmetic.Polynomial> e = new RoutedPropertyChangedEventArgs<ExtendedArithmetic.Polynomial>(oldValue, newValue);
             e.RoutedEvent = PolynomialChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaisePolynomialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -139,7 +140,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
             e.RoutedEvent = TextChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaiseTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -173,9 +174,9 @@ namespace MathEquationControls
 
         public PolynomialControl()
         {
-            this.IsHitTestVisible = true;
-            this.Loaded += PolynomialControl_Loaded;
-            this.Unloaded += PolynomialControl_Unloaded;
+            IsHitTestVisible = true;
+            Loaded += PolynomialControl_Loaded;
+            Unloaded += PolynomialControl_Unloaded;
             _controlCache_Terms = new Dictionary<int, PolynomialTermControl>();
             SuppressUpdateEvents = false;
 
@@ -212,8 +213,8 @@ namespace MathEquationControls
         {
             if (EventsRegistered)
             {
-                this.PolynomialChanged -= PolynomialControl_PolynomialChanged;
-                this.TextChanged -= PolynomialControl_TextChanged;
+                PolynomialChanged -= PolynomialControl_PolynomialChanged;
+                TextChanged -= PolynomialControl_TextChanged;
                 EventsRegistered = false;
             }
         }
@@ -260,11 +261,11 @@ namespace MathEquationControls
                     FrameworkElement parent = (FrameworkElement)WPFHelper.GetParent(this);
 
                     double parentActualHeight = parent.ActualHeight;
-                    this.Height = parentActualHeight;
+                    Height = parentActualHeight;
                 }
 
-                this.TextChanged += PolynomialControl_TextChanged;
-                this.PolynomialChanged += PolynomialControl_PolynomialChanged;
+                TextChanged += PolynomialControl_TextChanged;
+                PolynomialChanged += PolynomialControl_PolynomialChanged;
             }
         }
 
@@ -278,7 +279,7 @@ namespace MathEquationControls
             TextToPolynomial();
         }
 
-        private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<Polynomial> e)
+        private void PolynomialControl_PolynomialChanged(object sender, RoutedPropertyChangedEventArgs<ExtendedArithmetic.Polynomial> e)
         {
             if (e.OldValue.ToString().Equals(e.NewValue.ToString(), StringComparison.OrdinalIgnoreCase))
             {
@@ -311,7 +312,7 @@ namespace MathEquationControls
                 }
             }
 
-            Polynomial tempP = null;
+            ExtendedArithmetic.Polynomial tempP = null;
             try
             {
                 tempP = ExtendedArithmetic.Polynomial.Parse(Text);
@@ -378,7 +379,7 @@ namespace MathEquationControls
             {
                 result = new PolynomialTermControl(term);
                 result.Style = (Style)FindResource("PolynomialTermStyle");
-                result.Height = this.Height;
+                result.Height = Height;
                 result.TermUpdated += TermCtrl_TermUpdated;
                 _controlCache_Terms[term.Exponent] = result;
             }

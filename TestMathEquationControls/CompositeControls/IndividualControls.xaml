@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestMathEquationControls.CompositeControls"
-		xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls"
+        xmlns:algebra="clr-namespace:MathEquationControls.CustomControls.Algebra;assembly=MathEquationControls"
+        xmlns:poly="clr-namespace:MathEquationControls.CustomControls.Polynomial;assembly=MathEquationControls"
+		xmlns:mathctrls="clr-namespace:MathEquationControls.CustomControls;assembly=MathEquationControls"
 		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
         Title="Individual Controls Example"
@@ -16,29 +18,105 @@
             <RowDefinition Height="Auto" MinHeight="100" />
             <RowDefinition Height="Auto" MinHeight="100" />
             <RowDefinition Height="Auto" MinHeight="100" />
+            <RowDefinition Height="Auto" MinHeight="100" />
+            <RowDefinition Height="Auto" MinHeight="100" />
+            <RowDefinition Height="Auto" MinHeight="100" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <mathctrls:NumberBox x:Name="controlNumberBox" d:Text="6" Text="-7" />
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Number Box</TextBlock>
+                <mathctrls:NumberBox Grid.Row="1" x:Name="controlNumberBox" d:Text="6" Text="-7"  />
+
             </Grid>
         </Border>
 
         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <mathctrls:Coefficient x:Name="controlCoeddicient" d:Text="6"  Text="-7" />
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Coefficient</TextBlock>
+                <poly:Coefficient  Grid.Row="1" x:Name="controlCoeddicient" d:Text="6"  Text="-7" />
+
             </Grid>
         </Border>
 
         <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <mathctrls:PolynomialTermControl  x:Name="controlPolynomialTermControl" d:Text="-3*X^2" Text="X" />
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">PolynomialTermControl</TextBlock>
+                <poly:PolynomialTermControl Grid.Row="1"  x:Name="controlPolynomialTermControl" d:Text="-3*X^2" Text="X" />
+
             </Grid>
         </Border>
 
         <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <mathctrls:PolynomialControl  x:Name="controlPolynomialControl" d:Text="3*X^3 + X^2 + 1" Text="X - 1"/>
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">PolynomialControl</TextBlock>
+                <poly:PolynomialControl Grid.Row="1"  x:Name="controlPolynomialControl" d:Text="3*X^3 + X^2 + 1" Text="X - 1"
+                                        Style="{DynamicResource PolynomialControlStyle}"
+                                        />
+
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="4" BorderBrush="Black" BorderThickness="1">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Number</TextBlock>
+                <algebra:Number x:Name="ctrlNumber" Grid.Row="1" Text="1234" Style="{DynamicResource UserControlStyle}"  />
+
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="5" BorderBrush="Black" BorderThickness="1">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Binary Operation</TextBlock>
+                <algebra:BinaryOperation x:Name="ctrlBinaryOperation" Grid.Row="1" Text="1 * 2 + 8 * 9" />
+
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="6" BorderBrush="Black" BorderThickness="1">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Equation</TextBlock>
+                <algebra:Equation  Grid.Row="1" x:Name="ctrlEquation" Text="1 * 2 + N * 4 = 14" />
+
             </Grid>
         </Border>
 

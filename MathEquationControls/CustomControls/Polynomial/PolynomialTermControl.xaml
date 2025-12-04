@@ -2,7 +2,7 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-					xmlns:local="clr-namespace:MathEquationControls"
+					xmlns:local="clr-namespace:MathEquationControls.CustomControls.Polynomial"
 					xmlns:converters="clr-namespace:MathEquationControls.Converters"
 					mc:Ignorable="d">
 
@@ -33,7 +33,7 @@
                             />
                             <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}" IsEnabled="True" />
                             <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}" d:Text="•"></TextBlock>
-                            <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}" d:Text="X"></TextBlock>
+                            <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}" d:Text="X" />
                             <TextBlock x:Name="exponentBlock">
                                 <Run x:Name="PART_Exponent" Style="{DynamicResource ExponentStyle}"></Run>
                             </TextBlock>
@@ -74,6 +74,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="IsTabStop" Value="False" />
     </Style>
 
 </ResourceDictionary>

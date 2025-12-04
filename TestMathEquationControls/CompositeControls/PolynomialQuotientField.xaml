@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestMathEquationControls.CompositeControls"
         Title="PolynomialQuotientField"
-		xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls"
+        xmlns:poly="clr-namespace:MathEquationControls.CustomControls.Polynomial;assembly=MathEquationControls"
+		xmlns:mathctrls="clr-namespace:MathEquationControls.CustomControls;assembly=MathEquationControls"
 		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
 		ContentRendered="Window_ContentRendered"
@@ -34,7 +35,7 @@
 
         <WrapPanel Grid.Row="1" Style="{DynamicResource WrapPanelStyle}">
             <Label Content="X =" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:Coefficient x:Name="xIntegerValue"
+            <poly:Coefficient x:Name="xIntegerValue"
 								 Value="{Binding Path=BaseValue, Mode=TwoWay}"
 								 Style="{DynamicResource TextControlStyle}" 
 								 ValueChanged="numberboxControl_ValueChanged"
@@ -46,7 +47,7 @@
             <TextBlock Text="ƒ" Style="{DynamicResource TextBlockStyle}" />
             <TextBlock Text="=" Style="{DynamicResource TextBlockStyle}" />
             <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
-            <mathctrls:PolynomialControl x:Name="dividendPolynomialCtrl"
+            <poly:PolynomialControl x:Name="dividendPolynomialCtrl"
                                          Width="Auto" Height="Auto" MinHeight="30"										 
 										 Style="{DynamicResource PolynomialControlStyle}" />
         </WrapPanel>
@@ -89,7 +90,7 @@
             <TextBlock Grid.Column="7" Text="(" Style="{DynamicResource TextBlockStyle}" />
             <Label Grid.Column="8" Content="mod" Style="{DynamicResource TextControlStyle}" />
             <TextBlock Grid.Column="9" Text=" " Style="{DynamicResource TextBlockStyle}" />
-            <mathctrls:PolynomialControl  Grid.Column="10" x:Name="modulusPolynomialCtrl"
+            <poly:PolynomialControl  Grid.Column="10" x:Name="modulusPolynomialCtrl"
                                      Width="Auto" Height="Auto" MinHeight="30"
 									 Style="{DynamicResource PolynomialControlStyle}" />
             <TextBlock Grid.Column="11" Text=" " Style="{DynamicResource TextBlockStyle}" />
@@ -110,7 +111,7 @@
             <TextBlock Text=" " Style="{DynamicResource TextBlockStyle}" Width="13" />
             <TextBlock Text="(" Style="{DynamicResource TextBlockStyle}" />
             <Label Content="mod" Style="{DynamicResource TextControlStyle}" />
-            <mathctrls:Coefficient x:Name="modulusInteger"					 
+            <poly:Coefficient x:Name="modulusInteger"					 
 						 Value="{Binding Path=Modulus, Mode=TwoWay}"
 						 Style="{DynamicResource TextControlStyle}" 
 						 ValueChanged="numberboxControl_ValueChanged" />

@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="MathEquationControls.CustomControls.Algebra.Number"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MathEquationControls.CustomControls.Algebra"
+             mc:Ignorable="d"         
+             Width="Auto" Height="Auto"
+             VerticalAlignment="Center" HorizontalAlignment="Center"
+             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+             Background="White"     
+             Focusable="True"            
+             IsTabStop="False"    
+             FocusManager.IsFocusScope="false"        
+             KeyboardNavigation.TabNavigation="Once"             
+             >
+
+    <UserControl.Resources>
+        <Style x:Key="Algebra_TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource FrameworkElementStyle}">
+            <Setter Property="FontFamily" Value="Libertinus Math Regular" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Cursor" Value="IBeam" />
+
+            <Setter Property="Focusable" Value="true" />
+            <Setter Property="IsTabStop" Value="true" />
+            <!--Setter Property="FocusManager.IsFocusScope" Value="true" /-->
+            <!--Setter Property="KeyboardNavigation.TabNavigation" Value="Once" /-->
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
+
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+
+            <Setter Property="TextAlignment" Value="Center" />
+
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Height" Value="Auto" />
+
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Padding"  Value="3,2" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Opacity" Value="1" />
+
+        </Style>
+    </UserControl.Resources>
+
+    <WrapPanel Orientation="Horizontal" 
+               DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Number}}}"               
+               >
+        <TextBox x:Name="textBox"
+                 d:Text="0" Text="{Binding Text}"  
+                 Margin="0" Padding="0"                 
+                 
+                 GotKeyboardFocus="textBox_GotKeyboardFocus"
+                 LostKeyboardFocus="textBox_LostKeyboardFocus"                 
+                                
+                 Style="{DynamicResource Algebra_TextBoxStyle}" 
+                             
+                 >
+        </TextBox>
+    </WrapPanel>
+
+</UserControl>

@@ -1,5 +1,5 @@
 ﻿using ExtendedArithmetic;
-using MathEquationControls;
+using MathEquationControls.CustomControls.Polynomial;
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MathEquationControls.CustomControls;
 
 namespace TestMathEquationControls.CompositeControls
 {
@@ -265,6 +266,9 @@ namespace TestMathEquationControls.CompositeControls
                     }
                 }
 
+                // Remove terms with zero coefficients. They neither contribute to the evaluated polynomial value nor are displayed.
+                // The polynomial class represents a 'sparse' polynomial; it does not store zero coefficient terms.
+                // If you pass in zero terms into the constructor anyways, they will be discarded.
                 newTerms.RemoveAll((Term t) => t.CoEfficient == 0L);
                 if (!newTerms.Any())
                 {

@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="MathEquationControls.CustomControls.Algebra.BinaryOperation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MathEquationControls.CustomControls.Algebra"
+             xmlns:converters="clr-namespace:MathEquationControls.Converters"
+             mc:Ignorable="d" 
+             Width="Auto" Height="Auto"
+             MinWidth="20" MinHeight="20"
+             Margin="2"             
+             Style="{DynamicResource UserControlStyle}"
+             
+              Focusable="False"            
+              IsTabStop="False"
+              KeyboardNavigation.TabNavigation="Continue"
+              FocusManager.IsFocusScope="False"
+             >
+
+    <UserControl.Resources>
+        <converters:OperationTypeToStringConverter x:Key="Operation2StringConverter" />
+    </UserControl.Resources>
+
+    <Border Style="{DynamicResource NumberBox_Default_BorderStyle}" Background="White">
+        <WrapPanel x:Name="ctrlContent" Orientation="Horizontal" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:BinaryOperation}}}">
+
+            <ContentControl x:Name="ctrlLHS" Content="{Binding LHS}" MinWidth="10" IsTabStop="False" />
+
+            <TextBlock x:Name="ctrlOperation" Focusable="False" d:Text="+" Margin="0" Padding="0" Text="{Binding Operation, Converter={StaticResource Operation2StringConverter}}" Style="{DynamicResource AdditiveOperatorStyle}" />
+
+            <ContentControl x:Name="ctrlRHS" Content="{Binding RHS}" MinWidth="10" IsTabStop="False" />
+
+        </WrapPanel>
+    </Border>
+</UserControl>

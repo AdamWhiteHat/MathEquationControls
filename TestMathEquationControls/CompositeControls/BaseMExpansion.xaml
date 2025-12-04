@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestMathEquationControls.CompositeControls"
-		xmlns:mathctrls="clr-namespace:MathEquationControls;assembly=MathEquationControls"
+        xmlns:poly="clr-namespace:MathEquationControls.CustomControls.Polynomial;assembly=MathEquationControls"
+		xmlns:mathctrls="clr-namespace:MathEquationControls.CustomControls;assembly=MathEquationControls"
 		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
         Title="Base M Expansion"
@@ -70,7 +71,7 @@
         <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid>
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource StackPanelStyle}">
-                    <mathctrls:PolynomialControl x:Name="polyControl" 
+                    <poly:PolynomialControl x:Name="polyControl" 
 											 DockToParent="False"
 											 Style="{DynamicResource PolynomialControlStyle}"
                                              d:Text="X^3 - X^2 - 12*X + 35"
@@ -94,6 +95,7 @@
                     <WrapPanel HorizontalAlignment="Center">
                         <Label Content="=" Style="{DynamicResource TextControlStyle}" />
                         <mathctrls:NumberBox x:Name="ctrlTargetValue" Value="{Binding Path=TargetValue, Mode=TwoWay}" />
+                        <CheckBox x:Name="targetValueLock" IsChecked="True" IsEnabled="False" Style="{DynamicResource ToggleLockStyle}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
                     </WrapPanel>
                     <TextBlock Style="{DynamicResource TextBlockStyle}" >
                         <Run Style="{StaticResource BlueUnderline}">(target value)</Run>

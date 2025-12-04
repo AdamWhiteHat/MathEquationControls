@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MathEquationControls
+namespace MathEquationControls.CustomControls.Algebra
 {
-	[TemplatePart(Name = Fraction.ElementControlStackPanel, Type = typeof(StackPanel))]
-	[TemplatePart(Name = Fraction.ElementNumeratorTextBlock, Type = typeof(TextBlock))]
-	[TemplatePart(Name = Fraction.ElementDenominatorTextBlock, Type = typeof(TextBlock))]
+	[TemplatePart(Name = ElementControlStackPanel, Type = typeof(StackPanel))]
+	[TemplatePart(Name = ElementNumeratorTextBlock, Type = typeof(TextBlock))]
+	[TemplatePart(Name = ElementDenominatorTextBlock, Type = typeof(TextBlock))]
 	public class Fraction : Control
 	{
 		#region Public Properties
@@ -37,14 +37,14 @@ namespace MathEquationControls
 																				typeof(Fraction),
 																				new PropertyMetadata(
 																					default(int),
-																					new PropertyChangedCallback(Fraction.OnNumeratorChanged)
+																					new PropertyChangedCallback(OnNumeratorChanged)
 																				)
 																	  );
 
 		public event RoutedPropertyChangedEventHandler<int> NumeratorChanged
 		{
-			add { base.AddHandler(NumeratorChangedEvent, value); }
-			remove { base.RemoveHandler(NumeratorChangedEvent, value); }
+			add { AddHandler(NumeratorChangedEvent, value); }
+			remove { RemoveHandler(NumeratorChangedEvent, value); }
 		}
 
 		public static readonly RoutedEvent NumeratorChangedEvent = EventManager.RegisterRoutedEvent(
@@ -57,7 +57,7 @@ namespace MathEquationControls
 		{
 			RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
 			e.RoutedEvent = NumeratorChangedEvent;
-			base.RaiseEvent(e);
+			RaiseEvent(e);
 		}
 
 		private static void OnNumeratorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -82,14 +82,14 @@ namespace MathEquationControls
 																					typeof(Fraction),
 																					new PropertyMetadata(
 																						default(int),
-																						new PropertyChangedCallback(Fraction.OnDenominatorChanged)
+																						new PropertyChangedCallback(OnDenominatorChanged)
 																					)
 																			);
 
 		public event RoutedPropertyChangedEventHandler<int> DenominatorChanged
 		{
-			add { base.AddHandler(DenominatorChangedEvent, value); }
-			remove { base.RemoveHandler(DenominatorChangedEvent, value); }
+			add { AddHandler(DenominatorChangedEvent, value); }
+			remove { RemoveHandler(DenominatorChangedEvent, value); }
 		}
 
 		public static readonly RoutedEvent DenominatorChangedEvent = EventManager.RegisterRoutedEvent(
@@ -101,7 +101,7 @@ namespace MathEquationControls
 		{
 			RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
 			e.RoutedEvent = DenominatorChangedEvent;
-			base.RaiseEvent(e);
+			RaiseEvent(e);
 		}
 
 		private static void OnDenominatorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -128,7 +128,7 @@ namespace MathEquationControls
 
 		public Fraction()
 		{
-			this.Loaded += Fraction_Loaded;
+			Loaded += Fraction_Loaded;
 		}
 
 		private void Fraction_Loaded(object sender, RoutedEventArgs e)
@@ -139,8 +139,8 @@ namespace MathEquationControls
 		public Fraction(int numerator, int denominator)
 			: this()
 		{
-			this.SetCurrentValue(NumeratorProperty, numerator);
-			this.SetCurrentValue(DenominatorProperty, denominator);
+			SetCurrentValue(NumeratorProperty, numerator);
+			SetCurrentValue(DenominatorProperty, denominator);
 		}
 
 		static Fraction()
@@ -179,9 +179,9 @@ namespace MathEquationControls
 
 		private void SetControls()
 		{
-			if (controlNumerator != null && Numerator != default(int))
+			if (controlNumerator != null && Numerator != default)
 			{
-				if (controlDenominator != null && Denominator != default(int))
+				if (controlDenominator != null && Denominator != default)
 				{
 					controlNumerator.Text = Numerator.ToString();
 					controlDenominator.Text = Denominator.ToString();

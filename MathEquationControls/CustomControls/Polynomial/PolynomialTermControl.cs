@@ -21,14 +21,12 @@ using MathEquationControls.Behaviors;
 using System.ComponentModel;
 using MathEquationControls.Converters;
 
-namespace MathEquationControls
+namespace MathEquationControls.CustomControls.Polynomial
 {
-    [TemplatePart(Name = PolynomialTermControl.ElementBorder, Type = typeof(Border))]
-    [TemplatePart(Name = PolynomialTermControl.ElementWrapPanel, Type = typeof(WrapPanel))]
-    [TemplatePart(Name = PolynomialTermControl.ElementCoefficient, Type = typeof(Coefficient))]
-    [TemplatePart(Name = PolynomialTermControl.ElementMultiplicationSymbol, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PolynomialTermControl.ElementIndeteminant, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PolynomialTermControl.ElementExponent, Type = typeof(Run))]
+    [TemplatePart(Name = ElementCoefficient, Type = typeof(Coefficient))]
+    [TemplatePart(Name = ElementMultiplicationSymbol, Type = typeof(TextBlock))]
+    [TemplatePart(Name = ElementIndeteminant, Type = typeof(TextBlock))]
+    [TemplatePart(Name = ElementExponent, Type = typeof(Run))]
     public class PolynomialTermControl : Control
     {
         #region Public Properties
@@ -67,14 +65,14 @@ namespace MathEquationControls
             {
                 bool termUpdated = false;
                 SuppressTermUpdateEvent = true;
-                if (value.CoEfficient != this.Coefficient)
+                if (value.CoEfficient != Coefficient)
                 {
-                    this.Coefficient = value.CoEfficient;
+                    Coefficient = value.CoEfficient;
                     termUpdated = true;
                 }
-                if (value.Exponent != this.Exponent)
+                if (value.Exponent != Exponent)
                 {
-                    this.Exponent = value.Exponent;
+                    Exponent = value.Exponent;
                     termUpdated = true;
                 }
                 SuppressTermUpdateEvent = false;
@@ -102,7 +100,7 @@ namespace MathEquationControls
 
         public Term GetPolynomialTerm()
         {
-            return new Term(this.Coefficient, this.Exponent);
+            return new Term(Coefficient, Exponent);
         }
 
         #endregion
@@ -122,7 +120,7 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     0,
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseSignChanged)));
+                                                                                    new PropertyChangedCallback(RaiseSignChanged)));
 
         public static readonly DependencyProperty CoefficientProperty = DependencyProperty.Register(
                                                                                 nameof(Coefficient),
@@ -130,7 +128,7 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     default(BigInteger),
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseCoefficientChanged)
+                                                                                    new PropertyChangedCallback(RaiseCoefficientChanged)
                                                                                 )
                                                                        );
 
@@ -140,7 +138,7 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     default(int),
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseExponentChanged)
+                                                                                    new PropertyChangedCallback(RaiseExponentChanged)
                                                                                 )
                                                                         );
 
@@ -150,7 +148,7 @@ namespace MathEquationControls
                                                                                 typeof(PolynomialTermControl),
                                                                                 new PropertyMetadata(
                                                                                     false,
-                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseIsLeadingTermChanged)
+                                                                                    new PropertyChangedCallback(RaiseIsLeadingTermChanged)
                                                                                 )
                                                                         );
 
@@ -160,7 +158,7 @@ namespace MathEquationControls
                                                                             typeof(PolynomialTermControl),
                                                                             new PropertyMetadata(
                                                                                 default(string),
-                                                                                new PropertyChangedCallback(PolynomialTermControl.RaiseTextChanged)
+                                                                                new PropertyChangedCallback(RaiseTextChanged)
                                                                             )
                                                                     );
 
@@ -175,32 +173,32 @@ namespace MathEquationControls
 
         public event RoutedPropertyChangedEventHandler<int> SignChanged
         {
-            add { base.AddHandler(SignChangedEvent, value); }
-            remove { base.RemoveHandler(SignChangedEvent, value); }
+            add { AddHandler(SignChangedEvent, value); }
+            remove { RemoveHandler(SignChangedEvent, value); }
         }
 
         public event RoutedPropertyChangedEventHandler<BigInteger> CoefficientChanged
         {
-            add { base.AddHandler(CoefficientChangedEvent, value); }
-            remove { base.RemoveHandler(CoefficientChangedEvent, value); }
+            add { AddHandler(CoefficientChangedEvent, value); }
+            remove { RemoveHandler(CoefficientChangedEvent, value); }
         }
 
         public event RoutedPropertyChangedEventHandler<int> ExponentChanged
         {
-            add { base.AddHandler(ExponentChangedEvent, value); }
-            remove { base.RemoveHandler(ExponentChangedEvent, value); }
+            add { AddHandler(ExponentChangedEvent, value); }
+            remove { RemoveHandler(ExponentChangedEvent, value); }
         }
 
         public event RoutedPropertyChangedEventHandler<bool> IsLeadingTermChanged
         {
-            add { base.AddHandler(IsLeadingTermChangedEvent, value); }
-            remove { base.RemoveHandler(IsLeadingTermChangedEvent, value); }
+            add { AddHandler(IsLeadingTermChangedEvent, value); }
+            remove { RemoveHandler(IsLeadingTermChangedEvent, value); }
         }
 
         public event RoutedPropertyChangedEventHandler<string> TextChanged
         {
-            add { base.AddHandler(TextChangedEvent, value); }
-            remove { base.RemoveHandler(TextChangedEvent, value); }
+            add { AddHandler(TextChangedEvent, value); }
+            remove { RemoveHandler(TextChangedEvent, value); }
         }
 
         #endregion
@@ -245,7 +243,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
             e.RoutedEvent = SignChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaiseSignChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -258,7 +256,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<BigInteger> e = new RoutedPropertyChangedEventArgs<BigInteger>(oldValue, newValue);
             e.RoutedEvent = CoefficientChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaiseCoefficientChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -271,7 +269,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
             e.RoutedEvent = ExponentChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaiseExponentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -284,7 +282,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<bool> e = new RoutedPropertyChangedEventArgs<bool>(oldValue, newValue);
             e.RoutedEvent = IsLeadingTermChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaiseIsLeadingTermChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -306,7 +304,7 @@ namespace MathEquationControls
         {
             RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
             e.RoutedEvent = TextChangedEvent;
-            base.RaiseEvent(e);
+            RaiseEvent(e);
         }
 
         private static void RaiseTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -321,8 +319,6 @@ namespace MathEquationControls
 
         #region Template Constants & Private Controls
 
-        private const string ElementBorder = "PART_Border";
-        private const string ElementWrapPanel = "PART_WrapPanel";
         private const string ElementCoefficient = "PART_Coefficient";
         private const string ElementMultiplicationSymbol = "PART_MultiplicationSymbol";
         private const string ElementIndeteminant = "PART_Indeteminant";
@@ -331,8 +327,6 @@ namespace MathEquationControls
         //private MouseWheelAdjustValueBehavior mouseBehavior;
         //private TextInputSetValueBehavior textinputBehavior;
 
-        private Border controlBorder;
-        private WrapPanel controlWrapPanel;
         private Coefficient controlCoefficient;
         private TextBlock controlMultiplicationSymbol;
         private TextBlock controlIndeteminant;
@@ -352,18 +346,18 @@ namespace MathEquationControls
         public PolynomialTermControl()
         {
             SuppressTermUpdateEvent = false;
-            this.DataContext = this;
-            this.Loaded += PolynomialTermControl_Loaded;
-            this.Unloaded += PolynomialTermControl_Unloaded;
+            DataContext = this;
+            Loaded += PolynomialTermControl_Loaded;
+            Unloaded += PolynomialTermControl_Unloaded;
         }
         public PolynomialTermControl(Term polynomialTerm)
         {
             SuppressTermUpdateEvent = false;
-            this.Coefficient = polynomialTerm.CoEfficient;
-            this.Exponent = polynomialTerm.Exponent;
-            this.DataContext = this;
-            this.Loaded += PolynomialTermControl_Loaded;
-            this.Unloaded += PolynomialTermControl_Unloaded;
+            Coefficient = polynomialTerm.CoEfficient;
+            Exponent = polynomialTerm.Exponent;
+            DataContext = this;
+            Loaded += PolynomialTermControl_Loaded;
+            Unloaded += PolynomialTermControl_Unloaded;
         }
 
         private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
@@ -392,8 +386,6 @@ namespace MathEquationControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
-            controlBorder = GetTemplateChild(ElementBorder) as Border;
 
             controlCoefficient = GetTemplateChild(ElementCoefficient) as Coefficient;
 
@@ -457,7 +449,7 @@ namespace MathEquationControls
         {
             if (e.OldValue.Sign != e.NewValue.Sign)
             {
-                this.Sign = e.NewValue.Sign;
+                Sign = e.NewValue.Sign;
             }
             RaiseTermUpdated(new TermUpdatedEventArgs(GetPolynomialTerm()));
         }
@@ -470,9 +462,9 @@ namespace MathEquationControls
 
         private void SetExponentControlText()
         {
-            if (this.Exponent.ToString() != controlExponent.Text)
+            if (Exponent.ToString() != controlExponent.Text)
             {
-                controlExponent.Text = this.Exponent.ToString();//ConvertToSuperScript(term.Exponent.ToString());
+                controlExponent.Text = Exponent.ToString();//ConvertToSuperScript(term.Exponent.ToString());
             }
 
             //string termString = GetStringRepresentation();

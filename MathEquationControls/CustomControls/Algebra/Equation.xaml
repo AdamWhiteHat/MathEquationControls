@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="MathEquationControls.CustomControls.Algebra.Equation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MathEquationControls.CustomControls.Algebra"
+             mc:Ignorable="d" 
+             Width="Auto" Height="Auto"
+             MinWidth="20" MinHeight="20"
+             Margin="2"
+             Style="{DynamicResource UserControlStyle}"
+             Focusable="True"            
+             IsTabStop="False"
+             KeyboardNavigation.TabNavigation="Continue"
+             FocusManager.IsFocusScope="True"
+             >
+
+    <Border Style="{DynamicResource NumberBox_Default_BorderStyle}" Background="White">
+        <WrapPanel x:Name="ctrlContent" Orientation="Horizontal" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Equation}}}">
+
+            <ContentControl x:Name="ctrlLHS" Content="{Binding LHS}" MinWidth="10" IsTabStop="False" />
+
+            <TextBlock Focusable="False" Margin="0" Padding="0" Text="=" Style="{DynamicResource AdditiveOperatorStyle}" />
+
+            <ContentControl x:Name="ctrlRHS" Content="{Binding RHS}" MinWidth="10" IsTabStop="False" />
+
+        </WrapPanel>
+    </Border>
+</UserControl>
