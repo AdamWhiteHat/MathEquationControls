@@ -15,7 +15,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Coefficient}">
                     <Border x:Name="PART_Border" Style="{DynamicResource NumberBox_Default_BorderStyle}" >
-                        <WrapPanel Orientation="Horizontal" Style="{DynamicResource WrapPanelStyle}">
+                        <WrapPanel Orientation="Horizontal" Style="{DynamicResource Coefficient_WrapPanelStyle}">
                             <TextBox x:Name="PART_TextBox" IsTabStop="True" Style="{DynamicResource Coefficient_TextBoxStyle}" />
                         </WrapPanel>
                     </Border>

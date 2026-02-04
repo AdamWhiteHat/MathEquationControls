@@ -11,6 +11,7 @@
         <Style.Resources>
             <converters:SignToTextConverter x:Key="Sign2TextConverter" />
             <converters:BigIntegerToStringConverter x:Key="BigInteger2StringConverter" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         </Style.Resources>
 
         <Setter Property="Template">
@@ -25,20 +26,40 @@
 							HorizontalAlignment="Center"  
                             VerticalAlignment="Center"                           
                             >
-                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock  x:Name="OperatorSymbol" 
-                                DataContext="{Binding RelativeSource={RelativeSource  Mode=TemplatedParent}}"
-                                Style="{DynamicResource AdditiveOperatorStyle}" 
-                                Text="{Binding Path=Sign, Converter={StaticResource Sign2TextConverter}}"
-                            />
-                            <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}" IsEnabled="True" />
-                            <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}" d:Text="•"></TextBlock>
-                            <TextBlock x:Name="PART_Indeteminant" Style="{DynamicResource TextBlockStyle}" d:Text="X" />
-                            <TextBlock x:Name="exponentBlock">
-                                <Run x:Name="PART_Exponent" Style="{DynamicResource ExponentStyle}"></Run>
-                            </TextBlock>
-                        </WrapPanel>
 
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            
+                            <TextBlock x:Name="OperatorSymbol" 
+                                       DataContext="{Binding RelativeSource={RelativeSource  Mode=TemplatedParent}}"
+                                       Style="{DynamicResource AdditiveOperatorStyle}" 
+                                       Text="{Binding Path=Sign, Converter={StaticResource Sign2TextConverter}}"
+                             />
+
+                            <StackPanel>
+                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                                    <local:Coefficient x:Name="PART_Coefficient" Value="{Binding Path=Coefficient}" IsEnabled="True" />
+                                    <TextBlock x:Name="PART_MultiplicationSymbol" Width="13" Style="{DynamicResource OperatorStyle}" d:Text="•"></TextBlock>
+                                    <TextBlock x:Name="PART_Indeterminant" Style="{DynamicResource TextBlockStyle}" d:Text="X" />
+                                    <TextBlock x:Name="exponentBlock">
+                                        <Run x:Name="PART_Exponent" Style="{DynamicResource ExponentStyle}"></Run>
+                                    </TextBlock>
+                                </WrapPanel>
+
+                                <CheckBox x:Name="LockTermControl"
+                                          DataContext="{Binding RelativeSource={RelativeSource  Mode=TemplatedParent}}"
+                                          Content="{Binding Exponent}"
+                                          Tag="{Binding Exponent}"
+                                          Visibility="{Binding Path=IsLockingEnabled, Converter={StaticResource ResourceKey=BoolToVisibilityConverter}}"                                      
+                                          Style="{DynamicResource ToggleLockStyle}"
+                                          IsChecked="{Binding IsLocked, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Width="Auto" 
+                                          HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                                          VerticalAlignment="Top" VerticalContentAlignment="Top"
+                                />
+                            </StackPanel>
+
+                        </WrapPanel>
                     </Border>
                     <ControlTemplate.Triggers>
 

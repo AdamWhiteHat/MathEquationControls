@@ -10,8 +10,6 @@
         mc:Ignorable="d"
         Title="Base M Expansion"
 		Height="450" Width="800"
-        Loaded="Window_Loaded"
-        Unloaded="Window_Unloaded"
 		>
 
     <Grid>
@@ -51,7 +49,9 @@
                         </Label.Content>
                     </Label>
 
-                    <mathctrls:NumberBox x:Name="ctrlPolynomialBaseM" Value="{Binding Path=PolynomialBaseM}" />
+                    <mathctrls:NumberBox x:Name="ctrlPolynomialBaseM"
+                                         DataContext="{Binding ElementName=polyControl, Mode=OneWay}"
+                                         Value="{Binding Path=IndeterminateValue, Mode=TwoWay}" />
                 </WrapPanel>
                 <WrapPanel HorizontalAlignment="Right"  Style="{DynamicResource WrapPanelStyle}">
                     <Label Style="{DynamicResource TextControlStyle}" >
@@ -61,7 +61,10 @@
                             </TextBlock>
                         </Label.Content>
                     </Label>
-                    <mathctrls:NumberBox x:Name="ctrlDegree" Value="{Binding Path=PolynomialDegree, Mode=TwoWay}" Margin="0,0,30,0"
+                    <mathctrls:NumberBox x:Name="ctrlDegree"
+                                         DataContext="{Binding ElementName=polyControl, Mode=OneWay}"
+                                         Value="{Binding Path=Degree, Mode=TwoWay}" 
+                                         Margin="0,0,30,0"
                                          Minimum="0" Maximum="10"  SmallChange="1" MediumChange="1" LargeChange="1" />
                 </WrapPanel>
             </Grid>
@@ -72,17 +75,17 @@
             <Grid>
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource StackPanelStyle}">
                     <poly:PolynomialControl x:Name="polyControl" 
-											 DockToParent="False"
-											 Style="{DynamicResource PolynomialControlStyle}"
-                                             d:Text="X^3 - X^2 - 12*X + 35"
-											 />
-                    <WrapPanel x:Name="wrappanelTermLocks" HorizontalAlignment="Center">
-                        <d:CheckBox Style="{DynamicResource ToggleLockStyle}" Content="3" Width="90"
-                                HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
-                    </WrapPanel>
+											DockToParent="False"
+                                            IsLockingEnabled="True"
+											Style="{DynamicResource PolynomialControlStyle}"                                                        
+                                            Text="12*X^5 + 11*X^4 + 2*X^3 + 4*X^2 + 3*X"
+                                            d:Text="X^3 - X^2 - 12*X + 35"
+											/>
                 </StackPanel>
                 <CheckBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="15,7"
-						  FontFamily="Libertinus Math Regular" FontSize="17" IsChecked="True"
+                          DataContext="{Binding ElementName=polyControl, Mode=OneWay}"
+                          IsChecked="{Binding AllowNegativeCoefficients, Mode=TwoWay}"
+						  FontFamily="Libertinus Math Regular" FontSize="17" 
 						  x:Name="checkboxSmallCoefficients" Content="Reduce coefficient size" />
             </Grid>
         </Border>
@@ -94,7 +97,9 @@
                 <StackPanel HorizontalAlignment="Center"  Style="{DynamicResource StackPanelStyle}">
                     <WrapPanel HorizontalAlignment="Center">
                         <Label Content="=" Style="{DynamicResource TextControlStyle}" />
-                        <mathctrls:NumberBox x:Name="ctrlTargetValue" Value="{Binding Path=TargetValue, Mode=TwoWay}" />
+                        <mathctrls:NumberBox x:Name="ctrlTargetValue" 
+                                             DataContext="{Binding ElementName=polyControl, Mode=OneWay}"
+                                             Value="{Binding TargetValue, Mode=TwoWay}" />
                         <CheckBox x:Name="targetValueLock" IsChecked="True" IsEnabled="False" Style="{DynamicResource ToggleLockStyle}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
                     </WrapPanel>
                     <TextBlock Style="{DynamicResource TextBlockStyle}" >

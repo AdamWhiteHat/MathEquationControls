@@ -25,10 +25,11 @@ namespace MathEquationControls.CustomControls.Polynomial
 {
     [TemplatePart(Name = ElementCoefficient, Type = typeof(Coefficient))]
     [TemplatePart(Name = ElementMultiplicationSymbol, Type = typeof(TextBlock))]
-    [TemplatePart(Name = ElementIndeteminant, Type = typeof(TextBlock))]
+    [TemplatePart(Name = ElementIndeterminant, Type = typeof(TextBlock))]
     [TemplatePart(Name = ElementExponent, Type = typeof(Run))]
     public class PolynomialTermControl : Control
     {
+
         #region Public Properties
 
         [Bindable(true), Browsable(true), Category("Common")]
@@ -43,7 +44,11 @@ namespace MathEquationControls.CustomControls.Polynomial
         public BigInteger Coefficient
         {
             get => (BigInteger)GetValue(CoefficientProperty);
-            set => SetValue(CoefficientProperty, value);
+            set
+            {
+                SetValue(CoefficientProperty, value);
+                SetValue(SignProperty, value.Sign);
+            }
         }
 
         [Bindable(true), Browsable(true), Category("Common")]
@@ -98,6 +103,20 @@ namespace MathEquationControls.CustomControls.Polynomial
             set { SetValue(TextProperty, value); }
         }
 
+        [Bindable(true), Browsable(true), Category("Common")]
+        public bool IsLockingEnabled
+        {
+            get { return (bool)GetValue(IsLockingEnabledProperty); }
+            set { SetValue(IsLockingEnabledProperty, value); }
+        }
+
+        [Bindable(true), Browsable(true), Category("Common")]
+        public bool IsLocked
+        {
+            get { return (bool)GetValue(IsLockedProperty); }
+            set { SetValue(IsLockedProperty, value); }
+        }
+
         public Term GetPolynomialTerm()
         {
             return new Term(Coefficient, Exponent);
@@ -107,7 +126,7 @@ namespace MathEquationControls.CustomControls.Polynomial
 
         #region Private Symbols
 
-        private static string IndeteminantSymbolValue = "X";
+        private static string IndeterminantSymbolValue = "X";
         private static string MultiplicationSymbolValue = "•"; // 
 
         #endregion
@@ -152,16 +171,21 @@ namespace MathEquationControls.CustomControls.Polynomial
                                                                                 )
                                                                         );
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-                                                                            nameof(Text),
-                                                                            typeof(string),
-                                                                            typeof(PolynomialTermControl),
-                                                                            new PropertyMetadata(
-                                                                                default(string),
-                                                                                new PropertyChangedCallback(RaiseTextChanged)
-                                                                            )
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(PolynomialTermControl),
+                                                                                new PropertyMetadata(default(string),new PropertyChangedCallback(RaiseTextChanged))
                                                                     );
 
+        public static readonly DependencyProperty IsLockingEnabledProperty = DependencyProperty.Register(nameof(IsLockingEnabled), typeof(bool), typeof(PolynomialTermControl),
+                                                                                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender,
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseIsLockingEnabledChanged)
+                                                                              ));
+
+        public static readonly DependencyProperty IsLockedProperty = DependencyProperty.Register(nameof(IsLocked), typeof(bool), typeof(PolynomialTermControl),
+                                                                                new PropertyMetadata(
+                                                                                    false,
+                                                                                    new PropertyChangedCallback(PolynomialTermControl.RaiseIsLockedChanged),
+                                                                                    new CoerceValueCallback(PolynomialTermControl.CoerceIsLockedProperty)
+                                                                                ));
 
         #endregion
 
@@ -201,6 +225,18 @@ namespace MathEquationControls.CustomControls.Polynomial
             remove { RemoveHandler(TextChangedEvent, value); }
         }
 
+        public event RoutedPropertyChangedEventHandler<bool> IsLockingEnabledChanged
+        {
+            add { base.AddHandler(IsLockingEnabledChangedEvent, value); }
+            remove { base.RemoveHandler(IsLockingEnabledChangedEvent, value); }
+        }
+
+        public event RoutedPropertyChangedEventHandler<bool> IsLockedChanged
+        {
+            add { base.AddHandler(IsLockedChangedEvent, value); }
+            remove { base.RemoveHandler(IsLockedChangedEvent, value); }
+        }
+
         #endregion
 
         #region RoutedEvents
@@ -234,6 +270,10 @@ namespace MathEquationControls.CustomControls.Polynomial
                                                                             RoutingStrategy.Bubble,
                                                                             typeof(RoutedPropertyChangedEventHandler<string>),
                                                                             typeof(PolynomialTermControl));
+
+        public static readonly RoutedEvent IsLockingEnabledChangedEvent = EventManager.RegisterRoutedEvent(nameof(IsLockingEnabledChanged),RoutingStrategy.Bubble,typeof(RoutedPropertyChangedEventHandler<bool>),typeof(PolynomialTermControl));
+
+        public static readonly RoutedEvent IsLockedChangedEvent = EventManager.RegisterRoutedEvent(nameof(IsLockedChanged),RoutingStrategy.Bubble,typeof(RoutedPropertyChangedEventHandler<bool>),typeof(PolynomialTermControl));
 
         #endregion
 
@@ -313,6 +353,49 @@ namespace MathEquationControls.CustomControls.Polynomial
             element.RaiseTextChanged((string)e.OldValue, (string)e.NewValue);
         }
 
+        protected virtual void RaiseIsLockingEnabledChanged(bool oldValue, bool newValue)
+        {
+            RoutedPropertyChangedEventArgs<bool> e = new RoutedPropertyChangedEventArgs<bool>(oldValue, newValue);
+            e.RoutedEvent = IsLockingEnabledChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaiseIsLockingEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.RaiseIsLockingEnabledChanged((bool)e.OldValue, (bool)e.NewValue);
+        }
+
+        protected virtual void RaiseIsLockedChanged(bool oldValue, bool newValue)
+        {
+            RoutedPropertyChangedEventArgs<bool> e = new RoutedPropertyChangedEventArgs<bool>(oldValue, newValue);
+            e.RoutedEvent = IsLockedChangedEvent;
+            base.RaiseEvent(e);
+        }
+
+        private static void RaiseIsLockedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            element.RaiseIsLockedChanged((bool)e.OldValue, (bool)e.NewValue);
+        }
+
+        #endregion
+
+        #region Coerce Value Callback
+
+        private static object CoerceIsLockedProperty(DependencyObject d, object baseValue)
+        {
+            PolynomialTermControl element = (PolynomialTermControl)d;
+            bool newValue = (bool)baseValue;
+
+            if (element.IsLockingEnabled == false)
+            {
+                return false;
+            }
+
+            return baseValue;
+        }
+
         #endregion
 
         #endregion
@@ -321,7 +404,7 @@ namespace MathEquationControls.CustomControls.Polynomial
 
         private const string ElementCoefficient = "PART_Coefficient";
         private const string ElementMultiplicationSymbol = "PART_MultiplicationSymbol";
-        private const string ElementIndeteminant = "PART_Indeteminant";
+        private const string ElementIndeterminant = "PART_Indeterminant";
         private const string ElementExponent = "PART_Exponent";
 
         //private MouseWheelAdjustValueBehavior mouseBehavior;
@@ -329,7 +412,7 @@ namespace MathEquationControls.CustomControls.Polynomial
 
         private Coefficient controlCoefficient;
         private TextBlock controlMultiplicationSymbol;
-        private TextBlock controlIndeteminant;
+        private TextBlock controlIndeterminant;
         private Run controlExponent;
 
         private bool SuppressTermUpdateEvent = false;
@@ -351,13 +434,10 @@ namespace MathEquationControls.CustomControls.Polynomial
             Unloaded += PolynomialTermControl_Unloaded;
         }
         public PolynomialTermControl(Term polynomialTerm)
+            : this()
         {
-            SuppressTermUpdateEvent = false;
             Coefficient = polynomialTerm.CoEfficient;
             Exponent = polynomialTerm.Exponent;
-            DataContext = this;
-            Loaded += PolynomialTermControl_Loaded;
-            Unloaded += PolynomialTermControl_Unloaded;
         }
 
         private void PolynomialTermControl_Loaded(object sender, RoutedEventArgs e)
@@ -379,6 +459,19 @@ namespace MathEquationControls.CustomControls.Polynomial
             }
         }
 
+        private bool EventsRegistered = false;
+        private void RegisterEvents()
+        {
+            if (!EventsRegistered)
+            {
+                EventsRegistered = true;
+
+                CoefficientChanged += PolynomialTermControl_CoefficientChanged;
+                ExponentChanged += PolynomialTermControl_ExponentChanged;
+                TextChanged += PolynomialTermControl_TextChanged;
+            }
+        }
+
         #endregion
 
         #region Set Controls
@@ -392,8 +485,8 @@ namespace MathEquationControls.CustomControls.Polynomial
             controlMultiplicationSymbol = GetTemplateChild(ElementMultiplicationSymbol) as TextBlock;
             controlMultiplicationSymbol.Text = MultiplicationSymbolValue;
 
-            controlIndeteminant = GetTemplateChild(ElementIndeteminant) as TextBlock;
-            controlIndeteminant.Text = IndeteminantSymbolValue;
+            controlIndeterminant = GetTemplateChild(ElementIndeterminant) as TextBlock;
+            controlIndeterminant.Text = IndeterminantSymbolValue;
 
             controlExponent = GetTemplateChild(ElementExponent) as Run;
 
@@ -429,19 +522,6 @@ namespace MathEquationControls.CustomControls.Polynomial
                         controlExponent.Text = temp.Exponent.ToString();
                     }
                 }
-            }
-        }
-
-        private bool EventsRegistered = false;
-        private void RegisterEvents()
-        {
-            if (!EventsRegistered)
-            {
-                EventsRegistered = true;
-
-                CoefficientChanged += PolynomialTermControl_CoefficientChanged;
-                ExponentChanged += PolynomialTermControl_ExponentChanged;
-                TextChanged += PolynomialTermControl_TextChanged;
             }
         }
 
@@ -514,7 +594,7 @@ namespace MathEquationControls.CustomControls.Polynomial
 
             string signString = string.Empty;
             string coefficientString = Coefficient.ToString();
-            string variableString = $"{IndeteminantSymbolValue}{ConvertToSuperScript(Exponent.ToString())}";
+            string variableString = $"{IndeterminantSymbolValue}{ConvertToSuperScript(Exponent.ToString())}";
             string multiplyString = "*";
 
             if (Exponent == 0)
@@ -524,7 +604,7 @@ namespace MathEquationControls.CustomControls.Polynomial
             }
             else if (Exponent == 1)
             {
-                variableString = IndeteminantSymbolValue;
+                variableString = IndeterminantSymbolValue;
             }
 
             if (BigInteger.Abs(Coefficient) == 1)
@@ -539,7 +619,7 @@ namespace MathEquationControls.CustomControls.Polynomial
 
                 if (Exponent == 0)
                 {
-                    variableString = IndeteminantSymbolValue;
+                    variableString = IndeterminantSymbolValue;
                 }
             }
 
