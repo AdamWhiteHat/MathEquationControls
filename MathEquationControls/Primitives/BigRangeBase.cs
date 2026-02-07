@@ -362,15 +362,6 @@ namespace MathEquationControls.Primitives
             }
 
             return val.ToString();
-
-            // If min, max, value are defined
-            //if (valuesDefined)
-            //{
-            //    return string.Format("{0} Minimum:{1} Maximum:{2} Value:{3}", typeText, min, max, val);
-            //}
-            //
-            //// Not able to access the dispatcher
-            //return typeText;
         }
 
         #endregion

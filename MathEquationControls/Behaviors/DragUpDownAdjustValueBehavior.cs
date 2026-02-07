@@ -64,7 +64,7 @@ namespace MathEquationControls.Behaviors
             AssociatedObject.GotKeyboardFocus += AssociatedObject_GotKeyboardFocus;
             AssociatedObject.LostKeyboardFocus += AssociatedObject_LostKeyboardFocus;
 
-            // AssociatedObject.PreviewMouseMove += AssociatedObject_PreviewMouseMove;
+            AssociatedObject.PreviewMouseMove += AssociatedObject_PreviewMouseMove;
 
             _draggingTimer = new DispatcherTimer(DispatcherPriority.Input);
             _draggingTimer.Interval = TimeSpan.FromMilliseconds(TimerResolutionMS);
@@ -75,6 +75,13 @@ namespace MathEquationControls.Behaviors
 
         protected override void OnDetaching()
         {
+            if (_draggingTimer != null)
+            {
+                _draggingTimer.Stop();
+                _draggingTimer.Tick -= DraggingTimer_Tick;
+                _draggingTimer = null;
+            }
+
             if (AssociatedObject != null)
             {
                 AssociatedObject.PreviewMouseDown -= AssociatedObject_PreviewMouseDown;
@@ -86,14 +93,7 @@ namespace MathEquationControls.Behaviors
                 AssociatedObject.GotKeyboardFocus -= AssociatedObject_GotKeyboardFocus;
                 AssociatedObject.LostKeyboardFocus -= AssociatedObject_LostKeyboardFocus;
 
-                //AssociatedObject.PreviewMouseMove -= AssociatedObject_PreviewMouseMove;
-            }
-
-            if (_draggingTimer != null)
-            {
-                _draggingTimer.Stop();
-                _draggingTimer.Tick -= DraggingTimer_Tick;
-                _draggingTimer = null;
+                AssociatedObject.PreviewMouseMove -= AssociatedObject_PreviewMouseMove;
             }
 
             base.OnDetaching();
@@ -114,11 +114,13 @@ namespace MathEquationControls.Behaviors
                 InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.IBeam;
             }
         }
+
         private void AssociatedObject_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Middle)
             {
                 StopDragging(e);
+                e.Handled = true;
             }
         }
 
@@ -206,7 +208,7 @@ namespace MathEquationControls.Behaviors
                 AssociatedObject.ReleaseMouseCapture();
                 InputManager.Current.PrimaryMouseDevice.OverrideCursor = Cursors.Arrow;
                 e.Handled = true;
-
+                /*
                 bool isUpdateRequired = false;
 
                 int deltaY = CalculateDragYDelta();
@@ -221,7 +223,7 @@ namespace MathEquationControls.Behaviors
                 {
                     AssociatedObject.RaiseEvent(new RoutedPropertyChangedEventArgs<BigInteger>(_numericStartValue, newValue) { RoutedEvent = BigRangeBase.ValueChangedEvent });
                 }
-
+                */
                 _dragStartPosition = default(Point);
                 _numericStartValue = BigInteger.Zero;
             }
@@ -303,15 +305,18 @@ namespace MathEquationControls.Behaviors
         {
             Point currentMousePosition = GetCurrentPointerPosition();
 
+            int result = 0;
+
             if (_dragStartPosition.Y > currentMousePosition.Y)
             {
-                return (int)Math.Round(_dragStartPosition.Y - currentMousePosition.Y);
+                result = (int)Math.Round(_dragStartPosition.Y - currentMousePosition.Y);
             }
             else if (_dragStartPosition.Y < currentMousePosition.Y)
             {
-                return (int)Math.Round(_dragStartPosition.Y - currentMousePosition.Y);
+                result = (int)Math.Round(_dragStartPosition.Y - currentMousePosition.Y);
             }
-            return 0;
+
+            return result;
         }
 
         private Point GetCurrentPointerPosition()
@@ -336,7 +341,7 @@ namespace MathEquationControls.Behaviors
                 return new DragInfo() { Direction = DragDirection.Up, Multiplier = Math.Min(MaxMultiplier, multiplier) };
             }
 
-            double bottomStart = middle + DragDistanceStepSize; ;
+            double bottomStart = middle + DragDistanceStepSize;
             double bottomStop = middle + (5 * DragDistanceStepSize);
 
             if (currentPointerPosition.Y > middle)
