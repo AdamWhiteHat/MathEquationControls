@@ -4,25 +4,77 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathEquationControls.CustomControls.Algebra"
+             xmlns:cc="clr-namespace:MathEquationControls.CustomControls"		
              mc:Ignorable="d" 
              Width="Auto" Height="Auto"
              MinWidth="20" MinHeight="20"
-             Margin="2"
-             Style="{DynamicResource UserControlStyle}"
+             Margin="2"             
              Focusable="True"            
              IsTabStop="False"
-             KeyboardNavigation.TabNavigation="Continue"
-             FocusManager.IsFocusScope="True"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              >
 
-    <Border Style="{DynamicResource NumberBox_Default_BorderStyle}" Background="White">
-        <WrapPanel x:Name="ctrlContent" Orientation="Horizontal" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Equation}}}">
+    <UserControl.Resources>
+        <Style x:Key="Algebra_Equation_BorderStyle" TargetType="Border">
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Height" Value="Auto" />
 
-            <ContentControl x:Name="ctrlLHS" Content="{Binding LHS}" MinWidth="10" IsTabStop="False" />
+            <Setter Property="HorizontalAlignment"  Value="Center" />
+            <Setter Property="VerticalAlignment"  Value="Center" />
 
-            <TextBlock Focusable="False" Margin="0" Padding="0" Text="=" Style="{DynamicResource AdditiveOperatorStyle}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0.1" />
+            <Setter Property="BorderBrush"   Value="LightGray" />
+        </Style>
 
-            <ContentControl x:Name="ctrlRHS" Content="{Binding RHS}" MinWidth="10" IsTabStop="False" />
+        <Style x:Key="Algebra_Equation_ContentControlStyle" TargetType="ContentControl">
+            <Setter Property="MinWidth" Value="10" />
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+
+            <Setter Property="FontFamily" Value="Libertinus Math Regular" />
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="Focusable" Value="False" />
+
+            <Setter Property="TextElement.FontStretch" Value="UltraExpanded" />
+            <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        </Style>
+
+        <Style x:Key="Algebra_Equation_EqualsStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment"  Value="Center" />
+            <Setter Property="VerticalAlignment"  Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+
+            <Setter Property="FontFamily" Value="Libertinus Math Regular" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Focusable" Value="False" />
+
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextAlignment" Value="Center" />
+
+            <Setter Property="TextTrimming" Value="None" />
+            <Setter Property="BaselineOffset" Value="0" />
+            <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
+            <Setter Property="TextElement.FontStretch" Value="UltraExpanded" />
+            <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        </Style>
+
+    </UserControl.Resources>
+    <Border Style="{DynamicResource Algebra_Equation_BorderStyle}" Background="White">
+        <WrapPanel x:Name="ctrlContent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <ContentControl x:Name="ctrlLHS" Content="{Binding LHS}" d:Content="X" Style="{DynamicResource Algebra_Equation_ContentControlStyle}" />
+
+            <TextBlock Focusable="False" Text="=" Style="{DynamicResource Algebra_Equation_EqualsStyle}" VerticalAlignment="Center" />
+
+            <ContentControl x:Name="ctrlRHS" Content="{Binding RHS}" d:Content="42" Style="{DynamicResource Algebra_Equation_ContentControlStyle}" />
 
         </WrapPanel>
     </Border>

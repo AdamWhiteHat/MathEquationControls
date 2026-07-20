@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,178 +16,182 @@ using System.Windows.Shapes;
 
 namespace MathEquationControls.CustomControls.Algebra
 {
-	[TemplatePart(Name = ElementControlStackPanel, Type = typeof(StackPanel))]
-	[TemplatePart(Name = ElementNumeratorTextBlock, Type = typeof(TextBlock))]
-	[TemplatePart(Name = ElementDenominatorTextBlock, Type = typeof(TextBlock))]
-	public class Fraction : Control
-	{
-		#region Public Properties
+    public partial class Fraction : UserControl, IExpression
+    {
+        #region Public Properties
 
-		#region Numerator
+        #region Numerator
 
-		public int Numerator
-		{
-			get => (int)GetValue(NumeratorProperty);
-			set => SetValue(NumeratorProperty, value);
-		}
+        public int Numerator
+        {
+            get => (int)GetValue(NumeratorProperty);
+            set => SetValue(NumeratorProperty, value);
+        }
 
 
-		public static readonly DependencyProperty NumeratorProperty = DependencyProperty.Register(
-																				nameof(Numerator),
-																				typeof(int),
-																				typeof(Fraction),
-																				new PropertyMetadata(
-																					default(int),
-																					new PropertyChangedCallback(OnNumeratorChanged)
-																				)
-																	  );
+        public static readonly DependencyProperty NumeratorProperty = DependencyProperty.Register(
+                                                                                nameof(Numerator),
+                                                                                typeof(int),
+                                                                                typeof(Fraction),
+                                                                                new PropertyMetadata(
+                                                                                    default(int),
+                                                                                    new PropertyChangedCallback(OnNumeratorChanged)
+                                                                                )
+                                                                      );
 
-		public event RoutedPropertyChangedEventHandler<int> NumeratorChanged
-		{
-			add { AddHandler(NumeratorChangedEvent, value); }
-			remove { RemoveHandler(NumeratorChangedEvent, value); }
-		}
+        public event RoutedPropertyChangedEventHandler<int> NumeratorChanged
+        {
+            add { AddHandler(NumeratorChangedEvent, value); }
+            remove { RemoveHandler(NumeratorChangedEvent, value); }
+        }
 
-		public static readonly RoutedEvent NumeratorChangedEvent = EventManager.RegisterRoutedEvent(
-																				nameof(NumeratorChanged),
-																				RoutingStrategy.Bubble,
-																				typeof(RoutedPropertyChangedEventHandler<int>),
-																				typeof(Fraction));
+        public static readonly RoutedEvent NumeratorChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                                nameof(NumeratorChanged),
+                                                                                RoutingStrategy.Bubble,
+                                                                                typeof(RoutedPropertyChangedEventHandler<int>),
+                                                                                typeof(Fraction));
 
-		protected virtual void OnNumeratorChanged(int oldValue, int newValue)
-		{
-			RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
-			e.RoutedEvent = NumeratorChangedEvent;
-			RaiseEvent(e);
-		}
+        protected virtual void OnNumeratorChanged(int oldValue, int newValue)
+        {
+            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
+            e.RoutedEvent = NumeratorChangedEvent;
+            RaiseEvent(e);
+        }
 
-		private static void OnNumeratorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			Fraction element = (Fraction)d;
-			element.OnNumeratorChanged((int)e.OldValue, (int)e.NewValue);
-		}
+        private static void OnNumeratorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Fraction element = (Fraction)d;
+            element.OnNumeratorChanged((int)e.OldValue, (int)e.NewValue);
+        }
 
-		#endregion
+        #endregion
 
-		#region Denominator
+        public OperationType Operation { get { return OperationType.Divide; } }
 
-		public int Denominator
-		{
-			get => (int)GetValue(DenominatorProperty);
-			set => SetValue(DenominatorProperty, value);
-		}
+        #region Denominator
 
-		public static readonly DependencyProperty DenominatorProperty = DependencyProperty.Register(
-																					nameof(Denominator),
-																					typeof(int),
-																					typeof(Fraction),
-																					new PropertyMetadata(
-																						default(int),
-																						new PropertyChangedCallback(OnDenominatorChanged)
-																					)
-																			);
+        public int Denominator
+        {
+            get => (int)GetValue(DenominatorProperty);
+            set => SetValue(DenominatorProperty, value);
+        }
 
-		public event RoutedPropertyChangedEventHandler<int> DenominatorChanged
-		{
-			add { AddHandler(DenominatorChangedEvent, value); }
-			remove { RemoveHandler(DenominatorChangedEvent, value); }
-		}
+        public static readonly DependencyProperty DenominatorProperty = DependencyProperty.Register(
+                                                                                    nameof(Denominator),
+                                                                                    typeof(int),
+                                                                                    typeof(Fraction),
+                                                                                    new PropertyMetadata(
+                                                                                        default(int),
+                                                                                        new PropertyChangedCallback(OnDenominatorChanged)
+                                                                                    )
+                                                                            );
 
-		public static readonly RoutedEvent DenominatorChangedEvent = EventManager.RegisterRoutedEvent(
-																			nameof(DenominatorChanged),
-																			RoutingStrategy.Bubble,
-																			typeof(RoutedPropertyChangedEventHandler<int>),
-																			typeof(Fraction));
-		protected virtual void OnDenominatorChanged(int oldValue, int newValue)
-		{
-			RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
-			e.RoutedEvent = DenominatorChangedEvent;
-			RaiseEvent(e);
-		}
+        public event RoutedPropertyChangedEventHandler<int> DenominatorChanged
+        {
+            add { AddHandler(DenominatorChangedEvent, value); }
+            remove { RemoveHandler(DenominatorChangedEvent, value); }
+        }
 
-		private static void OnDenominatorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			Fraction element = (Fraction)d;
-			element.OnDenominatorChanged((int)e.OldValue, (int)e.NewValue);
-		}
+        public static readonly RoutedEvent DenominatorChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                            nameof(DenominatorChanged),
+                                                                            RoutingStrategy.Bubble,
+                                                                            typeof(RoutedPropertyChangedEventHandler<int>),
+                                                                            typeof(Fraction));
+        protected virtual void OnDenominatorChanged(int oldValue, int newValue)
+        {
+            RoutedPropertyChangedEventArgs<int> e = new RoutedPropertyChangedEventArgs<int>(oldValue, newValue);
+            e.RoutedEvent = DenominatorChangedEvent;
+            RaiseEvent(e);
+        }
 
-		#endregion
+        private static void OnDenominatorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Fraction element = (Fraction)d;
+            element.OnDenominatorChanged((int)e.OldValue, (int)e.NewValue);
+        }
 
-		#endregion
+        #endregion
 
-		#region Template Constants & Private Controls
+        #region Text
 
-		private const string ElementControlStackPanel = "PART_ControlStackPanel";
-		private const string ElementNumeratorTextBlock = "PART_NumeratorTextBlock";
-		private const string ElementDenominatorTextBlock = "PART_DenominatorTextBlock";
+        [RefreshProperties(RefreshProperties.All)]
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
 
-		private StackPanel controlStackPanel;
-		private TextBlock controlNumerator;
-		private TextBlock controlDenominator;
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+                                                                            nameof(Text),
+                                                                            typeof(string),
+                                                                            typeof(Fraction),
+                                                                            new FrameworkPropertyMetadata(
+                                                                                default(string),
+                                                                                FrameworkPropertyMetadataOptions.AffectsRender,
+                                                                                new PropertyChangedCallback(
+                                                                                    Fraction.RaiseTextChanged)
+                                                                                )
+                                                                            );
 
-		#endregion
 
-		public Fraction()
-		{
-			Loaded += Fraction_Loaded;
-		}
+        public event RoutedPropertyChangedEventHandler<string> TextChanged
+        {
+            add { base.AddHandler(TextChangedEvent, value); }
+            remove { base.RemoveHandler(TextChangedEvent, value); }
+        }
 
-		private void Fraction_Loaded(object sender, RoutedEventArgs e)
-		{
-			SetControls();
-		}
+        public static readonly RoutedEvent TextChangedEvent = EventManager.RegisterRoutedEvent(
+                                                                            nameof(TextChanged),
+                                                                            RoutingStrategy.Bubble,
+                                                                            typeof(RoutedPropertyChangedEventHandler<string>),
+                                                                            typeof(Fraction));
 
-		public Fraction(int numerator, int denominator)
-			: this()
-		{
-			SetCurrentValue(NumeratorProperty, numerator);
-			SetCurrentValue(DenominatorProperty, denominator);
-		}
+        protected virtual void RaiseTextChanged(string oldValue, string newValue)
+        {
+            RoutedPropertyChangedEventArgs<string> e = new RoutedPropertyChangedEventArgs<string>(oldValue, newValue);
+            e.RoutedEvent = TextChangedEvent;
+            base.RaiseEvent(e);
+        }
 
-		static Fraction()
-		{
-			DefaultStyleKeyProperty.OverrideMetadata(typeof(Fraction), new FrameworkPropertyMetadata(typeof(Fraction)));
-		}
+        private static void RaiseTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Fraction element = (Fraction)d;
+            element.RaiseTextChanged((string)e.OldValue, (string)e.NewValue);
+        }
 
-		public override void OnApplyTemplate()
-		{
-			base.OnApplyTemplate();
+        #endregion
 
-			controlStackPanel = GetTemplateChild(ElementControlStackPanel) as StackPanel;
+        #endregion
 
-			controlNumerator = GetTemplateChild(ElementNumeratorTextBlock) as TextBlock;
-			if (controlNumerator != null)
-			{
-				NumeratorChanged += Fraction_NumeratorChanged;
-			}
+        #region Template Constants & Private Controls
 
-			controlDenominator = GetTemplateChild(ElementDenominatorTextBlock) as TextBlock;
-			if (controlDenominator != null)
-			{
-				DenominatorChanged += Fraction_DenominatorChanged;
-			}
-		}
+        #endregion
 
-		private void Fraction_NumeratorChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
-		{
-			SetControls();
-		}
+        public Fraction()
+        {
+            InitializeComponent();
+            Loaded += Fraction_Loaded;
+            Unloaded += Fraction_Unloaded;
+        }
 
-		private void Fraction_DenominatorChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
-		{
-			SetControls();
-		}
+        private void Fraction_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
 
-		private void SetControls()
-		{
-			if (controlNumerator != null && Numerator != default)
-			{
-				if (controlDenominator != null && Denominator != default)
-				{
-					controlNumerator.Text = Numerator.ToString();
-					controlDenominator.Text = Denominator.ToString();
-				}
-			}
-		}
-	}
+        private void Fraction_Unloaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        public Fraction(int numerator, int denominator)
+            : this()
+        {
+            SetCurrentValue(NumeratorProperty, numerator);
+            SetCurrentValue(DenominatorProperty, denominator);
+        }
+
+        static Fraction()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Fraction), new FrameworkPropertyMetadata(typeof(Fraction)));
+        }
+    }
 }

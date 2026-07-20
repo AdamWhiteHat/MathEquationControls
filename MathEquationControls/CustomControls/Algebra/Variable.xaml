@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathEquationControls.CustomControls.Algebra"
+             xmlns:cc="clr-namespace:MathEquationControls.CustomControls"		
              mc:Ignorable="d"         
              Width="Auto" Height="Auto"
              VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -12,11 +13,12 @@
              Focusable="True"            
              IsTabStop="False" 
              FocusManager.IsFocusScope="false"        
-             KeyboardNavigation.TabNavigation="Once"    
+             KeyboardNavigation.TabNavigation="Once"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              >
 
     <UserControl.Resources>
-        <Style x:Key="Algebra_TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource FrameworkElementStyle}">
+        <Style x:Key="Algebra_Variable_TextBoxStyle" TargetType="TextBox">
             <Setter Property="FontFamily" Value="Libertinus Math Regular" />
             <Setter Property="FontSize" Value="30" />
             <Setter Property="Cursor" Value="IBeam" />
@@ -42,13 +44,13 @@
             <Setter Property="BorderBrush" Value="White" />
             <Setter Property="Background" Value="White" />
             <Setter Property="Opacity" Value="1" />
-
         </Style>
+
     </UserControl.Resources>
 
-    <WrapPanel Orientation="Horizontal" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Variable}}}">
+    <WrapPanel Orientation="Horizontal">
         <TextBox x:Name="textBox"
-                 d:Text="0" Text="{Binding Text}" Style="{DynamicResource Algebra_TextBoxStyle}" Margin="0" Background="{x:Null}" Padding="0" >
+                 Text="{Binding Text}" d:Text="0" Style="{DynamicResource Algebra_Variable_TextBoxStyle}" Margin="0" Padding="0" >
         </TextBox>
     </WrapPanel>
 

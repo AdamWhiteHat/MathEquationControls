@@ -3,7 +3,7 @@
                     xmlns:converters="clr-namespace:MathEquationControls.Converters"
                     xmlns:poly="clr-namespace:MathEquationControls.CustomControls.Polynomial"
                     xmlns:algebra="clr-namespace:MathEquationControls.CustomControls.Algebra"
-					xmlns:local="clr-namespace:MathEquationControls.CustomControls"					
+					xmlns:local="clr-namespace:MathEquationControls.CustomControls"
 					>
 
     <!-- Root styles -->

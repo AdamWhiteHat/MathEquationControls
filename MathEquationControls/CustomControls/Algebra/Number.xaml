@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MathEquationControls.CustomControls.Algebra"
+             xmlns:cc="clr-namespace:MathEquationControls.CustomControls"		
              mc:Ignorable="d"         
              Width="Auto" Height="Auto"
              VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -13,18 +14,17 @@
              IsTabStop="False"    
              FocusManager.IsFocusScope="false"        
              KeyboardNavigation.TabNavigation="Once"             
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              >
 
     <UserControl.Resources>
-        <Style x:Key="Algebra_TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource FrameworkElementStyle}">
+        <Style x:Key="Algebra_Number_TextBoxStyle" TargetType="TextBox">
             <Setter Property="FontFamily" Value="Libertinus Math Regular" />
             <Setter Property="FontSize" Value="30" />
             <Setter Property="Cursor" Value="IBeam" />
 
             <Setter Property="Focusable" Value="true" />
             <Setter Property="IsTabStop" Value="true" />
-            <!--Setter Property="FocusManager.IsFocusScope" Value="true" /-->
-            <!--Setter Property="KeyboardNavigation.TabNavigation" Value="Once" /-->
             <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
 
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -45,21 +45,19 @@
             <Setter Property="BorderBrush" Value="White" />
             <Setter Property="Background" Value="White" />
             <Setter Property="Opacity" Value="1" />
-
         </Style>
+
     </UserControl.Resources>
 
-    <WrapPanel Orientation="Horizontal" 
-               DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:Number}}}"               
-               >
+    <WrapPanel Orientation="Horizontal">
         <TextBox x:Name="textBox"
-                 d:Text="0" Text="{Binding Text}"  
+                 Text="{Binding Text}" d:Text="0"
                  Margin="0" Padding="0"                 
                  
                  GotKeyboardFocus="textBox_GotKeyboardFocus"
                  LostKeyboardFocus="textBox_LostKeyboardFocus"                 
                                 
-                 Style="{DynamicResource Algebra_TextBoxStyle}" 
+                 Style="{DynamicResource Algebra_Number_TextBoxStyle}" 
                              
                  >
         </TextBox>

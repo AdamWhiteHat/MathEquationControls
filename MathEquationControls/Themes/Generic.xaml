@@ -2,11 +2,15 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:MathEquationControls.CustomControls"
-    xmlns:primitives="clr-namespace:MathEquationControls.Primitives">
+    xmlns:poly="clr-namespace:MathEquationControls.CustomControls.Polynomial"
+    xmlns:algebra="clr-namespace:MathEquationControls.CustomControls.Algebra"
+    xmlns:primitives="clr-namespace:MathEquationControls.Primitives"
+    xmlns:converters="clr-namespace:MathEquationControls.Converters"
+    >
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/NumberBox.xaml" />
-        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Algebra/Fraction.xaml"/>
+        <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Algebra/BinaryOp.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Polynomial/PolynomialTermControl.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Polynomial/PolynomialControl.xaml"/>
         <ResourceDictionary Source="/MathEquationControls;component/CustomControls/Polynomial/Coefficient.xaml" />

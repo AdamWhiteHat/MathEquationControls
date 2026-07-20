@@ -32,6 +32,7 @@ namespace MathEquationControls.CustomControls.Algebra
             get { return (IExpression)GetValue(RHSProperty); }
             set { SetValue(RHSProperty, value); }
         }
+
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
