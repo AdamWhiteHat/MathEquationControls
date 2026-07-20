@@ -1,14 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-		<TargetFramework>net8.0-windows</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
 		<OutputType>WinExe</OutputType>
-	   <Nullable>annotations</Nullable>
+		<Nullable>annotations</Nullable>
 		<UseWPF>true</UseWPF>
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MathEquationControls\MathEquationControls.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<EnablePreviewFeatures>true</EnablePreviewFeatures>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Themes\hexagons-horizontal.bmp" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MathEquationControls\MathEquationControls.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Themes\hexagons-horizontal.bmp">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
+	</ItemGroup>
 
 </Project>

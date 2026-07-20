@@ -1,4 +1,4 @@
-﻿<Window x:Class="TestMathEquationControls.CompositeControls.IndividualControls"
+﻿<Page x:Class="TestMathEquationControls.CompositeControls.IndividualControls"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,7 +10,7 @@
 		xmlns:converters="clr-namespace:MathEquationControls.Converters;assembly=MathEquationControls"
         mc:Ignorable="d"
         Title="Individual Controls Example"
-        Height="Auto" Width="600"        
+        Height="NaN" Width="NaN"        
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -28,11 +28,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Number Box</TextBlock>
-                <mathctrls:NumberBox Grid.Row="1" x:Name="controlNumberBox" d:Text="6" Text="-7"  />
+                <mathctrls:NumberBox Margin="20,0" Grid.Row="1" x:Name="controlNumberBox" d:Text="6" Text="-7"  />
 
             </Grid>
         </Border>
@@ -45,13 +44,13 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Coefficient</TextBlock>
-                <poly:Coefficient  Grid.Row="1" x:Name="controlCoeddicient" d:Text="6"  Text="-7" />
+                <poly:Coefficient Margin="20,0" Grid.Row="1" x:Name="controlCoeddicient" d:Text="6"  Text="-7" />
 
             </Grid>
         </Border>
 
         <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -71,7 +70,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">PolynomialControl</TextBlock>
-                <poly:PolynomialControl Grid.Row="1"  x:Name="controlPolynomialControl" d:Text="3*X^3 + X^2 + 1" Text="X - 1"
+                <poly:PolynomialControl Margin="20,0" Grid.Row="1"  x:Name="controlPolynomialControl" d:Text="3*X^3 + X^2 + 1" Text="X - 1"
                                         Style="{DynamicResource PolynomialControlStyle}"
                                         />
 
@@ -87,7 +86,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Number</TextBlock>
-                <algebra:Number x:Name="ctrlNumber" Grid.Row="1" Text="1234" Style="{DynamicResource UserControlStyle}"  />
+                <algebra:Number Margin="20,0" x:Name="ctrlNumber" Grid.Row="1" Text="1234" Style="{DynamicResource UserControlStyle}"  />
 
             </Grid>
         </Border>
@@ -101,7 +100,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Binary Operation</TextBlock>
-                <algebra:BinaryOperation x:Name="ctrlBinaryOperation" Grid.Row="1" Text="1 * 2 + 8 * 9" />
+                <algebra:BinaryOperation Margin="20,0" x:Name="ctrlBinaryOperation" Grid.Row="1" Text="1 * 2 + 8 * 9" />
 
             </Grid>
         </Border>
@@ -115,10 +114,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Margin="3" HorizontalAlignment="Left" Foreground="DarkGray">Equation</TextBlock>
-                <algebra:Equation  Grid.Row="1" x:Name="ctrlEquation" Text="1 * 2 + N * 4 = 14" />
+                <algebra:Equation Margin="20,0" Grid.Row="1" x:Name="ctrlEquation" Text="1 * 2 + N * 4 = 14" />
 
             </Grid>
         </Border>
 
     </Grid>
-</Window>
+</Page>

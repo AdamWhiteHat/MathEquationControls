@@ -19,7 +19,7 @@ namespace TestMathEquationControls.CompositeControls
     /// <summary>
     /// Interaction logic for IndividualControls.xaml
     /// </summary>
-    public partial class IndividualControls : Window
+    public partial class IndividualControls : Page
     {
         public IndividualControls()
         {

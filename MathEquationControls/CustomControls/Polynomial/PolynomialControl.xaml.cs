@@ -857,7 +857,8 @@ namespace MathEquationControls.CustomControls.Polynomial
                 controlContentsPanel.Children.Clear();
 
                 bool firstPass = true;
-                List<Term> termsToIterate = poly.Terms.Reverse().ToList();
+                List<Term> termsToIterate = poly.Terms.ToList();
+                termsToIterate.Reverse();
                 //foreach (ExtendedArithmetic.Term term in termsToIterate)
 
                 int deg = poly.Degree;

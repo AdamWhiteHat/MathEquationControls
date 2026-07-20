@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TestMathEquationControls" InvalidatesImplicitDataTemplateResources="False"
+                    >
+    <ImageSource x:Key="HexagonsHorizontalImageSource1">
+        /Themes/hexagons-horizontal.bmp
+    </ImageSource>
+
+    <ImageSource x:Key="HexagonsHorizontalImageSource2">
+        pack://application:,,,/TestMathEquationControls;component/Themes/hexagons-horizontal.bmp
+    </ImageSource>
+
+    <ImageBrush x:Key="HexagonsHorizontalImageBrush1" ImageSource="{StaticResource HexagonsHorizontalImageSource1}" Stretch="UniformToFill" Opacity="1"/>
+    <ImageBrush x:Key="HexagonsHorizontalImageBrush2" ImageSource="{StaticResource HexagonsHorizontalImageSource2}" Stretch="UniformToFill" Opacity="1"/>
+    <ImageBrush x:Key="HexagonsHorizontalImageBrush3" ImageSource="pack://application:,,,/TestMathEquationControls;component/Themes/hexagons-horizontal.bmp" Stretch="UniformToFill"/>
+    <ImageBrush x:Key="HexagonsHorizontalImageBrush4" ImageSource="/Themes/hexagons-horizontal.bmp" Stretch="UniformToFill"/>
+
+    <BitmapImage x:Key="HexagonsHorizontalBitmapEffectInput" UriSource="pack://application:,,,/TestMathEquationControls;component/Themes/hexagons-horizontal.bmp" />
+
+</ResourceDictionary>

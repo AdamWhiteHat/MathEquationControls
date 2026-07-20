@@ -21,7 +21,7 @@ namespace TestMathEquationControls.CompositeControls
     /// <summary>
     /// Interaction logic for PolynomialQuotientField.xaml
     /// </summary>
-    public partial class PolynomialQuotientField : Window
+    public partial class PolynomialQuotientField : Page
     {
 
         #region Dependency Properties
@@ -121,10 +121,11 @@ namespace TestMathEquationControls.CompositeControls
 
         public PolynomialQuotientField()
         {
-            InitializeComponent();
+            //InitializeComponent();
+            this.Loaded += PageLoaded;
         }
 
-        private void Window_ContentRendered(object sender, EventArgs e)
+        private void PageLoaded(object sender, RoutedEventArgs e)
         {
             dividendPolynomialCtrl.Text = "1*X^5 + 2*X^4 + 3*X^3 + 4*X^2 + 5*X + 6";
             modulusPolynomialCtrl.Text = "X^2 - 1";

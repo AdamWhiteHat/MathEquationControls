@@ -4,55 +4,381 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:TestMathEquationControls"
+        xmlns:stylectrl="clr-namespace:TestMathEquationControls.StylisticControls"
         mc:Ignorable="d"
-        Title="MainWindow" 
-		MinHeight="400" MinWidth="200"
-		Height="Auto" Width="300"
-		>
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"		
+		Height="240" Width="260"        
+        Background="{x:Static SystemColors.WindowBrush}"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        Title="Math Controls Gallery"      
+        
+        >
 
     <Window.Resources>
-        <Style TargetType="GroupBox">
-            <Setter Property="Padding" Value="30,0,0,0" />
-            <Setter Property="Margin" Value="0,10" />
-        </Style>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary Source="pack://application:,,,/TestMathEquationControls;component/Themes/DesignTimeResourceDictionary.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TestMathEquationControls;component/Themes/Generic.xaml" />
+
+                <ResourceDictionary>
+                    <Style TargetType="GroupBox">
+                        <Setter Property="Padding" Value="6" />
+                        <Setter Property="Margin" Value="6" />
+                        <Setter Property="Background" Value="Azure" />
+                    </Style>
+
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Padding" Value="2" />
+                    </Style>
+                </ResourceDictionary>
+
+                <ResourceDictionary>
+
+                    <SolidColorBrush x:Key="TransparentBackgroundBrush" Color="{DynamicResource ControlAltFillColorTransparentBrush}" Opacity="1" />
+                    <SolidColorBrush x:Key="AcrylicBackgroundBrush" Color="{DynamicResource AcrylicBackgroundFillColorDefault}" Opacity="0.8" />
+                    <SolidColorBrush x:Key="MicaBackgroundBrush" Color="{DynamicResource MicaBackgroundFillColorBaseBrush}" Opacity="1" />
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{DynamicResource CardBackgroundFillColorDefaultBrush}" Opacity="1" />
+
+                    <Style x:Key="TitleBarDefaultButtonStyle" TargetType="Button">
+                        <Setter Property="MinHeight" Value="25" />
+                        <Setter Property="MinWidth" Value="27" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <!--Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" /-->
+                        <Setter Property="FontFamily" Value="Marlett" />
+                        <Setter Property="FontSize" Value="15" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+
+                        <Setter Property="IsEnabled" Value="True" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="EnclosingBorder"                                            
+                                            WindowChrome.IsHitTestVisibleInChrome="True"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4"
+                                            SnapsToDevicePixels="True"                                            
+                                            >
+                                        <ContentPresenter                                            
+                                            RecognizesAccessKey="True"
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"                                         
+                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                    <Style x:Key="TitleBarHighlightableButtonStyle"  TargetType="Button" BasedOn="{StaticResource TitleBarDefaultButtonStyle}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
+                                <Setter Property="Foreground" Value="{x:Static SystemColors.HighlightTextBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+
+                    </Style>
+
+                    <Style x:Key="TitleBarDefaultCloseButtonStyle" BasedOn="{StaticResource TitleBarDefaultButtonStyle}" TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C42B1C" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="BackButtonStyle" TargetType="Button"  BasedOn="{StaticResource TitleBarHighlightableButtonStyle}" >
+                        <Setter Property="Margin" Value="6,0,0,0" />
+                        <Setter Property="Padding" Value="0" />
+                        <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsEnabled" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
+                                    <Setter Property="Foreground" Value="{x:Static SystemColors.HighlightTextBrush}" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsEnabled" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="{x:Static SystemColors.ControlTextBrush}" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{x:Static SystemColors.InactiveCaptionTextBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="100" />
-        </Grid.RowDefinitions>
+    <Window.CommandBindings>
+        <CommandBinding Command="NavigationCommands.BrowseBack" Executed="CommandBack_Executed" />
+        <CommandBinding Command="NavigationCommands.BrowseForward" Executed="CommandForward_Executed" />
+        <CommandBinding Command="SystemCommands.MaximizeWindowCommand" Executed="CommandMaximizeWindow_Executed" />
+        <CommandBinding Command="SystemCommands.MinimizeWindowCommand" Executed="CommandMinimizeWindow_Executed" />
+        <CommandBinding Command="SystemCommands.CloseWindowCommand" Executed="CommandCloseWindow_Executed" />
+    </Window.CommandBindings>
 
-        <StackPanel Grid.Row="0">
+    <Border x:Name="HighContrastBorder" BorderThickness="1" Margin="0">
+        <Grid x:Name="WindowGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <GroupBox Header="Polynomial examples:">
-                <StackPanel>
-                    <TextBlock>
-				<Hyperlink x:Name="link_Polynomial_QuotientField" Click="link_Polynomial_QuotientField_Click" >
-					View: Quotient Field 
-				</Hyperlink>
-                    </TextBlock>
-                    <TextBlock>
-				<Hyperlink x:Name="link_Polynomial_BaseMExpansion" Click="link_Polynomial_BaseMExpansion_Click" >
-					View: Base-m Expansion
-				</Hyperlink>
-                    </TextBlock>
-                    <TextBlock>
-                <Hyperlink x:Name="link_Individual_Controls" Click ="link_Individual_Controls_Click" >
-					View: Individual Controls Example
-				</Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-            </GroupBox>
+            <Border x:Name="TitlebarBorder"  Grid.Row="0" BorderThickness="0,0,0,1" Margin="0">
+                <Grid  Height="34" x:Name="CustomTitleBar" Margin="3,0,3,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <GroupBox Header="Fraction examples:">
+                    <Button Grid.Column="0"
+                        x:Name="BackButton" Command="NavigationCommands.BrowseBack"
+                        Style="{DynamicResource BackButtonStyle}"
+                        >
 
-            </GroupBox>
+                        <Button.Resources>
+                            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
+                            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+                        </Button.Resources>
 
-            <GroupBox Header="Misc examples:">
+                        <TextBlock VerticalAlignment="Center"
+                               FontFamily="Wingdings 3"
+                               FontSize="15"
+                               Text="f">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
 
-            </GroupBox>
+                    <StackPanel Grid.Column="1"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
 
-        </StackPanel>
-    </Grid>
+                        <TextBlock Margin="6,0,0,0" x:Name="TitleBarTextBlock"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Style="{DynamicResource CaptionTextBlockStyle}"
+                               AutomationProperties.HeadingLevel="Level1"
+                               Text="Math Controls Gallery" />
+                    </StackPanel>
+
+                    <Button Grid.Column="2" 
+                        x:Name="MinimizeButton" Command="SystemCommands.MinimizeWindowCommand"      
+                        Content="0"
+                        Style="{DynamicResource TitleBarHighlightableButtonStyle}"                            
+                        />
+
+                    <Button Grid.Column="3" 
+                        x:Name="MaximizeButton"  Command="SystemCommands.MaximizeWindowCommand"
+                        Content="1"
+                        Style="{DynamicResource TitleBarHighlightableButtonStyle}"                       
+                         />
+
+                    <Button Grid.Column="4"
+                        x:Name="CloseButton" Command="SystemCommands.CloseWindowCommand"
+                        Content="r"
+                        Style="{DynamicResource TitleBarDefaultCloseButtonStyle}"
+                        />
+
+                </Grid>
+            </Border>
+            <!--Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0" Grid.Row="0">
+
+                        <Grid.Background>
+                            <DrawingBrush Stretch="None" Opacity="1" TileMode="None">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <ImageDrawing x:Name="imageDrawing" Rect="0,0,951,496" ImageSource="{StaticResource HexagonsHorizontalImageSource1}" />
+                                        <GeometryDrawing>
+                                            <GeometryDrawing.Brush>
+                                                <SolidColorBrush Color="White" Opacity="0.6" />
+                                            </GeometryDrawing.Brush>
+                                            <GeometryDrawing.Geometry>
+                                                <RectangleGeometry Rect="0,0,951,496" />
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Grid.Background>
+
+                        <Grid.Effect>
+                            <BlurEffect Radius="5" KernelType="Gaussian" />
+                        </Grid.Effect>
+
+                    </Grid>
+
+                    <Grid Grid.Column="0" Grid.Row="0" Background="Transparent"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+
+                        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Background="MistyRose">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                            Text
+                            </TextBlock>
+                        </StackPanel>
+
+                    </Grid>
+
+                    </Grid-->
+
+            <stylectrl:WatermarkImagePanel Grid.Row="1" x:Name="ContentWatermarkPanel"
+                                           BackgroundImageSource="{StaticResource HexagonsHorizontalImageSource1}"
+                                           BlurRadius="5"
+                                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                                                                
+                                           >
+
+                <Grid x:Name="MainGrid" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Grid.Column="0" x:Name="RightContentGrid" Background="Transparent" 
+                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="150">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Column="0" Grid.Row="0"
+                                x:Name="FrameBorder"
+                                Margin="6"
+                                Padding="6"
+                                Background="Transparent"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                          
+                                BorderThickness="1"
+                                CornerRadius="18"         
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"                                
+                                 >
+
+                            <Frame x:Name="RootContentFrame" 
+                                       
+                                   Width="Auto" Height="Auto" Margin="12"
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                   Background="Transparent"  
+                                   NavigationUIVisibility="Hidden"
+                                >
+
+                                <Frame.Content>
+
+                                    <StackPanel HorizontalAlignment="Left" MinWidth="200">
+                                        <GroupBox Header="Blank" Visibility="Collapsed"
+                                                  Margin="6" Padding="6">
+                                            <StackPanel>
+                                                <TextBlock Margin="2" />
+                                            </StackPanel>
+                                        </GroupBox>
+
+                                        <GroupBox Header="Polynomial examples:" Margin="6" Padding="6">
+                                            <StackPanel>
+
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink x:Name="link_Polynomial_BaseMExpansion"
+                                                               NavigateUri="pack://application:,,,/TestMathEquationControls;component/CompositeControls/BaseMExpansion.xaml"
+                                                               RequestNavigate="Hyperlink_RequestNavigate">
+                                                        Base-m Expansion
+                                                    </Hyperlink>
+                                                </TextBlock>
+
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink x:Name="link_Polynomial_QuotientField"
+                                                               NavigateUri="pack://application:,,,/TestMathEquationControls;component/CompositeControls/PolynomialQuotientField.xaml" 
+                                                               RequestNavigate="Hyperlink_RequestNavigate">
+            	                                        Quotient Field 
+                                                    </Hyperlink>
+                                                </TextBlock>
+
+                                            </StackPanel>
+                                        </GroupBox>
+
+                                        <GroupBox Header="Fraction examples:" Visibility="Collapsed" Margin="6" Padding="6">
+                                            <StackPanel>
+                                                <TextBlock Margin="2" />
+                                            </StackPanel>
+                                        </GroupBox>
+
+                                        <GroupBox Header="Misc examples:" Margin="6" Padding="6">
+                                            <StackPanel>
+                                                <TextBlock Margin="2">
+                                                    <Hyperlink x:Name="link_Individual_Controls"  
+                                                               NavigateUri="pack://application:,,,/TestMathEquationControls;component/CompositeControls/IndividualControls.xaml"
+                                                               RequestNavigate="Hyperlink_RequestNavigate">
+                                                    	Individual Controls
+                                                    </Hyperlink>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </GroupBox>
+
+                                    </StackPanel>
+
+                                </Frame.Content>
+                            </Frame>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+            </stylectrl:WatermarkImagePanel>
+
+        </Grid>
+    </Border>
+
 </Window>
